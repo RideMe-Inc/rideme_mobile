@@ -1,6 +1,8 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideme_mobile/core/location/domain/entity/geo_hash.dart';
+import 'package:rideme_mobile/core/location/domain/entity/places_info.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/get_geo_id.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/search_place.dart';
 
