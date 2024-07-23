@@ -1,4 +1,4 @@
-package com.ridemeinc.app
+package com.appridemeinc.app
 
 import io.flutter.embedding.android.FlutterActivity
 
