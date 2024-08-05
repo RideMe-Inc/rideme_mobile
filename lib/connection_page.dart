@@ -37,6 +37,9 @@ class _ConnectionPageState extends State<ConnectionPage> {
 
             if (state is IsOnboardingViewedSuccess) {
               //network connection flow continues from here
+
+              //go to sign up for now
+              context.goNamed('login');
             }
           },
         ),

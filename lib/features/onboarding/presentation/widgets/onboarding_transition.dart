@@ -10,11 +10,12 @@ class OnboardingTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: Sizes.height(context, 0.01),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 400),
+      height: Sizes.height(context, 0.008),
       width: currentIndex == index
-          ? Sizes.width(context, 0.1)
-          : Sizes.width(context, 0.02),
+          ? Sizes.width(context, 0.08)
+          : Sizes.width(context, 0.018),
       margin: EdgeInsets.only(right: Sizes.width(context, 0.02)),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Sizes.height(context, 0.02)),
