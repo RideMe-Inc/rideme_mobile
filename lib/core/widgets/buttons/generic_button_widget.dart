@@ -36,6 +36,8 @@ class GenericButton extends StatelessWidget {
   /// An optional color for the button text.
   final Color? textColor;
 
+  final double? borderRadius;
+
   /// An optional callback function that is called when the button is tapped.
   final void Function()? onTap;
 
@@ -52,6 +54,7 @@ class GenericButton extends StatelessWidget {
     super.key,
     this.textColor,
     this.buttonColor,
+    this.borderRadius,
     required this.onTap,
     required this.label,
     required this.isActive,
@@ -71,7 +74,7 @@ class GenericButton extends StatelessWidget {
               ? buttonColor ?? AppColors.rideMeBlueNormal
               : AppColors.rideMeBlackLightHover,
           borderRadius: BorderRadius.circular(
-            Sizes.height(context, 0.026),
+            Sizes.height(context, borderRadius ?? 0.006),
           ),
         ),
         child: Center(

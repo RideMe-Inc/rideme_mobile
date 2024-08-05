@@ -181,9 +181,7 @@ class GenericTextField extends StatelessWidget {
             onTapOutside: (enabled ?? false)
                 ? null
                 : (_) => FocusManager.instance.primaryFocus?.unfocus(),
-            cursorColor: context.theme.brightness == Brightness.light
-                ? AppColors.rideMeBlackNormalHover
-                : AppColors.rideMeGreyDark,
+            cursorColor: AppColors.rideMeBlackNormalHover,
             buildCounter: (context,
                     {required currentLength,
                     required isFocused,

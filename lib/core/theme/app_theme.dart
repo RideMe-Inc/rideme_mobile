@@ -111,7 +111,7 @@ const _bottomNavigationBarThemeLight = BottomNavigationBarThemeData(
 //LIGHT TEXT THEME
 const _lightTextTheme = TextTheme(
   displaySmall: TextStyle(
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.rideMeBlackNormal,
   ),
