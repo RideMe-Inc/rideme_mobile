@@ -11,6 +11,12 @@ import 'package:rideme_mobile/features/localization/domain/repository/localizati
 import 'package:rideme_mobile/features/localization/domain/usecases/change_locale.dart';
 import 'package:rideme_mobile/features/localization/domain/usecases/get_current_locale.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/features/onboarding/data/datasources/local_ds.dart';
+import 'package:rideme_mobile/features/onboarding/data/repository/onboarding_repo_impl.dart';
+import 'package:rideme_mobile/features/onboarding/domain/repository/onboarding_repository.dart';
+import 'package:rideme_mobile/features/onboarding/domain/usecases/is_onboarding_viewed.dart';
+import 'package:rideme_mobile/features/onboarding/domain/usecases/mark_onboarding_viewed.dart';
+import 'package:rideme_mobile/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:rideme_mobile/features/permissions/data/datasources/localds.dart';
 import 'package:rideme_mobile/features/permissions/data/repository/repository_impl.dart';
 import 'package:rideme_mobile/features/permissions/domain/repository/permissions_repo.dart';
@@ -35,6 +41,10 @@ init() async {
 
   //localizations
   initLocalization();
+
+  //onboarding
+
+  initOnboarding();
 
   //urls
   sl.registerLazySingleton(() => URLS());
@@ -170,6 +180,46 @@ initLocalization() {
   //datasources
   sl.registerLazySingleton<LocalizationLocalDataSource>(
     () => LocalizationLocalDataSourceImpl(
+      sharedPreferences: sl(),
+    ),
+  );
+}
+
+//!INIT ONBOARDING
+initOnboarding() {
+  //bloc
+  sl.registerFactory(
+    () => OnboardingBloc(
+      markOnboardingViewed: sl(),
+      isOnboardingViewed: sl(),
+    ),
+  );
+
+  //usecases
+
+  sl.registerLazySingleton(
+    () => MarkOnboardingViewed(
+      repository: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton(
+    () => IsOnboardingViewed(
+      repository: sl(),
+    ),
+  );
+
+  //repository
+  sl.registerLazySingleton<OnboardingRepository>(
+    () => OnboardingRepositoryImpl(
+      localDatasource: sl(),
+    ),
+  );
+
+  //datasources
+
+  sl.registerLazySingleton<OnboardingLocalDatasource>(
+    () => OnboardingLocalDatasourceImpl(
       sharedPreferences: sl(),
     ),
   );
