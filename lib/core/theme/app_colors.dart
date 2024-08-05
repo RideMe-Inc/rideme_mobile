@@ -8,7 +8,7 @@ class AppColors {
   static const rideMeBackgroundDark = Color.fromRGBO(45, 45, 53, 1);
   static const rideMeSearchBar = Color.fromRGBO(208, 208, 208, 0.3);
   static const rideMeReviewRateColor = Color.fromRGBO(255, 215, 0, 1);
-  static const rideMeBackgroundLight = Color.fromRGBO(255, 255, 247, 1);
+  static const rideMeBackgroundLight = Colors.white;
   static const rideMeProductDivider = Color.fromRGBO(217, 217, 217, 0.4);
   static const rideMeBottomNavigationBackgroundDark =
       Color.fromRGBO(53, 53, 61, 1);

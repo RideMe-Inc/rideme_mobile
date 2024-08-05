@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:rideme_mobile/connection_page.dart';
+import 'package:rideme_mobile/features/authentication/presentation/pages/otp_verification_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/phone_entry_page.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/pages/onboarding_page.dart';
 
@@ -25,6 +26,18 @@ final GoRouter goRouterConfiguration = GoRouter(
       name: 'login',
       path: '/login',
       builder: (context, state) => const PhoneEntryPage(),
+      routes: [
+        //otp verification
+
+        GoRoute(
+          name: 'otpVerification',
+          path: 'otp-verification',
+          builder: (context, state) => OtpVerificationPage(
+            phoneNumber: state.uri.queryParameters['phone'] ?? '',
+            token: state.uri.queryParameters['token'] ?? '',
+          ),
+        )
+      ],
     ),
 
     //HOME

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/mixins/url_launcher_mixin.dart';
@@ -56,7 +57,10 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
 
             //BUTTON
             GenericButton(
-              onTap: () {},
+              onTap: () =>
+                  context.pushNamed('otpVerification', queryParameters: {
+                "phone": number,
+              }),
               label: context.appLocalizations.continues,
               isActive: isButtonActive,
             ),
