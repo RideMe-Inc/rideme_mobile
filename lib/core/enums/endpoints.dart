@@ -20,7 +20,9 @@ enum Endpoints {
   //! LOCATION
   myLocation(value: '/geo-data'),
   addresses(value: '/address'),
-  editAddress(value: '/address/:id');
+  editAddress(value: '/address/:id'),
+
+  applyCoupon(value: '/coupons/');
 
   final String value;
 
