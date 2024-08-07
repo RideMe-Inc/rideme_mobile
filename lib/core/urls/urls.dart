@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:rideme_mobile/core/enums/endpoints.dart';
 
 class URLS {
@@ -14,8 +15,8 @@ class URLS {
     required Map<String, dynamic>? queryParameters,
     required Map<String, dynamic>? urlParameters,
   }) {
-    const baseUrl = 'dev2-api.shaqapp.com';
-    //  const testBaseUrl = 'testv3.shaqexpress.com';
+    const baseUrl = kDebugMode ? 'api.rideme.com' : 'api.rideme.com';
+
     String lastRoute = '/v1/$locale/users${endpoint.value}';
 
     String parsedRoute = urlParser.urlPasser(urlParameters, lastRoute);
