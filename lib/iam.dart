@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:rideme_mobile/assets/images/image_name_constants.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/widgets/become_a_driver_card.dart';
 
@@ -17,7 +16,7 @@ class _IAMScreenImplementerState extends State<IAMScreenImplementer> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(Sizes.height(context, 0.02)),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BecomeADriverCard(),

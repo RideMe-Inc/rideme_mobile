@@ -5,7 +5,6 @@ import 'package:rideme_mobile/features/authentication/presentation/pages/more_in
 import 'package:rideme_mobile/features/authentication/presentation/pages/otp_verification_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/phone_entry_page.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:rideme_mobile/iam.dart';
 
 final GoRouter goRouterConfiguration = GoRouter(
   initialLocation: '/',
@@ -14,8 +13,7 @@ final GoRouter goRouterConfiguration = GoRouter(
     GoRoute(
       name: 'root',
       path: '/',
-      // builder: (context, state) => const ConnectionPage(),
-      builder: (context, state) => const IAMScreenImplementer(),
+      builder: (context, state) => const ConnectionPage(),
     ),
 
     //ONBOARDING
