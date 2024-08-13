@@ -113,6 +113,18 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                 ],
               ),
             ),
+
+            //TODO: TO BE REMOVED
+            Space.height(context, 0.04),
+            SafeArea(
+              child: GestureDetector(
+                onTap: () => context.goNamed('home'),
+                child: Text(
+                  'Home',
+                  style: context.textTheme.displayMedium,
+                ),
+              ),
+            )
           ],
         ),
       ),

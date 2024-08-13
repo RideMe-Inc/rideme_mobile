@@ -85,6 +85,9 @@
   "resendOTP": "Resend OTP",
   "poweredBy": "Powered By",
   "trackTrip": "Track trip",
+
+  "history":"History",
+  "promotions":"Promotions",
   "disclaimer": "Disclaimer",
   "creditCard":"Credit card",
   "normalCar": "Normal Car",

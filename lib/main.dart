@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rideme_mobile/core/routes/go_router_config.dart';
 import 'package:rideme_mobile/core/theme/app_theme.dart';
+import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/firebase_options.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -36,6 +37,9 @@ main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => sl<LocaleProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => HomeProvider(),
         ),
       ],
       child: Consumer<LocaleProvider>(
