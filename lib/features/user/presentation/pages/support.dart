@@ -15,7 +15,7 @@ class SupportPage extends StatefulWidget {
 class _SupportPageState extends State<SupportPage> {
   final List<ProfileItemType> profileItemType = [
     ProfileItemType.faq,
-    ProfileItemType.accountSettings,
+    ProfileItemType.safety,
   ];
   @override
   Widget build(BuildContext context) {

@@ -8,8 +8,10 @@ import 'package:rideme_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:rideme_mobile/features/payment/presentation/pages/payment.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
+import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/profile.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/promotions.dart';
+import 'package:rideme_mobile/features/user/presentation/pages/safety_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/support.dart';
 
 final GoRouter goRouterConfiguration = GoRouter(
@@ -108,6 +110,21 @@ final GoRouter goRouterConfiguration = GoRouter(
           name: 'support',
           path: 'support',
           builder: (context, state) => const SupportPage(),
+          routes: [
+            //faq
+            GoRoute(
+              name: 'faq',
+              path: 'faq',
+              builder: (context, state) => const FaqPage(),
+            ),
+
+            //safety
+            GoRoute(
+              name: 'safety',
+              path: 'safety',
+              builder: (context, state) => const SafetyPage(),
+            ),
+          ],
         ),
       ],
     )

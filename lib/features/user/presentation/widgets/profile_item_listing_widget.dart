@@ -33,6 +33,7 @@ class ProfileItemListingWidget extends StatelessWidget {
     final namings = {
       "faq": 'FAQ',
       "logout": context.appLocalizations.logout,
+      "safety": context.appLocalizations.safety,
       "payment": context.appLocalizations.payment,
       "editProfile": context.appLocalizations.profile,
       "appLanguage": context.appLocalizations.appLanguage,
