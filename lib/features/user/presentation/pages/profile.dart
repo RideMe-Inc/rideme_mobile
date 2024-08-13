@@ -49,21 +49,19 @@ class _ProfilePageState extends State<ProfilePage> {
               profileUrl: null,
             ),
             Space.height(context, 0.038),
-            Column(
-              children: List.generate(
-                profileItemType.length,
-                (index) {
-                  return ProfileItemListingWidget(
-                    type: profileItemType[index],
-                    name: profileItemType[index].name,
-                    showTrailing: true,
-                    trailing: null,
-                    onTap: () => context.pushNamed(
-                      profileItemType[index].name,
-                    ),
-                  );
-                },
-              ),
+            ...List.generate(
+              profileItemType.length,
+              (index) {
+                return ProfileItemListingWidget(
+                  type: profileItemType[index],
+                  name: profileItemType[index].name,
+                  showTrailing: true,
+                  trailing: null,
+                  onTap: () => context.pushNamed(
+                    profileItemType[index].name,
+                  ),
+                );
+              },
             ),
             ProfileItemListingWidget(
               type: ProfileItemType.deleteAccount,

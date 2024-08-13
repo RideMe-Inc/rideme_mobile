@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rideme_mobile/core/enums/profile_item_type.dart';
+import 'package:rideme_mobile/core/extensions/context_extensions.dart';
+import 'package:rideme_mobile/core/size/sizes.dart';
+import 'package:rideme_mobile/features/user/presentation/widgets/profile_item_listing_widget.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({super.key});
@@ -8,8 +13,43 @@ class SupportPage extends StatefulWidget {
 }
 
 class _SupportPageState extends State<SupportPage> {
+  final List<ProfileItemType> profileItemType = [
+    ProfileItemType.faq,
+    ProfileItemType.accountSettings,
+  ];
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: Text(
+          context.appLocalizations.support,
+          style: context.textTheme.headlineSmall,
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: Sizes.height(context, 0.02),
+        ),
+        child: Column(
+          children: [
+            ...List.generate(
+              profileItemType.length,
+              (index) {
+                return ProfileItemListingWidget(
+                  type: profileItemType[index],
+                  name: profileItemType[index].name,
+                  showTrailing: true,
+                  trailing: null,
+                  onTap: () => context.pushNamed(
+                    profileItemType[index].name,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
