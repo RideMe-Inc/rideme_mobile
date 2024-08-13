@@ -4,21 +4,25 @@ enum Endpoints {
 
   //! AUTH
   initAuth(value: '/auth/init'),
-  logOut(value: '/auth/logout'),
-  signIn(value: '/auth/sign-in'),
-  signUp(value: '/auth/sign-up'),
   verifyOTP(value: '/auth/verify-otp'),
   resendOTP(value: '/auth/resend-otp'),
+  signUp(value: '/auth/sign-up'),
+  logOut(value: '/auth/logout'),
   getRefereshToken(value: '/auth/refresh'),
-  recoverPassword(value: '/auth/recovery'),
-  socialLogin(value: '/auth/social-login'),
-  socialSignUp(value: '/auth/social-sign-up'),
-  setNewPassword(value: '/auth/set-password'),
-  resetPassword(value: '/auth/reset-password'),
-  changePassword(value: '/auth/change-password'),
+  profile(value: '/profile'),
 
+  //!TRIPS
+  trip(value: '/trips'),
+  bookTrip(value: '/trips/:id/book'),
+  tripDetails(value: '/trips/:id'),
+  reportTrip(value: '/trips/:id/reports'),
+  rateTrip(value: '/trips/:id/ratings'),
   //! LOCATION
-  myLocation(value: '/geo-data');
+  myLocation(value: '/geo-data'),
+  addresses(value: '/address'),
+  editAddress(value: '/address/:id'),
+
+  applyCoupon(value: '/coupons/');
 
   final String value;
 

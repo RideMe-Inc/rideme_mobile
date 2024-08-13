@@ -1,0 +1,29 @@
+import 'package:rideme_mobile/core/pagination/pagination_model.dart';
+import 'package:rideme_mobile/features/trips/data/models/all_trips_details_model.dart';
+import 'package:rideme_mobile/features/trips/domain/entities/all_trips_data.dart';
+import 'package:rideme_mobile/features/trips/domain/entities/all_trips_info.dart';
+
+class AllTripsInfoModel extends AllTripsInfo {
+  const AllTripsInfoModel(
+      {required super.message, required super.allTripsData});
+
+  factory AllTripsInfoModel.fromJson(Map<String, dynamic> json) {
+    return AllTripsInfoModel(
+      message: json["message"],
+      allTripsData: AllTripsDataModel.fromJson(json["data"]),
+    );
+  }
+}
+
+class AllTripsDataModel extends AllTripsData {
+  const AllTripsDataModel({required super.list, required super.pagination});
+
+  factory AllTripsDataModel.fromJson(Map<String, dynamic>? json) {
+    return AllTripsDataModel(
+      list: json?["list"]
+          .map<AllTripDetailsModel>((e) => AllTripDetailsModel.fromJson(e))
+          .toList(),
+      pagination: PaginationModel.fromJson(json?["pagination"]),
+    );
+  }
+}

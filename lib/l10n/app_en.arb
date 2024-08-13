@@ -8,7 +8,7 @@
   "see": "See",
   "paid": "Paid",
   "cash": "Cash",
-  "fire": "Fire",
+  "fire": "Fire service",
   "from": "From",
   "food": "Food",
   "home": "Home",
@@ -72,7 +72,7 @@
   "mapCache": "Map cache",
   "saveTrip": "Save Trip",
   "tripName": "Trip Name",
-  "ambulance": "Ambulance",
+  "ambulance": "Ambulance service",
   "completed": "Completed",
   "cancelled": "Cancelled",
   "worldwide": "Worldwide",
@@ -85,7 +85,11 @@
   "resendOTP": "Resend OTP",
   "poweredBy": "Powered By",
   "trackTrip": "Track trip",
+
+  "history":"History",
+  "promotions":"Promotions",
   "disclaimer": "Disclaimer",
+  "creditCard":"Credit card",
   "normalCar": "Normal Car",
   "firstName": "First Name",
   "sendAgain": "Send again",
@@ -151,7 +155,7 @@
   "amountPayable": "Amount payable",
   "addSavedTrips": "Add saved trips",
   "sendersNumber": "Sender's number",
-  "privacyPolicy": "Privacy Policy.",
+  "privacyPolicy": "privacy policy.",
   "requestOurApi": "Request our api",
   "receiversName": "Receiver's Name",
   "clearMapCache": "Clear map cache",
@@ -316,15 +320,100 @@
   "deliveryProblems": "Delivery/order problems.",
   "movingOutOfServiceArea": "Moving out of service area.",
   "arrivingInPlaceholder": "Arriving in -- minutes",
-  "dob": "Date of birth",
-  "gender": "Gender",
-  "genderDesc": "Please select gender",
-  "dobDesc": "Please set date of birth",
-  "selectGender": "Select your gender",
-  "selectDOB": "Select your date of birth",
-  "genderUpdateSuccess": "Gender updated successfully",
-  "dobUpdateSuccess": "Date of birth updated successfully",
-  "calculateFare":"Calculate Fare",
+  
+
+  "ecoFriendly":"Eco-Friendly",
+  "ecoFriendlyNotice":"Drive with us towards a cleaner, brighter future in the vehicle of your choice.",
+  "safetyFeatures":"Safety Features",
+  "safetyFeaturesNotice":"Our commitment to safety means you'll find advanced safety features in all our app, giving you a worry-free drive.",
+  "subscriptionPlans":"Subscription Plans",
+  "subscriptionPlansNotice":"Our affordable subscription plans ensure you can travel as much as you need without breaking the bank.",
+  "newToRideMe":"New to RideMe? Sign Up",
+  "enterYourPhoneNumberInfo":"A verification code will be sent to this phone number to confirm account.",
+  "termsOfService":"terms of service",
+  "conditions":"condtions",
+  "byContinuing":"By continuing you agree to the",
+  "enterYourOtpCode":"Enter your OTP code",
+  "enterYourOtpCodeInfo":"Enter the code sent to",
+  "enterEmailToComplete":"Enter your email address to complete your profile.",
+  "emailAddress":"Email address",
+  "enterFullName":"Enter Full name",
+  "enterFullNameInfo":"This will help drivers identity you easily.",
+  "firstNameHint":"Enter your first name",
+  "lastNameHInt":"Enter your last name",
+  "bookForLaterNote":"Note charges may increase if pickup is delayed .",
+  "schedule":"Schedule",
+  "whereTo":"Where to?",
+  "becomeADriver":"Become a driver on RideMe",
+  "becomeADriverInfo":"Earn on RideMe by driving full time or part time making extra money.",
+  "enterLocations":"Enter locations",
+  "enterYourDestination":"Enter your destination",
+  "setYourLocation":"Set your location",
+  "confirmDestination":"Confirm destination",
+  "selectRide":"Select Ride",
+  "selectPaymentMethod":"Select payment method",
+  "confirmMethod":"Confirm method",
+  "checkingForCar":"Checking for cars nearby",
+  "checkingForCarInfo":"This may take a few seconds",
+  "myLocations":"My locations",
+  "availableDriverFound":"Available driver found",
+  "availableDriverFoundInfo":"Waiting for driver to accept trip",
+  "driver":"Driver",
+  "enterPickupMessage":"Enter pickup message",
+  "ridePreferences":"Ride preferences",
+  "ridePreferencesInfo":"Choose temperature, music etc",
+  "drivingToPickup":"Driving to pickup",
+  "drivingToDestination":"Driving to destination",
+  "driverAtDestination":"Driver is at destination",
+  "pleaseRateTrip":"Please rate your trip",
+  "addReviewDetails":"Add review details",
+  "reviewDetailsHint":"Enter details here",
+  "safetyNotice":"Please use these buttons incase of any emergency. Help will get to you as soon as possible",
+  "userDetails":"User Details",
+  "accountSettings":"Account Settings",
+  "appLanguage":"App Language",
+  "privacyAndDataPolicy":"Privacy and Data Policy",
+  "aboutRideMe":"About RideMe",
+  "howToRequestARide":"How do I request a ride?",
+  "howToPayForRide":"How do I pay for my ride?",
+  "whatToDoIfUnsafe":"What should I do if I feel unsafe during a ride?",
+  "tripDistance":"Trip distance",
+  "delayMinutes":"Delay minutes",
+  "paymentDetails":"Payment Details",
+  "callDriver":"Call driver",
+  "addUpToNumDestinations":"Add up to {number} destinations",
+  "@addUpToNumDestinations":{
+    "placeholders":{
+      "number":{
+        "type":"String",
+        "example":"3"
+      }
+    }
+  },
+  "helloThere":"Hello there, {name}",
+  "@helloThere":{
+    "placeholders":{
+      "name":{
+        "type":"String",
+        "example":"Simon"
+      }
+    }
+  },
+  "didntReceiveACode":"Didn't receive a code ({timer})",
+  "@didntReceiveACode":{
+    "placeholders":{
+      "timer":{
+        "type":"String",
+        "example":"1:59"
+      }
+    }
+  },
+
+
+
+
+
+
   "signInWithSocial": "Sign in with {provider}",
   "@signInWithSocial": {
     "placeholders": {
