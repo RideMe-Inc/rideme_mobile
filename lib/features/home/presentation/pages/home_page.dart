@@ -297,7 +297,7 @@ class _HomePageState extends State<HomePage> {
 
                         Space.height(context, 0.014),
                         Text(
-                          context.appLocalizations.helloThere('Simon', ''),
+                          context.appLocalizations.helloThere('Simon'),
                           style: context.textTheme.displayLarge?.copyWith(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,

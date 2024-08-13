@@ -388,6 +388,6 @@
   "paymentDetails":"Détails de paiement",
   "callDriver":"Appeler le chauffeur",
   "addUpToNumDestinations":"Ajoutez jusqu'à {number} destinations",
-  "helloThere":"Bonjour, {nom}",
+  "helloThere":"Bonjour, {name}",
   "didntReceiveACode":"Je n'ai pas reçu de code ({timer})"
 }
