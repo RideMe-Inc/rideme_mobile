@@ -5,21 +5,25 @@ import 'package:rideme_mobile/core/theme/app_colors.dart';
 
 class LoadingIndicator extends StatelessWidget {
   final double? height, width;
+  final Color? indicatorColor;
+  final Color? backgroundColor;
   const LoadingIndicator({
     super.key,
     this.height,
     this.width,
+    this.indicatorColor,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.theme.scaffoldBackgroundColor,
+      color: backgroundColor ?? context.theme.scaffoldBackgroundColor,
       width: width,
       height: height ?? Sizes.height(context, 0.1),
-      child: const Center(
+      child: Center(
         child: CircularProgressIndicator(
-          color: AppColors.rideMeBlueNormal,
+          color: indicatorColor ?? AppColors.rideMeBlueNormal,
         ),
       ),
     );

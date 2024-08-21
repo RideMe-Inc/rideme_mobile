@@ -38,8 +38,6 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
       }
     };
 
-    print(params);
-
     authBloc.add(InitAuthenticationEvent(params: params));
   }
 
