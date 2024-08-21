@@ -6,8 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rideme_mobile/core/routes/go_router_config.dart';
 import 'package:rideme_mobile/core/theme/app_theme.dart';
+import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
 import 'package:rideme_mobile/firebase_options.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rideme_mobile/injection_container.dart' as di;
@@ -40,6 +42,12 @@ main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => HomeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AuthenticationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
         ),
       ],
       child: Consumer<LocaleProvider>(

@@ -36,6 +36,10 @@ import 'package:rideme_mobile/features/permissions/domain/usecases/request_locat
 import 'package:rideme_mobile/features/permissions/domain/usecases/request_notif_permission.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
 import 'package:rideme_mobile/features/user/data/datasources/localds.dart';
+import 'package:rideme_mobile/features/user/data/datasources/remoteds.dart';
+import 'package:rideme_mobile/features/user/data/repositories/user_repository_impl.dart';
+import 'package:rideme_mobile/features/user/domain/repositories/user_repository.dart';
+import 'package:rideme_mobile/features/user/domain/usecases/get_user_profile.dart';
 import 'package:rideme_mobile/features/user/presentation/bloc/user_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,6 +66,9 @@ init() async {
   //auth
 
   initAuth();
+
+  //user
+  initUser();
 
   //urls
   sl.registerLazySingleton(() => URLS());
@@ -285,22 +292,36 @@ initAuth() {
   sl.registerLazySingleton<AuthenticationLocalDatasource>(
     () => AuthenticationLocalDatasourceImpl(secureStorage: sl()),
   );
-
-  sl.registerLazySingleton<UserLocalDatasource>(
-    () => UserLocalDatasourceImpl(sharedPreferences: sl(), imagePicker: sl()),
-  );
 }
 
 //!INIT USER
 initUser() {
   //bloc
   sl.registerFactory(
-    () => UserBloc(),
+    () => UserBloc(
+      getUserProfile: sl(),
+    ),
   );
 
   //usecases
+  sl.registerLazySingleton(() => GetUserProfile(repository: sl()));
 
   //repository
+  sl.registerLazySingleton<UserRepository>(
+    () => UserRepositoryImpl(
+      networkInfo: sl(),
+      localDatasource: sl(),
+      remoteDatasource: sl(),
+    ),
+  );
 
   //datasources
+
+  sl.registerLazySingleton<UserRemoteDatasource>(
+    () => UserRemoteDatasourceImpl(client: sl(), urls: sl()),
+  );
+
+  sl.registerLazySingleton<UserLocalDatasource>(
+    () => UserLocalDatasourceImpl(sharedPreferences: sl(), imagePicker: sl()),
+  );
 }
