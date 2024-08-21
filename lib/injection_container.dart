@@ -5,6 +5,17 @@ import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rideme_mobile/core/network/networkinfo.dart';
 import 'package:rideme_mobile/core/urls/urls.dart';
+import 'package:rideme_mobile/features/authentication/data/datasources/localds.dart';
+import 'package:rideme_mobile/features/authentication/data/datasources/remoteds.dart';
+import 'package:rideme_mobile/features/authentication/data/repository/authentication_repo_impl.dart';
+import 'package:rideme_mobile/features/authentication/domain/repository/authentication_repository.dart';
+import 'package:rideme_mobile/features/authentication/domain/usecases/get_refresh_token.dart';
+import 'package:rideme_mobile/features/authentication/domain/usecases/init_auth.dart';
+import 'package:rideme_mobile/features/authentication/domain/usecases/logout.dart';
+import 'package:rideme_mobile/features/authentication/domain/usecases/recover_token.dart';
+import 'package:rideme_mobile/features/authentication/domain/usecases/sign_up.dart';
+import 'package:rideme_mobile/features/authentication/domain/usecases/verify_otp.dart';
+import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:rideme_mobile/features/localization/data/datasources/localds.dart';
 import 'package:rideme_mobile/features/localization/data/repository/repo_impl.dart';
 import 'package:rideme_mobile/features/localization/domain/repository/localization_repo.dart';
@@ -24,6 +35,8 @@ import 'package:rideme_mobile/features/permissions/domain/usecases/request_all_n
 import 'package:rideme_mobile/features/permissions/domain/usecases/request_location_permission.dart';
 import 'package:rideme_mobile/features/permissions/domain/usecases/request_notif_permission.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
+import 'package:rideme_mobile/features/user/data/datasources/localds.dart';
+import 'package:rideme_mobile/features/user/presentation/bloc/user_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:web_socket_client/web_socket_client.dart';
@@ -45,6 +58,10 @@ init() async {
   //onboarding
 
   initOnboarding();
+
+  //auth
+
+  initAuth();
 
   //urls
   sl.registerLazySingleton(() => URLS());
@@ -89,7 +106,7 @@ init() async {
 
   //socket
   sl.registerLazySingleton<WebSocket>(() {
-    final socket = WebSocket(Uri.parse('wss://socket.shaqexpress.com/users/'));
+    final socket = WebSocket(Uri.parse('wss://dss.rideme.app/users/'));
     // final testingSocket =
     //     WebSocket(Uri.parse('wss://ws.shaqexpress.com/users/'));
 
@@ -223,4 +240,67 @@ initOnboarding() {
       sharedPreferences: sl(),
     ),
   );
+}
+
+//!INIT AUTH
+initAuth() {
+  //bloc
+  sl.registerFactory(
+    () => AuthenticationBloc(
+      initAuth: sl(),
+      verifyOtp: sl(),
+      getRefreshToken: sl(),
+      recoverToken: sl(),
+      signUp: sl(),
+      logOut: sl(),
+    ),
+  );
+
+  //usecases
+
+  sl.registerLazySingleton(() => InitAuth(repository: sl()));
+  sl.registerLazySingleton(() => VerifyOtp(repository: sl()));
+  sl.registerLazySingleton(() => GetRefreshToken(repository: sl()));
+  sl.registerLazySingleton(() => RecoverToken(repository: sl()));
+  sl.registerLazySingleton(() => SignUp(repository: sl()));
+  sl.registerLazySingleton(() => LogOut(repository: sl()));
+
+  //repository
+
+  sl.registerLazySingleton<AuthenticationRepository>(
+    () => AuthenticationRepositoryImpl(
+        networkInfo: sl(),
+        userLocalDatasource: sl(),
+        localDatasource: sl(),
+        remoteDatasource: sl()),
+  );
+
+  //datasources
+
+  sl.registerLazySingleton<AuthenticationRemoteDatasource>(
+    () => AuthenticationRemoteDatasourceImpl(
+        client: sl(), urls: sl(), messaging: sl()),
+  );
+
+  sl.registerLazySingleton<AuthenticationLocalDatasource>(
+    () => AuthenticationLocalDatasourceImpl(secureStorage: sl()),
+  );
+
+  sl.registerLazySingleton<UserLocalDatasource>(
+    () => UserLocalDatasourceImpl(sharedPreferences: sl(), imagePicker: sl()),
+  );
+}
+
+//!INIT USER
+initUser() {
+  //bloc
+  sl.registerFactory(
+    () => UserBloc(),
+  );
+
+  //usecases
+
+  //repository
+
+  //datasources
 }

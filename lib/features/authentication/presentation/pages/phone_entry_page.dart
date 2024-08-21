@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
@@ -7,8 +8,13 @@ import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
+import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
+import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 
 import 'package:rideme_mobile/core/widgets/textfield/phone_number_textfield_widget.dart';
+import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/injection_container.dart';
 
 class PhoneEntryPage extends StatefulWidget {
   const PhoneEntryPage({super.key});
@@ -22,6 +28,20 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
   bool isButtonActive = false;
 
   PhoneNumber phoneNumber = PhoneNumber();
+  final authBloc = sl<AuthenticationBloc>();
+
+  initAuth() {
+    final params = {
+      "locale": context.read<LocaleProvider>().locale,
+      "body": {
+        "phone": number,
+      }
+    };
+
+    print(params);
+
+    authBloc.add(InitAuthenticationEvent(params: params));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +76,32 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
             Space.height(context, 0.028),
 
             //BUTTON
-            GenericButton(
-              onTap: () =>
+            BlocConsumer(
+              bloc: authBloc,
+              listener: (context, state) {
+                if (state is InitAuthenticationLoaded) {
                   context.pushNamed('otpVerification', queryParameters: {
-                "phone": number,
-              }),
-              label: context.appLocalizations.continues,
-              isActive: isButtonActive,
+                    "phone": number,
+                    "token": state.initAuth.authData?.token,
+                    "user_exist":
+                        state.initAuth.userExists?.toString() ?? 'false'
+                  });
+                }
+                if (state is GenericAuthenticationError) {
+                  showErrorPopUp(state.errorMessage, context);
+                }
+              },
+              builder: (context, state) {
+                if (state is InitAuthenticationLoading) {
+                  return const LoadingIndicator();
+                }
+
+                return GenericButton(
+                  onTap: initAuth,
+                  label: context.appLocalizations.continues,
+                  isActive: isButtonActive,
+                );
+              },
             ),
             Space.height(context, 0.036),
 
@@ -113,18 +152,6 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                 ],
               ),
             ),
-
-            //TODO: TO BE REMOVED
-            Space.height(context, 0.04),
-            SafeArea(
-              child: GestureDetector(
-                onTap: () => context.goNamed('home'),
-                child: Text(
-                  'Home',
-                  style: context.textTheme.displayMedium,
-                ),
-              ),
-            )
           ],
         ),
       ),

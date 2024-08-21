@@ -45,6 +45,8 @@ final GoRouter goRouterConfiguration = GoRouter(
           builder: (context, state) => OtpVerificationPage(
             phoneNumber: state.uri.queryParameters['phone'] ?? '',
             token: state.uri.queryParameters['token'] ?? '',
+            userExist:
+                bool.parse(state.uri.queryParameters['user_exist'] ?? 'false'),
           ),
         ),
 

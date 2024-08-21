@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:rideme_mobile/core/extensions/context_extensions.dart';
+import 'package:rideme_mobile/core/size/sizes.dart';
+import 'package:rideme_mobile/core/theme/app_colors.dart';
+
+class LoadingIndicator extends StatelessWidget {
+  final double? height, width;
+  const LoadingIndicator({
+    super.key,
+    this.height,
+    this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: context.theme.scaffoldBackgroundColor,
+      width: width,
+      height: height ?? Sizes.height(context, 0.1),
+      child: const Center(
+        child: CircularProgressIndicator(
+          color: AppColors.rideMeBlueNormal,
+        ),
+      ),
+    );
+  }
+}

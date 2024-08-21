@@ -15,7 +15,7 @@ class URLS {
     required Map<String, dynamic>? queryParameters,
     required Map<String, dynamic>? urlParameters,
   }) {
-    const baseUrl = kDebugMode ? 'api.rideme.com' : 'api.rideme.com';
+    const baseUrl = kDebugMode ? 'dev.rideme.app' : 'dev.rideme.app';
 
     String lastRoute = '/v1/$locale/users${endpoint.value}';
 

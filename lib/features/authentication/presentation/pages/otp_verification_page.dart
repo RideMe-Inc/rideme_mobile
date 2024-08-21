@@ -6,16 +6,23 @@ import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
+import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
+import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
+import 'package:rideme_mobile/core/widgets/popups/success_popup.dart';
+import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
 
 import 'package:rideme_mobile/features/authentication/presentation/widgets/otp_textfield.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/injection_container.dart';
 
 class OtpVerificationPage extends StatefulWidget {
   final String phoneNumber, token;
+  final bool userExist;
   const OtpVerificationPage({
     super.key,
     required this.phoneNumber,
     required this.token,
+    required this.userExist,
   });
 
   @override
@@ -25,7 +32,7 @@ class OtpVerificationPage extends StatefulWidget {
 class _OtpVerificationPageState extends State<OtpVerificationPage> {
   final otpController = TextEditingController();
 
-  // final authBloc = sl<AuthenticationBloc>();
+  final authBloc = sl<AuthenticationBloc>();
   Timer? timer;
   int _minute = 2;
   String otp = '';
@@ -44,7 +51,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         "phone": widget.phoneNumber,
       }
     };
-    // authBloc.add(ResendCodeEvent(params: params));
+    authBloc.add(ResendCodeEvent(params: params));
   }
 
   countdown() {
@@ -73,7 +80,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       }
     };
 
-    // authBloc.add(VerifyOtpEvent(params: params));
+    authBloc.add(VerifyOtpEvent(params: params));
   }
 
   onCompleted(String value) {
@@ -86,6 +93,12 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   void initState() {
     countdown();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -128,6 +141,38 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               timeRemaining: timeRemaining,
               resendOnTap: canResendOtp ? resendOnTap : null,
             ),
+            Space.height(context, 0.01),
+            BlocConsumer(
+              bloc: authBloc,
+              listener: (context, state) {
+                if (state is GenericAuthenticationError) {
+                  showErrorPopUp(state.errorMessage, context);
+                }
+
+                if (state is ResendCodeLoaded) {
+                  showSuccessPopUp('Code resent', context);
+
+                  setState(() {
+                    _minute = 2;
+                    _seconds = 0;
+                    seconds = 120;
+                    canResendOtp = false;
+                    timeRemaining = '2:00';
+                  });
+                  countdown();
+                }
+
+                if (state is VerifyOtpLoaded) {
+                  //navigate user based on wether they exist or not
+                }
+              },
+              builder: (context, state) {
+                if (state is VerifyOtpLoading || state is ResendCodeLoading) {
+                  return const LoadingIndicator();
+                }
+                return Space.height(context, 0);
+              },
+            )
           ],
         ),
       ),
