@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
@@ -10,9 +11,12 @@ import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/core/widgets/popups/success_popup.dart';
 import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 
 import 'package:rideme_mobile/features/authentication/presentation/widgets/otp_textfield.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/features/user/presentation/bloc/user_bloc.dart';
+import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
 class OtpVerificationPage extends StatefulWidget {
@@ -33,6 +37,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   final otpController = TextEditingController();
 
   final authBloc = sl<AuthenticationBloc>();
+  final userBloc = sl<UserBloc>();
   Timer? timer;
   int _minute = 2;
   String otp = '';
@@ -83,6 +88,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     authBloc.add(VerifyOtpEvent(params: params));
   }
 
+  getUserProfile(String token) {
+    final params = {
+      "locale": context.read<LocaleProvider>().locale,
+      "bearer": token,
+    };
+
+    userBloc.add(GetUserProfileEvent(params: params));
+  }
+
   onCompleted(String value) {
     setState(() => otp = value);
 
@@ -105,75 +119,102 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Sizes.height(context, 0.02)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.appLocalizations.enterYourOtpCode,
-              style: context.textTheme.displayLarge?.copyWith(
-                color: AppColors.rideMeBlackNormalActive,
-                fontWeight: FontWeight.w600,
+      body: BlocListener(
+        bloc: userBloc,
+        listener: (context, state) {
+          if (state is GetUserProfileLoaded) {
+            //udpate provider with user data and navigate to home
+            context.read<UserProvider>().updateUserInfo = state.user;
+            context.goNamed('home');
+          }
+
+          if (state is GetUserProfileError) {
+            showErrorPopUp(state.message, context);
+          }
+        },
+        child: Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: Sizes.height(context, 0.02)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.appLocalizations.enterYourOtpCode,
+                style: context.textTheme.displayLarge?.copyWith(
+                  color: AppColors.rideMeBlackNormalActive,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            Space.height(context, 0.012),
-            RichText(
-              text: TextSpan(
-                  text: context.appLocalizations.enterYourOtpCodeInfo,
-                  style: context.textTheme.displaySmall,
-                  children: [
-                    TextSpan(
-                      text: ' ${widget.phoneNumber}',
-                      style: context.textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
+              Space.height(context, 0.012),
+              RichText(
+                text: TextSpan(
+                    text: context.appLocalizations.enterYourOtpCodeInfo,
+                    style: context.textTheme.displaySmall,
+                    children: [
+                      TextSpan(
+                        text: ' ${widget.phoneNumber}',
+                        style: context.textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ]),
-            ),
-            Space.height(context, 0.034),
-            OTPTextfield(
-              hasError: invalidOtp,
-              onChanged: (p0) {},
-              onCompleted: onCompleted,
-              controller: otpController,
-              canResendOTP: canResendOtp,
-              timeRemaining: timeRemaining,
-              resendOnTap: canResendOtp ? resendOnTap : null,
-            ),
-            Space.height(context, 0.01),
-            BlocConsumer(
-              bloc: authBloc,
-              listener: (context, state) {
-                if (state is GenericAuthenticationError) {
-                  showErrorPopUp(state.errorMessage, context);
-                }
+                    ]),
+              ),
+              Space.height(context, 0.034),
+              OTPTextfield(
+                hasError: invalidOtp,
+                onChanged: (p0) {},
+                onCompleted: onCompleted,
+                controller: otpController,
+                canResendOTP: canResendOtp,
+                timeRemaining: timeRemaining,
+                resendOnTap: canResendOtp ? resendOnTap : null,
+              ),
+              Space.height(context, 0.01),
+              BlocConsumer(
+                bloc: authBloc,
+                listener: (context, state) {
+                  if (state is GenericAuthenticationError) {
+                    showErrorPopUp(state.errorMessage, context);
+                  }
 
-                if (state is ResendCodeLoaded) {
-                  showSuccessPopUp('Code resent', context);
+                  if (state is ResendCodeLoaded) {
+                    showSuccessPopUp('Code resent', context);
 
-                  setState(() {
-                    _minute = 2;
-                    _seconds = 0;
-                    seconds = 120;
-                    canResendOtp = false;
-                    timeRemaining = '2:00';
-                  });
-                  countdown();
-                }
+                    setState(() {
+                      _minute = 2;
+                      _seconds = 0;
+                      seconds = 120;
+                      canResendOtp = false;
+                      timeRemaining = '2:00';
+                    });
+                    countdown();
+                  }
 
-                if (state is VerifyOtpLoaded) {
-                  //navigate user based on wether they exist or not
-                }
-              },
-              builder: (context, state) {
-                if (state is VerifyOtpLoading || state is ResendCodeLoading) {
-                  return const LoadingIndicator();
-                }
-                return Space.height(context, 0);
-              },
-            )
-          ],
+                  if (state is VerifyOtpLoaded) {
+                    if (widget.userExist) {
+                      //send an event to fetch the user data
+
+                      getUserProfile(
+                          state.authenticationInfo.authorization!.token!);
+
+                      context.read<AuthenticationProvider>().updateToken =
+                          state.authenticationInfo.authorization?.token;
+                      return;
+                    }
+                    context.goNamed('additionalInfo', queryParameters: {
+                      "token": widget.token,
+                    });
+                  }
+                },
+                builder: (context, state) {
+                  if (state is VerifyOtpLoading || state is ResendCodeLoading) {
+                    return const LoadingIndicator();
+                  }
+                  return Space.height(context, 0);
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
