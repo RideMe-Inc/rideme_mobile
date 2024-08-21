@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideme_mobile/connection_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/enter_email_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/more_info_addition_page.dart';
+import 'package:rideme_mobile/features/authentication/presentation/pages/no_internet_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/otp_verification_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/phone_entry_page.dart';
 import 'package:rideme_mobile/features/home/presentation/pages/home_page.dart';
@@ -22,6 +23,13 @@ final GoRouter goRouterConfiguration = GoRouter(
       name: 'root',
       path: '/',
       builder: (context, state) => const ConnectionPage(),
+    ),
+
+    //NO INTERNET
+    GoRoute(
+      name: 'noInternet',
+      path: '/no-internet',
+      builder: (context, state) => const NoInternetPage(),
     ),
 
     //ONBOARDING
