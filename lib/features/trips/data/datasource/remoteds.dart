@@ -162,7 +162,7 @@ class TripRemoteDataSourceImpl
   @override
   Future<PlacesModel> searchPlaces(Map<String, dynamic> params) async {
     final uri = Uri.parse(
-        "https://maps.googleapis.com/maps/api/place/autocomplete/json?fields=formatted_address,name,place_id&input=${Uri.encodeComponent(params['searchText'])}&region=gh&key=AIzaSyCcNLZGoUqLsA4jeKVudD6DNSLg0odLg1A");
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?fields=formatted_address,name,place_id&input=${Uri.encodeComponent(params['searchText'])}&region=gh&key=AIzaSyAIO-3vFI_0dmGTdOv9oojSnbXNysdXxmQ");
 
     final response = await client.post(uri);
 
