@@ -8,6 +8,7 @@ import 'package:rideme_mobile/features/authentication/presentation/pages/phone_e
 import 'package:rideme_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:rideme_mobile/features/payment/presentation/pages/payment.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/map_point_selection.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/profile.dart';
@@ -85,6 +86,34 @@ final GoRouter goRouterConfiguration = GoRouter(
       path: '/home',
       builder: (context, state) => const HomePage(),
       routes: [
+        //booking
+
+        GoRoute(
+          name: 'mapLocationSelection',
+          path: 'map-selection',
+          builder: (context, state) => LocationSelectionOnMap(
+            lat: state.uri.queryParameters['lat'].toString(),
+            lng: state.uri.queryParameters['lng'].toString(),
+            name: state.uri.queryParameters['name'].toString(),
+          ),
+        ),
+
+        // GoRoute(
+        //   name: 'bookTrip',
+        //   path: 'book-trip',
+        //   builder: (context, state) => const BookTripPage(),
+        //   routes: [
+        //     GoRoute(
+        //       name: 'mapLocationSelection',
+        //       path: 'map-selection',
+        //       builder: (context, state) => LocationSelectionOnMap(
+        //         lat: state.uri.queryParameters['lat'].toString(),
+        //         lng: state.uri.queryParameters['lng'].toString(),
+        //         name: state.uri.queryParameters['name'].toString(),
+        //       ),
+        //     )
+        //   ],
+        // ),
         //profile
         GoRoute(
           name: 'profile',

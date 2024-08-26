@@ -1,6 +1,6 @@
 enum Endpoints {
   //! CONFIGS
-  getGeoID(value: '/configs/geo-data'),
+  getGeoID(value: '/data/geo-data'),
 
   //! AUTH
   initAuth(value: '/auth/init'),

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:rideme_mobile/core/enums/endpoints.dart';
-import 'package:rideme_mobile/core/exceptions/generic_exception_class.dart';
 import 'package:rideme_mobile/core/location/data/models/geo_hash_model.dart';
 import 'package:rideme_mobile/core/location/data/models/places_model.dart';
 import 'package:rideme_mobile/core/mixins/remote_request_mixin.dart';
@@ -64,23 +63,12 @@ class LocationRemoteDatasourceImpl
 
   @override
   Future<GeoDataModel> getGeoID(Map<String, dynamic> params) async {
-    final uri = urls.returnUri(
-      locale: params['locale'],
+    final decodedResponse = await get(
+      client: client,
       endpoint: Endpoints.getGeoID,
-      queryParameters: params['queryParameters'],
-      urlParameters: null,
+      params: params,
+      urls: urls,
     );
-
-    final response = await client.get(
-      uri,
-      headers: urls.headers,
-    );
-
-    final decodedResponse = jsonDecode(response.body);
-
-    if (response.statusCode != 200) {
-      throw ErrorException(decodedResponse['message']);
-    }
 
     return GeoDataModel.fromJson(decodedResponse['data']);
   }

@@ -1,4 +1,3 @@
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
@@ -9,8 +8,6 @@ import 'package:equatable/equatable.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
 
-import 'package:rideme_mobile/features/trips/domain/entities/geo_data.dart';
-import 'package:rideme_mobile/features/trips/domain/entities/places_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_info.dart';
 
@@ -18,12 +15,12 @@ import 'package:rideme_mobile/features/trips/domain/usecases/cancel_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/create_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/fetch_pricing.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_all_trips.dart';
-import 'package:rideme_mobile/features/trips/domain/usecases/get_geo_id.dart';
+
 import 'package:rideme_mobile/features/trips/domain/usecases/get_trip_info.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/rate_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/report_trip.dart';
-import 'package:rideme_mobile/features/trips/domain/usecases/search_place.dart';
+
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
 
 part 'trips_event.dart';
@@ -36,8 +33,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   final RateTrip rateTrip;
   final ReportTrip reportTrip;
   final GetTripInfo getTripInfo;
-  final SearchPlace searchPlace;
-  final GetGeoID getGeoID;
+
   final FetchPricing fetchPricing;
   final InitiateTracking initiateTracking;
   final TerminateTracking terminateTracking;
@@ -50,8 +46,6 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     required this.rateTrip,
     required this.getTripInfo,
     required this.reportTrip,
-    required this.searchPlace,
-    required this.getGeoID,
     required this.fetchPricing,
     required this.initiateTracking,
     required this.terminateTracking,
@@ -164,59 +158,6 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
         ),
       );
     });
-
-    //!SEARCH PLACES
-
-    on<SearchPlacesEvent>(
-      (event, emit) async {
-        emit(SearchPlacesLoading());
-
-        final response = await searchPlace(event.params['body']);
-
-        emit(
-          response.fold(
-            (error) => SearchPlacesError(message: error),
-            (response) => SearchPlacesLoaded(
-              places: response,
-              isPickUP: event.params['isPickUP'],
-              dropOffIndex: event.params['dropOffIndex'],
-            ),
-          ),
-        );
-      },
-      transformer: restartable(),
-    );
-    //clear results
-
-    on<ClearSearchResultsEvent>((event, emit) async {
-      emit(SearchPlacesLoading());
-    });
-
-    //!GET GEO ID
-    on<GetGeoIDEvent>(
-      (event, emit) async {
-        emit(
-          GetGeoIDLoading(
-            isPickup: event.isPickUp,
-            index: event.index,
-          ),
-        );
-
-        final response = await getGeoID(event.params);
-
-        emit(
-          response.fold(
-            (error) => GetGeoIDError(message: error),
-            (response) => GetGeoIDLoaded(
-              geoDataInfo: response,
-              placedID: event.params['queryParams']['google_map_id'],
-              isPickUP: event.isPickUp,
-            ),
-          ),
-        );
-      },
-      transformer: restartable(),
-    );
 
     //!FETCH PRICING
     on<FetchPricingEvent>((event, emit) async {

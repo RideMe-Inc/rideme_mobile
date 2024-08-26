@@ -170,6 +170,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
               if (state is GetUserProfileLoaded) {
                 //udpate provider with user data and navigate to home
                 context.read<UserProvider>().updateUserInfo = state.user;
+
                 context.goNamed('home');
               }
 

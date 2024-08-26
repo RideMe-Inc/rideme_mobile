@@ -9,8 +9,6 @@ import 'package:rideme_mobile/core/urls/urls.dart';
 import 'package:rideme_mobile/features/trips/data/models/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
 
-import 'package:rideme_mobile/features/trips/data/models/geo_data_model.dart';
-import 'package:rideme_mobile/features/trips/data/models/places_model.dart';
 import 'package:rideme_mobile/features/trips/data/models/tracking_info_model.dart';
 import 'package:rideme_mobile/features/trips/data/models/trip_destnation_info_model.dart';
 import 'package:http/http.dart' as http;
@@ -30,13 +28,6 @@ abstract class TripRemoteDataSource {
   Future<String> reportTrip(Map<String, dynamic> params);
 
   Future<String> rateTrip(Map<String, dynamic> params);
-
-  // search places
-
-  Future<PlacesModel> searchPlaces(Map<String, dynamic> params);
-
-  //get geo id
-  Future<GeoDataInfoModel> getGeoID(Map<String, dynamic> params);
 
   //fetch pricing
   Future<CreateTripInfoModel> createOrFetchPricing(Map<String, dynamic> params);
@@ -155,57 +146,6 @@ class TripRemoteDataSourceImpl
     );
 
     return decodedResponse['message'];
-  }
-
-  //search places
-
-  @override
-  Future<PlacesModel> searchPlaces(Map<String, dynamic> params) async {
-    final uri = Uri.parse(
-        "https://maps.googleapis.com/maps/api/place/autocomplete/json?fields=formatted_address,name,place_id&input=${Uri.encodeComponent(params['searchText'])}&region=gh&key=AIzaSyAIO-3vFI_0dmGTdOv9oojSnbXNysdXxmQ");
-
-    final response = await client.post(uri);
-
-    // final uri = Uri.parse("https://places.googleapis.com/v1/places:searchText");
-
-    // final headers = {
-    //   "Content-Type": "application/json",
-    //   "X-Goog-Api-Key": "AIzaSyCcNLZGoUqLsA4jeKVudD6DNSLg0odLg1A",
-    //   "X-Goog-FieldMask":
-    //       "places.id, places.displayName,places.formattedAddress"
-    // };
-
-    // final body = {
-    //   "textQuery": params['searchText'],
-    // };
-
-    // //make request
-
-    // final response = await client.post(
-    //   uri,
-    //   headers: headers,
-    //   body: jsonEncode(body),
-    // );
-
-    if (response.statusCode == 200) {
-      return PlacesModel.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('An error occured');
-    }
-  }
-
-  //GET GEO ID
-
-  @override
-  Future<GeoDataInfoModel> getGeoID(Map<String, dynamic> params) async {
-    final decodedResponse = await get(
-      client: client,
-      urls: urls,
-      endpoint: Endpoints.getGeoID,
-      params: params,
-    );
-
-    return GeoDataInfoModel.fromJson(decodedResponse);
   }
 
   //CREATE OR FETCH PRICING

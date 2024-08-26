@@ -4,8 +4,7 @@ import 'package:rideme_mobile/core/network/networkinfo.dart';
 import 'package:rideme_mobile/features/trips/data/datasource/remoteds.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
-import 'package:rideme_mobile/features/trips/domain/entities/geo_data.dart';
-import 'package:rideme_mobile/features/trips/domain/entities/places_info.dart';
+
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_info.dart';
 import 'package:rideme_mobile/features/trips/domain/repository/trips_repository.dart';
@@ -123,47 +122,6 @@ class TripsRepositoryImpl implements TripsRepository {
     if (await networkInfo.isConnected) {
       try {
         final response = await tripRemoteDataSource.reportTrip(params);
-        return Right(response);
-      } catch (e) {
-        if (e is ErrorException) {
-          return Left(e.toString());
-        }
-
-        return const Left('An error occured');
-      }
-    } else {
-      return Left(networkInfo.noNetowrkMessage);
-    }
-  }
-
-  //search places
-
-  @override
-  Future<Either<String, Places>> searchPlace(
-      Map<String, dynamic> params) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final response = await tripRemoteDataSource.searchPlaces(params);
-        return Right(response);
-      } catch (e) {
-        if (e is ErrorException) {
-          return Left(e.toString());
-        }
-
-        return const Left('An error occured');
-      }
-    } else {
-      return Left(networkInfo.noNetowrkMessage);
-    }
-  }
-
-  //GET GEO ID
-  @override
-  Future<Either<String, GeoDataInfo>> getGeoID(
-      Map<String, dynamic> params) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final response = await tripRemoteDataSource.getGeoID(params);
         return Right(response);
       } catch (e) {
         if (e is ErrorException) {

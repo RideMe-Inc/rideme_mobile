@@ -30,6 +30,8 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
             (error) => SearchPlacesError(message: error),
             (response) => SearchPlacesLoaded(
               places: response,
+              isPickUP: event.params['isPickUP'],
+              dropOffIndex: event.params['dropOffIndex'],
             ),
           ),
         );
@@ -46,7 +48,10 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     on<GetGeoIDEvent>(
       (event, emit) async {
         emit(
-          GetGeoIDLoading(),
+          GetGeoIDLoading(
+            isPickup: event.isPickup,
+            index: event.index,
+          ),
         );
 
         final response = await getGeoID(event.params);
@@ -55,8 +60,9 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
           response.fold(
             (error) => GetGeoIDError(message: error),
             (response) => GetGeoIDLoaded(
-              geoDataInfo: response,
-            ),
+                geoDataInfo: response,
+                isPickUp: event.isPickup,
+                placedID: event.params['queryParams']?['google_map_id'] ?? ''),
           ),
         );
       },

@@ -55,8 +55,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       // cache authorization data
       await localDatasource.cacheAuthorizationData(response.authorization!);
 
-      // cache user information
-      await userLocalDatasource.cacheUserInfo(response.user!);
+      // // cache user information
+      // await userLocalDatasource.cacheUserInfo(response.user!);
 
       return Right(response);
     } catch (e) {

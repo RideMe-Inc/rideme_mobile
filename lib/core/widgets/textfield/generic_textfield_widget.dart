@@ -59,6 +59,8 @@ class GenericTextField extends StatelessWidget {
   /// An optional boolean flag indicating whether to show the suffix icon.
   final bool? showSuffixIcon;
 
+  final bool? filled;
+
   /// A boolean flag indicating whether to focus the textfield automatically.
   final bool autoFocus;
 
@@ -132,6 +134,7 @@ class GenericTextField extends StatelessWidget {
     this.inputFormatters,
     this.textInputAction,
     this.autoFocus = false,
+    this.filled = false,
   });
 
   @override
@@ -192,7 +195,8 @@ class GenericTextField extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
-              filled: false,
+              filled: filled,
+              fillColor: AppColors.rideMeGreyNormal,
               hintText: hint,
               hintStyle: context.textTheme.displaySmall?.copyWith(
                 color: AppColors.rideMeGreyNormalActive,
