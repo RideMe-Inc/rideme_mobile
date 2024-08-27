@@ -250,4 +250,16 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
 
     return Duration(hours: hours, minutes: minutes, seconds: seconds);
   }
+
+  List<Map<String, dynamic>> getGeoDataIds(List<dynamic> data) {
+    List<Map<String, dynamic>> ids = [];
+
+    for (var element in data) {
+      ids.add({
+        "geo_data_id": element['id'],
+      });
+    }
+
+    return ids;
+  }
 }

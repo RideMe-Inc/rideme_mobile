@@ -22,6 +22,7 @@ import 'package:rideme_mobile/features/home/presentation/widgets/dropoff_field_w
 import 'package:rideme_mobile/features/home/presentation/widgets/nav_bar_widget.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/drop_off_location_bottom_sheet.dart';
+import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
 class HomePage extends StatefulWidget {
@@ -327,7 +328,9 @@ class _HomePageState extends State<HomePage> {
 
                         Space.height(context, 0.014),
                         Text(
-                          context.appLocalizations.helloThere('Simon'),
+                          context.appLocalizations.helloThere(
+                              context.read<UserProvider>().user?.firstName ??
+                                  ''),
                           style: context.textTheme.displayLarge?.copyWith(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,

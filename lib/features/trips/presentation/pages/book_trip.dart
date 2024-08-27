@@ -9,6 +9,8 @@ import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
+import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
+import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/provider/trip_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/get_geo_loading_widget.dart';
@@ -55,6 +57,37 @@ class _BookTripPageState extends State<BookTripPage> {
     pickupLocationController.text = widget.locations['pickUp'][0]['name'];
   }
 
+  bool allLocationsLoaded() {
+    //check in locations['dropOff'] list for index of an empty map
+    //it returns -1 if element is not found
+    final dropOff = locations['dropOff'].indexWhere(
+      (Map<dynamic, dynamic> e) => e.isEmpty,
+    );
+
+    //check in locations['pickup'] list for index of an empty map
+    //it returns -1 if element is not found
+    final pickup = locations['pickUp'].indexWhere(
+      (Map<dynamic, dynamic> e) => e.isEmpty,
+    );
+
+    return pickup == -1 && dropOff == -1;
+  }
+
+  fetchPricing() {
+    final params = {
+      "locale": context.read<LocaleProvider>().locale,
+      "bearer": context.read<AuthenticationProvider>().token,
+      "body": {
+        "pickup_geo_data_id": locations['pickUp'][0]['id'],
+        "stops": tripsBloc.getGeoDataIds(locations['dropOff']),
+      }
+    };
+
+    print(params['body']);
+
+    tripsBloc.add(FetchPricingEvent(params: params));
+  }
+
   @override
   void initState() {
     initPickUpControllerIfValueExist();
@@ -76,7 +109,11 @@ class _BookTripPageState extends State<BookTripPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              dropOffLocationControllers.add(TextEditingController());
+              locations['dropOff'].add({});
+              setState(() {});
+            },
             icon: Icon(
               Icons.add,
               size: Sizes.height(context, 0.035),
@@ -84,67 +121,90 @@ class _BookTripPageState extends State<BookTripPage> {
           )
         ],
       ),
-      body: BlocListener(
-        bloc: locationBloc2,
-        listener: (context, state) {
-          if (state is GetGeoIDError) {
-            print(state.message);
-          }
-          if (state is GetGeoIDLoading) {
-            tripProvider.updateIsGeoLoading = true;
-            if (state.isPickup!) {
-              tripProvider.updateIsPickup = true;
-            } else {
-              tripProvider.updateIsPickup = false;
-              tripProvider.updateIndex = state.index ?? 0;
-            }
-          }
-          if (state is GetGeoIDLoaded) {
-            //replace id
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener(
+            bloc: locationBloc2,
+            listener: (context, state) {
+              if (state is GetGeoIDError) {
+                print(state.message);
+              }
+              if (state is GetGeoIDLoading) {
+                tripProvider.updateIsGeoLoading = true;
+                if (state.isPickup!) {
+                  tripProvider.updateIsPickup = true;
+                } else {
+                  tripProvider.updateIsPickup = false;
+                  tripProvider.updateIndex = state.index ?? 0;
+                }
+              }
+              if (state is GetGeoIDLoaded) {
+                print(locations);
+                //replace id
 
-            if (state.isPickUp) {
-              final index = locations['pickUp'].indexWhere(
-                (e) => e['id'] == state.placedID,
-              );
-              if (index != -1) {
-                locations['pickUp'][index] = {
-                  "name": locations['pickUp'][index]['name'],
-                  "id": state.geoDataInfo.id,
-                  "lat": state.geoDataInfo.lat,
-                  "lng": state.geoDataInfo.lng,
-                };
-                setState(() {});
+                if (state.isPickUp) {
+                  final index = locations['pickUp'].indexWhere(
+                    (e) => e['id'] == state.placedID,
+                  );
+                  if (index != -1) {
+                    locations['pickUp'][index] = {
+                      "name": locations['pickUp'][index]['name'],
+                      "id": state.geoDataInfo.id,
+                      "lat": state.geoDataInfo.lat,
+                      "lng": state.geoDataInfo.lng,
+                    };
+                    setState(() {});
+                  }
+                } else {
+                  final index = locations['dropOff'].indexWhere(
+                    (e) => e['id'] == state.placedID,
+                  );
+
+                  if (index != -1) {
+                    locations['dropOff'][index] = {
+                      "name": locations['dropOff'][index]['name'],
+                      "id": state.geoDataInfo.id,
+                      "lat": state.geoDataInfo.lat,
+                      "lng": state.geoDataInfo.lng,
+                    };
+
+                    setState(() {});
+                  }
+
+                  if (allLocationsLoaded() && tripProvider.isGeoLoading) {
+                    fetchPricing();
+                  }
+                }
+                tripProvider.updateIsGeoLoading = false;
               }
-            } else {
-              final index = locations['dropOff'].indexWhere(
-                (e) => e['id'] == state.placedID,
-              );
-              if (index != -1) {
-                locations['dropOff'][index] = {
-                  "name": locations['dropOff'][index]['name'],
-                  "id": state.geoDataInfo.id,
-                  "lat": state.geoDataInfo.lat,
-                  "lng": state.geoDataInfo.lng,
-                };
-                setState(() {});
+            },
+          ),
+          BlocListener(
+            bloc: tripsBloc,
+            listener: (context, state) {
+              print(state);
+              if (state is FetchPricingLoaded) {
+                print(state.createTripInfo);
               }
-            }
-            tripProvider.updateIsGeoLoading = false;
-          }
-        },
+
+              if (state is FetchPricingError) {
+                print(state.message);
+              }
+            },
+          ),
+        ],
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: Sizes.height(context, 0.02),
           ),
           child: Column(
             children: [
-              Space.height(context, 0.02),
               Row(
                 children: [
                   Expanded(
                     child: TripLocationTextfield(
                       hint: 'Enter pickup location',
-                      label: null,
+                      label: '',
                       isRequired: true,
                       errorText: null,
                       isPickup: true,
@@ -261,14 +321,14 @@ class _BookTripPageState extends State<BookTripPage> {
                           ),
                           child: Icon(
                             Icons.drag_indicator_rounded,
-                            color: AppColors.rideMeBlackLightActive,
+                            color: AppColors.rideMeBlackDarker,
                             size: Sizes.height(context, 0.024),
                           ),
                         ),
                       Expanded(
                         child: TripLocationTextfield(
                           hint: 'Enter your destination',
-                          label: '',
+                          label: null,
                           isRequired: true,
                           errorText: null,
                           filled: true,
@@ -364,7 +424,7 @@ class _BookTripPageState extends State<BookTripPage> {
                             },
                             child: Icon(
                               Icons.close,
-                              color: AppColors.rideMeBlackLightActive,
+                              color: AppColors.rideMeBlackDarker,
                               size: Sizes.height(context, 0.024),
                             ),
                           ),

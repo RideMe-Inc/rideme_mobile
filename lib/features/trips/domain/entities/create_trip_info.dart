@@ -89,13 +89,12 @@ class Destination extends Equatable {
 class Pricing extends Equatable {
   final num id, charge, cost;
   final bool isAvailable;
-  final String deliveryType, vehicleType, expiration, description, tag;
+  final String? vehicleType, expiration, description, tag;
 
   const Pricing({
     required this.id,
     required this.charge,
     required this.isAvailable,
-    required this.deliveryType,
     required this.vehicleType,
     required this.expiration,
     required this.description,
@@ -108,7 +107,6 @@ class Pricing extends Equatable {
         "id": id,
         "charge": charge,
         "is_available": isAvailable,
-        "delivery_type": deliveryType,
         "vehicle_type": vehicleType,
         "expiration": expiration,
         "description": description,
@@ -121,7 +119,6 @@ class Pricing extends Equatable {
         id,
         charge,
         isAvailable,
-        deliveryType,
         vehicleType,
         expiration,
         cost,

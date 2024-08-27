@@ -62,7 +62,8 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
             (response) => GetGeoIDLoaded(
                 geoDataInfo: response,
                 isPickUp: event.isPickup,
-                placedID: event.params['queryParams']?['google_map_id'] ?? ''),
+                placedID:
+                    event.params['queryParameters']?['google_place_id'] ?? ''),
           ),
         );
       },
