@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -6,6 +8,7 @@ import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
+import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/provider/trip_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/get_geo_loading_widget.dart';
@@ -135,6 +138,7 @@ class _BookTripPageState extends State<BookTripPage> {
           ),
           child: Column(
             children: [
+              Space.height(context, 0.02),
               Row(
                 children: [
                   Expanded(
@@ -225,17 +229,169 @@ class _BookTripPageState extends State<BookTripPage> {
                     const GetGeoLoadingWidget()
                 ],
               ),
-              TripLocationTextfield(
-                hint: 'Enter your destination',
-                label: '',
-                isRequired: true,
-                errorText: null,
-                filled: true,
-                isPickup: false,
-                controller: TextEditingController(),
-                onChanged: (p0) {},
-                onMapTap: () {},
+
+              //drop off locations
+              ReorderableListView.builder(
+                shrinkWrap: true,
+                itemCount: dropOffLocationControllers.length,
+                proxyDecorator: (child, index, animation) => AnimatedBuilder(
+                  animation: animation,
+                  builder: (BuildContext context, Widget? child) {
+                    final double animValue =
+                        Curves.easeInOut.transform(animation.value);
+                    final double elevation = lerpDouble(0, 6, animValue)!;
+                    return Material(
+                      elevation: elevation,
+                      color: context.theme.scaffoldBackgroundColor,
+                      shadowColor: AppColors.rideMeBlackLight,
+                      child: child,
+                    );
+                  },
+                  child: child,
+                ),
+                itemBuilder: (context, index) {
+                  return Row(
+                    key: Key(index.toString()),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (dropOffLocationControllers.length > 1)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Sizes.width(context, 0.01),
+                          ),
+                          child: Icon(
+                            Icons.drag_indicator_rounded,
+                            color: AppColors.rideMeBlackLightActive,
+                            size: Sizes.height(context, 0.024),
+                          ),
+                        ),
+                      Expanded(
+                        child: TripLocationTextfield(
+                          hint: 'Enter your destination',
+                          label: '',
+                          isRequired: true,
+                          errorText: null,
+                          filled: true,
+                          isPickup: false,
+                          controller: dropOffLocationControllers[index],
+                          onChanged: (p0) {
+                            if (p0 == '') {
+                              dropOffLocationControllers[index].text = p0;
+                            }
+                            final params = {
+                              "isPickUP": false,
+                              "dropOffIndex": index,
+                              "body": {
+                                "searchText": p0,
+                              }
+                            };
+
+                            locationBloc.add(
+                              SearchPlacesEvent(
+                                params: params,
+                              ),
+                            );
+                            setState(() {});
+                          },
+                          hasSuffix: true,
+                          onMapTap: () async {
+                            String lat = '';
+                            String lng = '';
+                            String name = '';
+
+                            if (locations['dropOff'][index]['lat'] != null) {
+                              lat =
+                                  locations['dropOff'][index]['lat'].toString();
+
+                              lng =
+                                  locations['dropOff'][index]['lng'].toString();
+
+                              name = dropOffLocationControllers[index].text;
+                            } else {
+                              Position position =
+                                  await Geolocator.getCurrentPosition(
+                                      desiredAccuracy: LocationAccuracy.high);
+
+                              lat = position.latitude.toString();
+                              lng = position.longitude.toString();
+                              name = "-----------------------";
+                            }
+
+                            if (!context.mounted) return;
+
+                            final response = await context.pushNamed(
+                                'mapLocationSelection',
+                                queryParameters: {
+                                  "isPickup": 'false',
+                                  "lat": lat,
+                                  "lng": lng,
+                                  "name": name,
+                                });
+
+                            if (response != null) {
+                              final responseInfo = response as Map;
+                              setState(() {
+                                locations['dropOff'][index]['id'] =
+                                    responseInfo['id'];
+                                locations['dropOff'][index]['lat'] =
+                                    responseInfo['lat'];
+                                locations['dropOff'][index]['lng'] =
+                                    responseInfo['lng'];
+                                locations['dropOff'][index]['name'] =
+                                    responseInfo['name'];
+
+                                dropOffLocationControllers[index].text =
+                                    responseInfo['name'];
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      if (tripProvider.isGeoLoading &&
+                          !tripProvider.isPickup &&
+                          tripProvider.index == index)
+                        const GetGeoLoadingWidget(),
+                      if (dropOffLocationControllers.length > 1)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Sizes.width(context, 0.01),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              dropOffLocationControllers.removeAt(index);
+                              locations['dropOff'].removeAt(index);
+                              setState(() {});
+                            },
+                            child: Icon(
+                              Icons.close,
+                              color: AppColors.rideMeBlackLightActive,
+                              size: Sizes.height(context, 0.024),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+                onReorder: (oldIndex, newIndex) {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+
+                  final dropOff = locations['dropOff'].removeAt(oldIndex);
+
+                  final dropOffLocationController =
+                      dropOffLocationControllers.removeAt(oldIndex);
+
+                  locations['dropOff'].insert(newIndex, dropOff);
+                  dropOffLocationControllers.insert(
+                    newIndex,
+                    dropOffLocationController,
+                  );
+
+                  setState(() {});
+                },
               ),
+
               Space.height(context, 0.028),
               BlocBuilder(
                 bloc: locationBloc,
