@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 
 class CreateTripInfo extends Equatable {
-  final int tripID;
-  final String polyline, pickupAddress;
+  final int? tripID;
+  final String? polyline, pickupAddress;
   final String? discountApplied;
-  final num pickupLat, pickupLng;
+  final num? pickupLat, pickupLng;
   final List<Pricing> pricing;
-  final List<Destination> destinations;
+  final List<Destination>? destinations;
 
   const CreateTripInfo({
     required this.tripID,
@@ -24,7 +24,7 @@ class CreateTripInfo extends Equatable {
         "id": tripID,
         "polyline": polyline,
         "pricing": pricing.map((e) => e.toMap()).toList(),
-        "destinations": destinations.map((e) => e.toMap()).toList(),
+        "destinations": destinations?.map((e) => e.toMap()).toList(),
         "pickup_address": pickupAddress,
         "pickup_lat": pickupLat,
         "pickup_lng": pickupLng,
@@ -89,7 +89,7 @@ class Destination extends Equatable {
 class Pricing extends Equatable {
   final num id, charge, cost;
   final bool isAvailable;
-  final String deliveryType, vehicleType, expiration, description;
+  final String deliveryType, vehicleType, expiration, description, tag;
 
   const Pricing({
     required this.id,
@@ -100,6 +100,7 @@ class Pricing extends Equatable {
     required this.expiration,
     required this.description,
     required this.cost,
+    required this.tag,
   });
 
   //pricing toMap
@@ -112,6 +113,7 @@ class Pricing extends Equatable {
         "expiration": expiration,
         "description": description,
         "cost": cost,
+        "tag": tag,
       };
 
   @override
@@ -123,5 +125,6 @@ class Pricing extends Equatable {
         vehicleType,
         expiration,
         cost,
+        tag,
       ];
 }

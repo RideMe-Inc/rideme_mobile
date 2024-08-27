@@ -15,14 +15,18 @@ class CreateTripInfoModel extends CreateTripInfo {
   //fromJson
   factory CreateTripInfoModel.fromJson(Map<String, dynamic> json) {
     return CreateTripInfoModel(
-      tripID: json['id'],
+      tripID: json['trip_id'],
       polyline: json['polyline'],
-      pricing: json['pricing']
-          .map<PricingModel>((e) => PricingModel.fromJson(e))
-          .toList(),
-      destinations: json['destinations']
-          .map<DestinationModel>((e) => DestinationModel.fromJson(e))
-          .toList(),
+      pricing: json["prices"] != null
+          ? json['prices']
+              .map<PricingModel>((e) => PricingModel.fromJson(e))
+              .toList()
+          : null,
+      destinations: json["destinations"] != null
+          ? json['destinations']
+              .map<DestinationModel>((e) => DestinationModel.fromJson(e))
+              .toList()
+          : null,
       pickupAddress: json['pickup_address'],
       pickupLat: json['pickup_lat'],
       pickupLng: json['pickup_lng'],
@@ -72,6 +76,7 @@ class PricingModel extends Pricing {
     required super.expiration,
     required super.description,
     required super.cost,
+    required super.tag,
   });
 
   //fromJson
@@ -84,6 +89,7 @@ class PricingModel extends Pricing {
       vehicleType: json['vehicle_type'],
       expiration: json['expiration'],
       description: json['description'],
+      tag: json['tag'],
       cost: num.parse(json['cost'].toString()),
     );
   }
