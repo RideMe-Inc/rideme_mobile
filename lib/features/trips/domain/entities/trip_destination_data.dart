@@ -20,6 +20,7 @@ class TripDetails extends Equatable {
       pickupAddress,
       status,
       completedAt,
+      paymentMethod,
       createdAt,
       polyline;
   final List<DestinationInfo>? destinations;
@@ -41,6 +42,7 @@ class TripDetails extends Equatable {
     required this.status,
     required this.completedAt,
     required this.createdAt,
+    required this.paymentMethod,
     required this.destinations,
     required this.extraFees,
     required this.totalAmount,
@@ -73,6 +75,7 @@ class TripDetails extends Equatable {
         polyline,
         driver,
         paymentInfo,
+        paymentMethod,
       ];
 
   Map<String, dynamic> toMap() => {
@@ -92,8 +95,9 @@ class TripDetails extends Equatable {
         "extra_fees": extraFees,
         "total_amount": totalAmount,
         "waiting_penalty": waitingPenalty,
+        "payment_method": paymentMethod,
         "polyline": polyline,
-        "destinations":
+        "stops":
             destinations?.map<Map<String, dynamic>>((e) => e.toMap()).toList(),
         'pickup_geo_data_id': pickupGeoDataId,
         'driver': driver?.toMap(),
