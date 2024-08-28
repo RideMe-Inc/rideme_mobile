@@ -381,6 +381,16 @@
   "delayMinutes":"Delay minutes",
   "paymentDetails":"Payment Details",
   "callDriver":"Call driver",
+
+  "amountAndCurrency":"$ {amount}",
+  "@amountAndCurrency":{
+    "placeholders":{
+      "amount":{
+        "type":"String",
+        "example":"10"
+      }
+    }
+  },
   "addUpToNumDestinations":"Add up to {number} destinations",
   "@addUpToNumDestinations":{
     "placeholders":{
