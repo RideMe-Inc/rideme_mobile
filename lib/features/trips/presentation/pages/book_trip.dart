@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,6 +11,7 @@ import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
+import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
@@ -83,8 +86,6 @@ class _BookTripPageState extends State<BookTripPage> {
       }
     };
 
-    print(params['body']);
-
     tripsBloc.add(FetchPricingEvent(params: params));
   }
 
@@ -127,7 +128,7 @@ class _BookTripPageState extends State<BookTripPage> {
             bloc: locationBloc2,
             listener: (context, state) {
               if (state is GetGeoIDError) {
-                print(state.message);
+                if (kDebugMode) print(state.message);
               }
               if (state is GetGeoIDLoading) {
                 tripProvider.updateIsGeoLoading = true;
@@ -139,7 +140,7 @@ class _BookTripPageState extends State<BookTripPage> {
                 }
               }
               if (state is GetGeoIDLoaded) {
-                print(locations);
+                if (kDebugMode) print(locations);
                 //replace id
 
                 if (state.isPickUp) {
@@ -182,13 +183,21 @@ class _BookTripPageState extends State<BookTripPage> {
           BlocListener(
             bloc: tripsBloc,
             listener: (context, state) {
-              print(state);
+              if (kDebugMode) print(state);
               if (state is FetchPricingLoaded) {
-                print(state.createTripInfo);
+                final params = state.createTripInfo.toMap();
+
+                final jsonString = jsonEncode(params);
+
+                context.pushNamed('priceSelection', queryParameters: {
+                  "pricing": jsonString,
+                  "isScheduled": 'false',
+                });
               }
 
               if (state is FetchPricingError) {
-                print(state.message);
+                if (kDebugMode) print(state.message);
+                showErrorPopUp('Oopps. Kindly try again', context);
               }
             },
           ),

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/edit_trip.dart';
@@ -251,6 +255,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     return Duration(hours: hours, minutes: minutes, seconds: seconds);
   }
 
+  //get geo data ids for making request for pricing
   List<Map<String, dynamic>> getGeoDataIds(List<dynamic> data) {
     List<Map<String, dynamic>> ids = [];
 
@@ -261,5 +266,47 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     }
 
     return ids;
+  }
+
+  //pricing data parsing
+
+  CreateTripInfo decodePricingInfo(String jsonString) {
+    return CreateTripInfoModel.fromJson(jsonDecode(jsonString));
+  }
+
+  //update markers for polyline on pricing page
+
+  Set<Marker> updateMarkersForPolyLine(CreateTripInfo createTripInfo) {
+    Set<Marker> marker = {};
+
+    marker.add(
+      Marker(
+        markerId: MarkerId(createTripInfo.pickupAddress ?? ''),
+        infoWindow: InfoWindow(
+          title: createTripInfo.pickupAddress,
+        ),
+        position: LatLng(
+          createTripInfo.pickupLat?.toDouble() ?? 0,
+          createTripInfo.pickupLng?.toDouble() ?? 0,
+        ),
+      ),
+    );
+
+    for (var location in createTripInfo.destinations!) {
+      marker.add(
+        Marker(
+          markerId: MarkerId(location.address!),
+          infoWindow: InfoWindow(
+            title: location.address ?? '',
+          ),
+          position: LatLng(
+            location.lat.toDouble(),
+            location.lng.toDouble(),
+          ),
+        ),
+      );
+    }
+
+    return marker;
   }
 }

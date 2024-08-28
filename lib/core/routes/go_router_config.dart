@@ -9,6 +9,7 @@ import 'package:rideme_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:rideme_mobile/features/payment/presentation/pages/payment.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/map_point_selection.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/price_selection_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/profile.dart';
@@ -96,6 +97,16 @@ final GoRouter goRouterConfiguration = GoRouter(
             lng: state.uri.queryParameters['lng'].toString(),
             name: state.uri.queryParameters['name'].toString(),
           ),
+        ),
+
+        //price selection
+
+        GoRoute(
+          name: 'priceSelection',
+          path: 'price-selection',
+          builder: (context, state) => PriceSelectionPage(
+              pricing: state.uri.queryParameters['pricing']!,
+              isScheduled: state.uri.queryParameters['isScheduled'] ?? 'false'),
         ),
 
         // GoRoute(
