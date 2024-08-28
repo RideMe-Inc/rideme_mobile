@@ -23,8 +23,8 @@ class CreateTripInfo extends Equatable {
   Map<String, dynamic> toMap() => {
         "id": tripID,
         "polyline": polyline,
-        "pricing": pricing.map((e) => e.toMap()).toList(),
-        "destinations": destinations?.map((e) => e.toMap()).toList(),
+        "prices": pricing.map((e) => e.toMap()).toList(),
+        "stops": destinations?.map((e) => e.toMap()).toList(),
         "pickup_address": pickupAddress,
         "pickup_lat": pickupLat,
         "pickup_lng": pickupLng,

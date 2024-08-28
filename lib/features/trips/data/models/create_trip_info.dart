@@ -22,8 +22,8 @@ class CreateTripInfoModel extends CreateTripInfo {
               .map<PricingModel>((e) => PricingModel.fromJson(e))
               .toList()
           : null,
-      destinations: json["destinations"] != null
-          ? json['destinations']
+      destinations: json["stops"] != null
+          ? json['stops']
               .map<DestinationModel>((e) => DestinationModel.fromJson(e))
               .toList()
           : null,
