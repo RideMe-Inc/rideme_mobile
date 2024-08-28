@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -13,7 +14,6 @@ import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
-import 'package:rideme_mobile/core/widgets/popups/success_popup.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
@@ -319,7 +319,14 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
                               listener: (context, state) {
                                 if (state is CreateTripLoaded) {
                                   //do navigation here
-                                  showSuccessPopUp('worked', context);
+                                  final params = state
+                                      .tripDestination.tripDestinationData!
+                                      .toMap();
+
+                                  context.pushNamed('driverAwait',
+                                      queryParameters: {
+                                        "tripInfo": jsonEncode(params)
+                                      });
                                 }
 
                                 if (state is GenericTripsError) {

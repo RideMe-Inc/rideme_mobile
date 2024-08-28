@@ -8,6 +8,7 @@ import 'package:rideme_mobile/features/authentication/presentation/pages/phone_e
 import 'package:rideme_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:rideme_mobile/features/payment/presentation/pages/payment.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/driver_await_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/map_point_selection.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/price_selection_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
@@ -107,6 +108,16 @@ final GoRouter goRouterConfiguration = GoRouter(
           builder: (context, state) => PriceSelectionPage(
               pricing: state.uri.queryParameters['pricing']!,
               isScheduled: state.uri.queryParameters['isScheduled'] ?? 'false'),
+          routes: [
+            //driver await page
+            GoRoute(
+              name: 'driverAwait',
+              path: 'driver-await',
+              builder: (context, state) => DriverAwaitPage(
+                tripInfo: state.uri.queryParameters['tripInfo']!,
+              ),
+            )
+          ],
         ),
 
         // GoRoute(
