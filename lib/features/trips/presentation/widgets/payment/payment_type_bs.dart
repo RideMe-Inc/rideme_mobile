@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideme_mobile/features/trips/presentation/widgets/payment_type_selection.dart';
-import 'package:rideme_mobile/features/trips/presentation/widgets/payment_type_selection_page.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection_page.dart';
 
 buildPaymentTypeSelectionBs(
         {required BuildContext context, required PaymentTypes? paymentType}) =>

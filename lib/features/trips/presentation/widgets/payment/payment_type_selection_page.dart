@@ -5,8 +5,8 @@ import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
-import 'package:rideme_mobile/features/trips/presentation/widgets/payment_selection_tile.dart';
-import 'package:rideme_mobile/features/trips/presentation/widgets/payment_type_selection.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_selection_tile.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
 
 class PaymentTypeSelectionPage extends StatefulWidget {
   final PaymentTypes? paymentTypes;

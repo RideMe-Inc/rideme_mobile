@@ -4,7 +4,7 @@ import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
-import 'package:rideme_mobile/features/trips/presentation/widgets/payment_type_selection.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
 
 class PaymentSelectionTile extends StatefulWidget {
   final PaymentTypes paymentTypes;

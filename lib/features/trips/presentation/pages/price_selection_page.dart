@@ -19,8 +19,8 @@ import 'package:rideme_mobile/features/localization/presentation/providers/local
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/provider/trip_provider.dart';
-import 'package:rideme_mobile/features/trips/presentation/widgets/payment_type_bs.dart';
-import 'package:rideme_mobile/features/trips/presentation/widgets/payment_type_selection.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_bs.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/pricing_card.dart';
 import 'package:rideme_mobile/injection_container.dart';
 

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
+import 'package:rideme_mobile/features/trips/data/models/trip_destnation_info_model.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
+import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/edit_trip.dart';
 
@@ -308,5 +310,11 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     }
 
     return marker;
+  }
+
+//trip info data parsing
+
+  TripDetails decodeTripDetailsInfo(String jsonString) {
+    return TripDestinationDataModel.fromJson(jsonDecode(jsonString));
   }
 }
