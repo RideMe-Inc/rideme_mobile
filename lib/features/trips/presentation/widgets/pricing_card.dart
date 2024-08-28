@@ -31,6 +31,7 @@ class _PricingCardState extends State<PricingCard> {
       onTap: widget.onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(top: 8),
         width: double.infinity,
         decoration: BoxDecoration(
           border: widget.isSelected
