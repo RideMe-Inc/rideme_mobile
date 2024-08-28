@@ -15,7 +15,7 @@ class CreateTripInfoModel extends CreateTripInfo {
   //fromJson
   factory CreateTripInfoModel.fromJson(Map<String, dynamic> json) {
     return CreateTripInfoModel(
-      tripID: json['trip_id'],
+      tripID: json['id'],
       polyline: json['polyline'],
       pricing: json["prices"] != null
           ? json['prices']

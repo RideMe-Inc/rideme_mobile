@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,11 @@ import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
+import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
+import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
+import 'package:rideme_mobile/core/widgets/popups/success_popup.dart';
+import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
+import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/provider/trip_provider.dart';
@@ -308,11 +314,49 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
                               paymentType: paymentTypes,
                             ),
                             Space.height(context, 0.032),
-                            GenericButton(
-                              onTap: () {},
-                              label: context.appLocalizations.selectRide,
-                              isActive: selectedPriceId != null &&
-                                  paymentTypes != null,
+                            BlocConsumer(
+                              bloc: tripBloc,
+                              listener: (context, state) {
+                                if (state is CreateTripLoaded) {
+                                  //do navigation here
+                                  showSuccessPopUp('worked', context);
+                                }
+
+                                if (state is GenericTripsError) {
+                                  if (kDebugMode) print(state.errorMessage);
+                                  showErrorPopUp(state.errorMessage, context);
+                                }
+                              },
+                              builder: (context, state) {
+                                if (state is CreateTripLoading) {
+                                  return const LoadingIndicator();
+                                }
+
+                                return GenericButton(
+                                  onTap: () {
+                                    final params = {
+                                      "locale":
+                                          context.read<LocaleProvider>().locale,
+                                      "bearer": context
+                                          .read<AuthenticationProvider>()
+                                          .token,
+                                      "body": {
+                                        "price_id": selectedPriceId,
+                                        "payment_method": paymentTypes?.name,
+                                      },
+                                      "urlParameters": {
+                                        "id": createTripInfo?.tripID
+                                      }
+                                    };
+
+                                    tripBloc
+                                        .add(CreateTripEvent(params: params));
+                                  },
+                                  label: context.appLocalizations.selectRide,
+                                  isActive: selectedPriceId != null &&
+                                      paymentTypes != null,
+                                );
+                              },
                             ),
                           ],
                         ),
