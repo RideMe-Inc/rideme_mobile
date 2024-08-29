@@ -2,11 +2,15 @@ import 'package:go_router/go_router.dart';
 import 'package:rideme_mobile/connection_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/enter_email_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/more_info_addition_page.dart';
+import 'package:rideme_mobile/features/authentication/presentation/pages/no_internet_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/otp_verification_page.dart';
 import 'package:rideme_mobile/features/authentication/presentation/pages/phone_entry_page.dart';
 import 'package:rideme_mobile/features/home/presentation/pages/home_page.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:rideme_mobile/features/payment/presentation/pages/payment.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/driver_await_page.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/map_point_selection.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/price_selection_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/profile.dart';
@@ -22,6 +26,13 @@ final GoRouter goRouterConfiguration = GoRouter(
       name: 'root',
       path: '/',
       builder: (context, state) => const ConnectionPage(),
+    ),
+
+    //NO INTERNET
+    GoRoute(
+      name: 'noInternet',
+      path: '/no-internet',
+      builder: (context, state) => const NoInternetPage(),
     ),
 
     //ONBOARDING
@@ -45,6 +56,8 @@ final GoRouter goRouterConfiguration = GoRouter(
           builder: (context, state) => OtpVerificationPage(
             phoneNumber: state.uri.queryParameters['phone'] ?? '',
             token: state.uri.queryParameters['token'] ?? '',
+            userExist:
+                bool.parse(state.uri.queryParameters['user_exist'] ?? 'false'),
           ),
         ),
 
@@ -75,6 +88,54 @@ final GoRouter goRouterConfiguration = GoRouter(
       path: '/home',
       builder: (context, state) => const HomePage(),
       routes: [
+        //booking
+
+        GoRoute(
+          name: 'mapLocationSelection',
+          path: 'map-selection',
+          builder: (context, state) => LocationSelectionOnMap(
+            lat: state.uri.queryParameters['lat'].toString(),
+            lng: state.uri.queryParameters['lng'].toString(),
+            name: state.uri.queryParameters['name'].toString(),
+          ),
+        ),
+
+        //price selection
+
+        GoRoute(
+          name: 'priceSelection',
+          path: 'price-selection',
+          builder: (context, state) => PriceSelectionPage(
+              pricing: state.uri.queryParameters['pricing']!,
+              isScheduled: state.uri.queryParameters['isScheduled'] ?? 'false'),
+          routes: [
+            //driver await page
+            GoRoute(
+              name: 'driverAwait',
+              path: 'driver-await',
+              builder: (context, state) => DriverAwaitPage(
+                tripInfo: state.uri.queryParameters['tripInfo']!,
+              ),
+            )
+          ],
+        ),
+
+        // GoRoute(
+        //   name: 'bookTrip',
+        //   path: 'book-trip',
+        //   builder: (context, state) => const BookTripPage(),
+        //   routes: [
+        //     GoRoute(
+        //       name: 'mapLocationSelection',
+        //       path: 'map-selection',
+        //       builder: (context, state) => LocationSelectionOnMap(
+        //         lat: state.uri.queryParameters['lat'].toString(),
+        //         lng: state.uri.queryParameters['lng'].toString(),
+        //         name: state.uri.queryParameters['name'].toString(),
+        //       ),
+        //     )
+        //   ],
+        // ),
         //profile
         GoRoute(
           name: 'profile',

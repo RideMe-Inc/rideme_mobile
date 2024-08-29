@@ -78,20 +78,20 @@ class TripProvider extends ChangeNotifier {
   decodePolyline(CreateTripInfo createTripInfo) async {
     //deal with polylines
 
-    _polyLines = _polylinePoints.decodePolyline(createTripInfo.polyline);
+    _polyLines = _polylinePoints.decodePolyline(createTripInfo.polyline!);
 
     _polyLines.insert(
       0,
       PointLatLng(
-        createTripInfo.pickupLat.toDouble(),
-        createTripInfo.pickupLng.toDouble(),
+        createTripInfo.pickupLat?.toDouble() ?? 0,
+        createTripInfo.pickupLng?.toDouble() ?? 0,
       ),
     );
 
     _polyLines.add(
       PointLatLng(
-        createTripInfo.destinations.last.lat.toDouble(),
-        createTripInfo.destinations.last.lng.toDouble(),
+        createTripInfo.destinations?.last.lat.toDouble() ?? 0,
+        createTripInfo.destinations?.last.lng.toDouble() ?? 0,
       ),
     );
 

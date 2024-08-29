@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 
 class CreateTripInfo extends Equatable {
-  final int tripID;
-  final String polyline, pickupAddress;
+  final int? tripID;
+  final String? polyline, pickupAddress;
   final String? discountApplied;
-  final num pickupLat, pickupLng;
+  final num? pickupLat, pickupLng;
   final List<Pricing> pricing;
-  final List<Destination> destinations;
+  final List<Destination>? destinations;
 
   const CreateTripInfo({
     required this.tripID,
@@ -23,8 +23,8 @@ class CreateTripInfo extends Equatable {
   Map<String, dynamic> toMap() => {
         "id": tripID,
         "polyline": polyline,
-        "pricing": pricing.map((e) => e.toMap()).toList(),
-        "destinations": destinations.map((e) => e.toMap()).toList(),
+        "prices": pricing.map((e) => e.toMap()).toList(),
+        "stops": destinations?.map((e) => e.toMap()).toList(),
         "pickup_address": pickupAddress,
         "pickup_lat": pickupLat,
         "pickup_lng": pickupLng,
@@ -89,17 +89,17 @@ class Destination extends Equatable {
 class Pricing extends Equatable {
   final num id, charge, cost;
   final bool isAvailable;
-  final String deliveryType, vehicleType, expiration, description;
+  final String? vehicleType, expiration, description, tag;
 
   const Pricing({
     required this.id,
     required this.charge,
     required this.isAvailable,
-    required this.deliveryType,
     required this.vehicleType,
     required this.expiration,
     required this.description,
     required this.cost,
+    required this.tag,
   });
 
   //pricing toMap
@@ -107,11 +107,11 @@ class Pricing extends Equatable {
         "id": id,
         "charge": charge,
         "is_available": isAvailable,
-        "delivery_type": deliveryType,
         "vehicle_type": vehicleType,
         "expiration": expiration,
         "description": description,
         "cost": cost,
+        "tag": tag,
       };
 
   @override
@@ -119,9 +119,9 @@ class Pricing extends Equatable {
         id,
         charge,
         isAvailable,
-        deliveryType,
         vehicleType,
         expiration,
         cost,
+        tag,
       ];
 }

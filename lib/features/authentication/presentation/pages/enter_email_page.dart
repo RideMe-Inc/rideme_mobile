@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
@@ -64,7 +65,13 @@ class _EnterEmailPageState extends State<EnterEmailPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             GenericButton(
-              onTap: () {},
+              onTap: () => context.pushNamed(
+                'moreAdditionalInfo',
+                queryParameters: {
+                  "email": email.text,
+                  "token": widget.token,
+                },
+              ),
               label: context.appLocalizations.continues,
               isActive: isEmail(email.text),
             ),

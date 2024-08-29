@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,9 +7,10 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
+import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart';
+import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
 
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
@@ -19,6 +21,8 @@ import 'package:rideme_mobile/features/home/presentation/widgets/book_trip_for_l
 import 'package:rideme_mobile/features/home/presentation/widgets/dropoff_field_widget.dart';
 import 'package:rideme_mobile/features/home/presentation/widgets/nav_bar_widget.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/drop_off_location_bottom_sheet.dart';
+import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,11 +33,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late AppLocalizations appLocalizations;
-
   late HomeProvider homeProvider;
+  late LocationProvider locationProvider;
 
   final permissionBloc = sl<PermissionBloc>();
+  final locationBloc = sl<LocationBloc>();
 
   Set<Marker> markers = {};
   DateTime chosenDate = DateTime.now();
@@ -76,15 +80,21 @@ class _HomePageState extends State<HomePage> {
 
       // fetchRiders(position);
 
-      // final params = {
-      //   "locale": appLocalizations.localeName,
-      //   "queryParams": {
-      //     "lat": position.latitude.toString(),
-      //     "lng": position.longitude.toString(),
-      //   },
-      // };
+      if (!mounted) return;
 
-      // tripsBloc.add(GetGeoIDEvent(params: params, isPickUp: true));
+      final params = {
+        "locale": context.appLocalizations.localeName,
+        "queryParameters": {
+          "lat": position.latitude.toString(),
+          "lng": position.longitude.toString(),
+        },
+      };
+
+      locationBloc.add(GetGeoIDEvent(
+        params: params,
+        isPickup: true,
+        index: null,
+      ));
       // getServiceInfo(lat: position.latitude, lng: position.longitude);
 
       mapController.animateCamera(CameraUpdate.newCameraPosition(
@@ -128,20 +138,41 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    appLocalizations = AppLocalizations.of(context)!;
     homeProvider = context.watch<HomeProvider>();
+    locationProvider = context.watch<LocationProvider>();
 
     return Scaffold(
       // drawer: const HomeDrawer(),
 
-      body: BlocListener(
-        bloc: permissionBloc,
-        listener: (context, state) {
-          // homeProvider.setNumberOfActiveTrips = user?.ongoingTrips?.length ?? 0;
-          if (state is LocationPemDeclined) {
-            homeProvider.updateLocationAllowed = false;
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          //permission
+          BlocListener(
+            bloc: permissionBloc,
+            listener: (context, state) {
+              // homeProvider.setNumberOfActiveTrips = user?.ongoingTrips?.length ?? 0;
+              if (state is LocationPemDeclined) {
+                homeProvider.updateLocationAllowed = false;
+              }
+            },
+          ),
+
+          //location
+          BlocListener(
+            bloc: locationBloc,
+            listener: (context, state) {
+              if (state is GetGeoIDLoaded) {
+                locationProvider.updateGeoDataInfo = state.geoDataInfo;
+              }
+
+              if (state is GetGeoIDError) {
+                if (kDebugMode) {
+                  print(state.message);
+                }
+              }
+            },
+          ),
+        ],
         child: Stack(
           children: [
             SizedBox(
@@ -297,7 +328,9 @@ class _HomePageState extends State<HomePage> {
 
                         Space.height(context, 0.014),
                         Text(
-                          context.appLocalizations.helloThere('Simon'),
+                          context.appLocalizations.helloThere(
+                              context.read<UserProvider>().user?.firstName ??
+                                  ''),
                           style: context.textTheme.displayLarge?.copyWith(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -306,27 +339,30 @@ class _HomePageState extends State<HomePage> {
 
                         Space.height(context, 0.016),
                         SetDropOffField(
-                          dropOffOnTap: () {
-                            // Map locations = {
-                            //   "pickUp": [
-                            //     homeProvider.isLocationAllowed
-                            //         ? {
-                            //             "name":
-                            //                 homeProvider.geoDataInfo?.address,
-                            //             "id": homeProvider.geoDataInfo?.id,
-                            //             "lat": homeProvider.geoDataInfo?.lat,
-                            //             "lng": homeProvider.geoDataInfo?.lng,
-                            //           }
-                            //         : {}
-                            //   ],
-                            //   "dropOff": [{}],
-                            // };
+                          dropOffOnTap: locationProvider.geoDataInfo != null
+                              ? () {
+                                  // context.pushNamed('bookTrip');
+                                  Map locations = {
+                                    "pickUp": [
+                                      {
+                                        "name": locationProvider
+                                            .geoDataInfo?.address,
+                                        "id": locationProvider.geoDataInfo?.id,
+                                        "lat":
+                                            locationProvider.geoDataInfo?.lat,
+                                        "lng":
+                                            locationProvider.geoDataInfo?.lng,
+                                      }
+                                    ],
+                                    "dropOff": [{}],
+                                  };
 
-                            // buildDropOffLocationBottomSheet(
-                            //   context: context,
-                            //   locations: locations,
-                            // );
-                          },
+                                  buildWhereToBottomSheet(
+                                    context: context,
+                                    locations: locations,
+                                  );
+                                }
+                              : null,
                           schedularOnTap: () async {
                             final response =
                                 await buildBookTripForLaterBottomSheet(

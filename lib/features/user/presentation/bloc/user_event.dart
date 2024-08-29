@@ -1,8 +1,14 @@
 part of 'user_bloc.dart';
 
-abstract class UserEvent extends Equatable {
+sealed class UserEvent extends Equatable {
   const UserEvent();
 
   @override
   List<Object> get props => [];
+}
+
+final class GetUserProfileEvent extends UserEvent {
+  final Map<String, dynamic> params;
+
+  const GetUserProfileEvent({required this.params});
 }

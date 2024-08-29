@@ -37,6 +37,7 @@ class TripDestinationDataModel extends TripDetails {
     required super.extraFees,
     required super.totalAmount,
     required super.waitingPenalty,
+    required super.paymentMethod,
     required super.polyline,
     required super.pickupLat,
     required super.pickupLng,
@@ -61,6 +62,7 @@ class TripDestinationDataModel extends TripDetails {
       status: json?["status"],
       createdAt: json?["created_at"],
       completedAt: json?["completed_at"],
+      paymentMethod: json?["payment_method"],
       extraFees: json?["extra_fees"],
       totalAmount: json?["total_amount"],
       waitingPenalty: json?["waiting_penalty"],
@@ -68,7 +70,7 @@ class TripDestinationDataModel extends TripDetails {
       driver: json?['driver'] != null
           ? DriverModel.fromJson(json?['driver'])
           : null,
-      destinations: json?["destinations"]
+      destinations: json?["stops"]
           ?.map<DestinationInfoModel>((e) => DestinationInfoModel.fromJson(e))
           .toList(),
       pickupGeoDataId: json?['pickup_geo_data_id'],

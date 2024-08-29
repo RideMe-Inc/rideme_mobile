@@ -7,16 +7,6 @@ sealed class TripsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-//!SEARCH PLACES
-final class SearchPlacesEvent extends TripsEvent {
-  final Map<String, dynamic> params;
-
-  const SearchPlacesEvent({required this.params});
-}
-
-//!CLEAR SEARCH RESULTS
-final class ClearSearchResultsEvent extends TripsEvent {}
-
 //!CANCEL TRIP
 class CancelTripEvent extends TripsEvent {
   final Map<String, dynamic> params;
@@ -68,19 +58,6 @@ class ReportTripEvent extends TripsEvent {
   final Map<String, dynamic> params;
 
   const ReportTripEvent({required this.params});
-}
-
-//!GET GEO ID
-final class GetGeoIDEvent extends TripsEvent {
-  final Map<String, dynamic> params;
-  final bool? isPickUp;
-  final int? index;
-
-  const GetGeoIDEvent({
-    required this.params,
-    this.isPickUp,
-    this.index,
-  });
 }
 
 //!CREATE TRIP OR FETCH PRICING

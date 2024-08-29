@@ -2,8 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
-import 'package:rideme_mobile/features/trips/domain/entities/geo_data.dart';
-import 'package:rideme_mobile/features/trips/domain/entities/places_info.dart';
+
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_info.dart';
 
@@ -23,13 +22,6 @@ abstract class TripsRepository {
   Future<Either<String, String>> reportTrip(Map<String, dynamic> params);
 
   Future<Either<String, String>> rateTrip(Map<String, dynamic> params);
-
-  // search places
-
-  Future<Either<String, Places>> searchPlace(Map<String, dynamic> params);
-
-  //get geo id
-  Future<Either<String, GeoDataInfo>> getGeoID(Map<String, dynamic> params);
 
   //fetch pricing
   Future<Either<String, CreateTripInfo>> fetchPricing(

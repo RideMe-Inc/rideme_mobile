@@ -10,7 +10,10 @@ class ImageNameConstants {
   static const carIMG = '$_baseUrl/car.png';
   static const ambulanceIMG = '$_baseUrl/ambulance.png';
   static const cashIMG = '$_baseUrl/cash.png';
+  static const cardIMG = '$_baseUrl/card.png';
   static const policeIMG = '$_baseUrl/police.png';
   static const fireServiceIMG = '$_baseUrl/fire_service.png';
   static const mapIndicatorIMG = '$_baseUrl/map_indicator.png';
+  static const ridemeLogoIMG = '$_baseUrl/rideme_logo.png';
+  static const locationPinIMG = '$_baseUrl/location_pin.png';
 }

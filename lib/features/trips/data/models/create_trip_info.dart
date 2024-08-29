@@ -17,12 +17,16 @@ class CreateTripInfoModel extends CreateTripInfo {
     return CreateTripInfoModel(
       tripID: json['id'],
       polyline: json['polyline'],
-      pricing: json['pricing']
-          .map<PricingModel>((e) => PricingModel.fromJson(e))
-          .toList(),
-      destinations: json['destinations']
-          .map<DestinationModel>((e) => DestinationModel.fromJson(e))
-          .toList(),
+      pricing: json["prices"] != null
+          ? json['prices']
+              .map<PricingModel>((e) => PricingModel.fromJson(e))
+              .toList()
+          : null,
+      destinations: json["stops"] != null
+          ? json['stops']
+              .map<DestinationModel>((e) => DestinationModel.fromJson(e))
+              .toList()
+          : null,
       pickupAddress: json['pickup_address'],
       pickupLat: json['pickup_lat'],
       pickupLng: json['pickup_lng'],
@@ -67,11 +71,11 @@ class PricingModel extends Pricing {
     required super.id,
     required super.charge,
     required super.isAvailable,
-    required super.deliveryType,
     required super.vehicleType,
     required super.expiration,
     required super.description,
     required super.cost,
+    required super.tag,
   });
 
   //fromJson
@@ -80,10 +84,10 @@ class PricingModel extends Pricing {
       id: json['id'],
       charge: json['charge'],
       isAvailable: json['is_available'],
-      deliveryType: json['delivery_type'],
       vehicleType: json['vehicle_type'],
       expiration: json['expiration'],
       description: json['description'],
+      tag: json['tag'],
       cost: num.parse(json['cost'].toString()),
     );
   }

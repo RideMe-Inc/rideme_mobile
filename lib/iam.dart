@@ -21,9 +21,9 @@ class _IAMScreenImplementerState extends State<IAMScreenImplementer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BecomeADriverCard(),
+            const BecomeADriverCard(),
             Space.height(context, 0.05),
-            SetDropOffField(dropOffOnTap: null, schedularOnTap: null)
+            const SetDropOffField(dropOffOnTap: null, schedularOnTap: null)
           ],
         ),
       ),

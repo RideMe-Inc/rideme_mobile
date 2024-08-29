@@ -11,6 +11,7 @@ import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/features/onboarding/domain/entities/onboarding_info.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/widgets/onboarding_transition.dart';
+import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -26,6 +27,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final onboardingBloc = sl<OnboardingBloc>();
 
   markasViewed() => onboardingBloc.add(MarkAsViewedEvent());
+
+  final permissionBloc = sl<PermissionBloc>();
+  requestAllNecessaryPermissions() {
+    permissionBloc.add(RequestAllNecessaryPermissionsEvent());
+  }
+
+  @override
+  void initState() {
+    requestAllNecessaryPermissions();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

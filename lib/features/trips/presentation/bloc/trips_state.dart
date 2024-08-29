@@ -91,30 +91,6 @@ class RateTripLoaded extends TripsState {
   const RateTripLoaded({required this.rate});
 }
 
-//!SEARCH PLACES
-//loading
-final class SearchPlacesLoading extends TripsState {}
-
-//loaded
-final class SearchPlacesLoaded extends TripsState {
-  final Places places;
-  final bool? isPickUP;
-  final int? dropOffIndex;
-
-  const SearchPlacesLoaded({
-    this.dropOffIndex,
-    required this.places,
-    this.isPickUP,
-  });
-}
-
-//error
-final class SearchPlacesError extends TripsState {
-  final String message;
-
-  const SearchPlacesError({required this.message});
-}
-
 //! REPORT   TRIP
 
 //loading
@@ -125,35 +101,6 @@ class ReportTripLoaded extends TripsState {
   final String report;
 
   const ReportTripLoaded({required this.report});
-}
-
-//!GET GEO ID
-//loading
-final class GetGeoIDLoading extends TripsState {
-  final bool? isPickup;
-  final int? index;
-
-  const GetGeoIDLoading({required this.isPickup, required this.index});
-}
-
-//loaded
-final class GetGeoIDLoaded extends TripsState {
-  final GeoDataInfo geoDataInfo;
-  final String? placedID;
-  final bool? isPickUP;
-
-  const GetGeoIDLoaded({
-    required this.geoDataInfo,
-    required this.placedID,
-    required this.isPickUP,
-  });
-}
-
-//error
-final class GetGeoIDError extends TripsState {
-  final String message;
-
-  const GetGeoIDError({required this.message});
 }
 
 //!CREATE OR FETCH PRICING

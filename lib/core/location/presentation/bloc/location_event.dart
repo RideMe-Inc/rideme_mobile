@@ -17,9 +17,13 @@ final class SearchPlacesEvent extends LocationEvent {
 //!GET GEO ID
 final class GetGeoIDEvent extends LocationEvent {
   final Map<String, dynamic> params;
+  final bool isPickup;
+  final int? index;
 
   const GetGeoIDEvent({
     required this.params,
+    required this.isPickup,
+    required this.index,
   });
 }
 

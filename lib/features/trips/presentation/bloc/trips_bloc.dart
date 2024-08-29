@@ -1,7 +1,13 @@
-import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rideme_mobile/core/extensions/date_extension.dart';
+import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
+import 'package:rideme_mobile/features/trips/data/models/trip_destnation_info_model.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
+import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/edit_trip.dart';
 
@@ -9,8 +15,6 @@ import 'package:equatable/equatable.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
 
-import 'package:rideme_mobile/features/trips/domain/entities/geo_data.dart';
-import 'package:rideme_mobile/features/trips/domain/entities/places_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_info.dart';
 
@@ -18,12 +22,12 @@ import 'package:rideme_mobile/features/trips/domain/usecases/cancel_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/create_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/fetch_pricing.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_all_trips.dart';
-import 'package:rideme_mobile/features/trips/domain/usecases/get_geo_id.dart';
+
 import 'package:rideme_mobile/features/trips/domain/usecases/get_trip_info.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/rate_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/report_trip.dart';
-import 'package:rideme_mobile/features/trips/domain/usecases/search_place.dart';
+
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
 
 part 'trips_event.dart';
@@ -36,8 +40,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   final RateTrip rateTrip;
   final ReportTrip reportTrip;
   final GetTripInfo getTripInfo;
-  final SearchPlace searchPlace;
-  final GetGeoID getGeoID;
+
   final FetchPricing fetchPricing;
   final InitiateTracking initiateTracking;
   final TerminateTracking terminateTracking;
@@ -50,8 +53,6 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     required this.rateTrip,
     required this.getTripInfo,
     required this.reportTrip,
-    required this.searchPlace,
-    required this.getGeoID,
     required this.fetchPricing,
     required this.initiateTracking,
     required this.terminateTracking,
@@ -165,59 +166,6 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
       );
     });
 
-    //!SEARCH PLACES
-
-    on<SearchPlacesEvent>(
-      (event, emit) async {
-        emit(SearchPlacesLoading());
-
-        final response = await searchPlace(event.params['body']);
-
-        emit(
-          response.fold(
-            (error) => SearchPlacesError(message: error),
-            (response) => SearchPlacesLoaded(
-              places: response,
-              isPickUP: event.params['isPickUP'],
-              dropOffIndex: event.params['dropOffIndex'],
-            ),
-          ),
-        );
-      },
-      transformer: restartable(),
-    );
-    //clear results
-
-    on<ClearSearchResultsEvent>((event, emit) async {
-      emit(SearchPlacesLoading());
-    });
-
-    //!GET GEO ID
-    on<GetGeoIDEvent>(
-      (event, emit) async {
-        emit(
-          GetGeoIDLoading(
-            isPickup: event.isPickUp,
-            index: event.index,
-          ),
-        );
-
-        final response = await getGeoID(event.params);
-
-        emit(
-          response.fold(
-            (error) => GetGeoIDError(message: error),
-            (response) => GetGeoIDLoaded(
-              geoDataInfo: response,
-              placedID: event.params['queryParams']['google_map_id'],
-              isPickUP: event.isPickUp,
-            ),
-          ),
-        );
-      },
-      transformer: restartable(),
-    );
-
     //!FETCH PRICING
     on<FetchPricingEvent>((event, emit) async {
       emit(FetchPricingLoading());
@@ -308,5 +256,95 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     int seconds = int.parse(parts[2]);
 
     return Duration(hours: hours, minutes: minutes, seconds: seconds);
+  }
+
+  //get geo data ids for making request for pricing
+  List<Map<String, dynamic>> getGeoDataIds(List<dynamic> data) {
+    List<Map<String, dynamic>> ids = [];
+
+    for (var element in data) {
+      ids.add({
+        "geo_data_id": element['id'],
+      });
+    }
+
+    return ids;
+  }
+
+  //pricing data parsing
+
+  CreateTripInfo decodePricingInfo(String jsonString) {
+    return CreateTripInfoModel.fromJson(jsonDecode(jsonString));
+  }
+
+  //update markers for polyline on pricing page
+
+  Set<Marker> updateMarkersForPolyLine(CreateTripInfo createTripInfo) {
+    Set<Marker> marker = {};
+
+    marker.add(
+      Marker(
+        markerId: MarkerId(createTripInfo.pickupAddress ?? ''),
+        infoWindow: InfoWindow(
+          title: createTripInfo.pickupAddress,
+        ),
+        position: LatLng(
+          createTripInfo.pickupLat?.toDouble() ?? 0,
+          createTripInfo.pickupLng?.toDouble() ?? 0,
+        ),
+      ),
+    );
+
+    for (var location in createTripInfo.destinations!) {
+      marker.add(
+        Marker(
+          markerId: MarkerId(location.address!),
+          infoWindow: InfoWindow(
+            title: location.address ?? '',
+          ),
+          position: LatLng(
+            location.lat.toDouble(),
+            location.lng.toDouble(),
+          ),
+        ),
+      );
+    }
+
+    return marker;
+  }
+
+//trip info data parsing
+
+  TripDetails decodeTripDetailsInfo(String jsonString) {
+    return TripDestinationDataModel.fromJson(jsonDecode(jsonString));
+  }
+
+//sort under date
+
+  List<MapEntry<DateTime, List<AllTripDetails>>> getCategorizedTripsHistory(
+      List<AllTripDetails> bills) {
+    Map<DateTime, List<AllTripDetails>> history = {};
+
+    for (final data in bills) {
+      final keys = history.keys;
+      final key = keys.firstWhere(
+        (element) => element.isSameDate(
+            DateTime.parse(data.createdAt ?? DateTime.now().toString())),
+        orElse: () =>
+            DateTime.parse(data.createdAt ?? DateTime.now().toString()),
+      );
+      if (history.containsKey(key)) {
+        history[key]!.add(data);
+      } else {
+        history[key] = [data];
+      }
+    }
+
+    List<MapEntry<DateTime, List<AllTripDetails>>> historyList = history.entries
+        .map(
+          (e) => e,
+        )
+        .toList();
+    return historyList;
   }
 }

@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
+import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
+import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/core/widgets/textfield/generic_textfield_widget.dart';
+import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
+import 'package:rideme_mobile/injection_container.dart';
 
 class MoreInfoAdditionPage extends StatefulWidget {
   final String token, email;
@@ -21,6 +29,23 @@ class MoreInfoAdditionPage extends StatefulWidget {
 class _MoreInfoAdditionPageState extends State<MoreInfoAdditionPage> {
   final firstName = TextEditingController();
   final lastName = TextEditingController();
+
+  final authBloc = sl<AuthenticationBloc>();
+
+  signUpUser() {
+    final params = {
+      "locale": context.read<LocaleProvider>().locale,
+      "body": {
+        "token": widget.token,
+        "email": widget.email,
+        "first_name": firstName.text,
+        "last_name": lastName.text,
+      }
+    };
+
+    authBloc.add(SignUpEvent(params: params));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,10 +97,31 @@ class _MoreInfoAdditionPageState extends State<MoreInfoAdditionPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GenericButton(
-              onTap: () {},
-              label: context.appLocalizations.continues,
-              isActive: firstName.text.length > 1 && lastName.text.length > 1,
+            BlocConsumer(
+              bloc: authBloc,
+              listener: (context, state) {
+                if (state is SignupLoaded) {
+                  //update user provider and navigate to home
+                  context.read<UserProvider>().updateUserInfo =
+                      state.authenticationInfo.user!;
+
+                  context.goNamed('home');
+                }
+                if (state is GenericAuthenticationError) {
+                  showErrorPopUp(state.errorMessage, context);
+                }
+              },
+              builder: (context, state) {
+                if (state is SignupLoading) {
+                  return const LoadingIndicator();
+                }
+                return GenericButton(
+                  onTap: signUpUser,
+                  label: context.appLocalizations.continues,
+                  isActive:
+                      firstName.text.length > 1 && lastName.text.length > 1,
+                );
+              },
             ),
           ],
         ),

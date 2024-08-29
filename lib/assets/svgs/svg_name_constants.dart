@@ -29,9 +29,16 @@ class SvgNameConstants {
   static const shareSVG = '$_baseUrl/share.svg';
   static const starSVG = '$_baseUrl/star.svg';
   static const startPointActiveSVG = '$_baseUrl/start_point_active.svg';
+  static const dropOffPointActiveSVG = '$_baseUrl/start_point.svg';
   static const supportSVG = '$_baseUrl/support.svg';
   static const userSVG = '$_baseUrl/user.svg';
   static const clockSVG = '$_baseUrl/clock.svg';
   static const searchSVG = '$_baseUrl/search.svg';
   static const googleLogoSVG = '$_baseUrl/google_watermark.svg';
+  static const locationPinSVG = '$_baseUrl/location_pin.svg';
+  static const recentLocationSVG = '$_baseUrl/recent_location.svg';
+  static const bookMarkedSVG = '$_baseUrl/bookmarked.svg';
+  static const workSVG = '$_baseUrl/work.svg';
+  static const checkmarkSVG = '$_baseUrl/checkmark.svg';
+  static const myLocationSVG = '$_baseUrl/my_location.svg';
 }
