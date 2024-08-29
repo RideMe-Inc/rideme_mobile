@@ -98,7 +98,7 @@ class TripRemoteDataSourceImpl
   //! GET ALL TRIPS
   @override
   Future<AllTripsInfoModel> getAllTrips(Map<String, dynamic> params) async {
-    final decodedResponse = await patch(
+    final decodedResponse = await get(
       client: client,
       urls: urls,
       endpoint: Endpoints.trip,

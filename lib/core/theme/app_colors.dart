@@ -36,6 +36,7 @@ class AppColors {
 //BLACK
   static const rideMeBlack20 = Color.fromRGBO(235, 235, 240, 1);
   static const rideMeBlack80 = Color.fromRGBO(105, 105, 107, 1);
+  static const rideMeBlack90 = Color.fromRGBO(65, 65, 65, 1);
   static const rideMeBlackLight = Color.fromRGBO(233, 233, 233, 1);
   static const rideMeBlackLightHover = Color.fromRGBO(222, 221, 222, 1);
   static const rideMeBlackLightActive = Color.fromRGBO(187, 186, 186, 1);

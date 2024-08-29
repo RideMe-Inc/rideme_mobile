@@ -10,7 +10,7 @@ class AllTripsInfoModel extends AllTripsInfo {
   factory AllTripsInfoModel.fromJson(Map<String, dynamic> json) {
     return AllTripsInfoModel(
       message: json["message"],
-      allTripsData: AllTripsDataModel.fromJson(json["data"]),
+      allTripsData: AllTripsDataModel.fromJson(json["trips"]),
     );
   }
 }

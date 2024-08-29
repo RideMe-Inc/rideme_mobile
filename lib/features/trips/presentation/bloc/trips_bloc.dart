@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rideme_mobile/core/extensions/date_extension.dart';
 import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
 import 'package:rideme_mobile/features/trips/data/models/trip_destnation_info_model.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
@@ -316,5 +317,34 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
 
   TripDetails decodeTripDetailsInfo(String jsonString) {
     return TripDestinationDataModel.fromJson(jsonDecode(jsonString));
+  }
+
+//sort under date
+
+  List<MapEntry<DateTime, List<AllTripDetails>>> getCategorizedTripsHistory(
+      List<AllTripDetails> bills) {
+    Map<DateTime, List<AllTripDetails>> history = {};
+
+    for (final data in bills) {
+      final keys = history.keys;
+      final key = keys.firstWhere(
+        (element) => element.isSameDate(
+            DateTime.parse(data.createdAt ?? DateTime.now().toString())),
+        orElse: () =>
+            DateTime.parse(data.createdAt ?? DateTime.now().toString()),
+      );
+      if (history.containsKey(key)) {
+        history[key]!.add(data);
+      } else {
+        history[key] = [data];
+      }
+    }
+
+    List<MapEntry<DateTime, List<AllTripDetails>>> historyList = history.entries
+        .map(
+          (e) => e,
+        )
+        .toList();
+    return historyList;
   }
 }
