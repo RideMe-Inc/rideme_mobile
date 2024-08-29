@@ -10,6 +10,7 @@ import 'package:rideme_mobile/core/widgets/become_a_driver_card.dart';
 import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
 import 'package:rideme_mobile/features/user/presentation/widgets/profile_item_listing_widget.dart';
 import 'package:rideme_mobile/features/user/presentation/widgets/user_profile_widget.dart';
 import 'package:rideme_mobile/injection_container.dart';
@@ -23,6 +24,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final authBloc = sl<AuthenticationBloc>();
+  late UserProvider provider;
 
   final List<ProfileItemType> profileItemType = [
     ProfileItemType.editProfile,
@@ -35,6 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
   @override
   Widget build(BuildContext context) {
+    provider = context.watch<UserProvider>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -50,10 +53,11 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             Space.height(context, 0.028),
-            const UserProfileWidget(
-              name: 'Simon Williams',
-              phoneNumber: '23834848484',
-              profileUrl: null,
+            UserProfileWidget(
+              name:
+                  '${provider.user?.firstName ?? ''} ${provider.user?.lastName ?? ''}',
+              phoneNumber: provider.user?.phone ?? '',
+              profileUrl: provider.user?.profileUrl,
             ),
             Space.height(context, 0.038),
             ...List.generate(

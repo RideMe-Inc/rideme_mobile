@@ -12,6 +12,7 @@ import 'package:rideme_mobile/features/trips/presentation/pages/driver_await_pag
 import 'package:rideme_mobile/features/trips/presentation/pages/map_point_selection.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/price_selection_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/trip_history_details_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/profile.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/promotions.dart';
@@ -156,6 +157,14 @@ final GoRouter goRouterConfiguration = GoRouter(
           name: 'history',
           path: 'history',
           builder: (context, state) => const TripHistoryPage(),
+          routes: [
+            GoRoute(
+              name: 'historyDetails',
+              path: 'history-details',
+              builder: (context, state) => TripHistoryDetailsPage(
+                  tripId: state.uri.queryParameters['tripId'] ?? ''),
+            )
+          ],
         ),
 
         //promotions

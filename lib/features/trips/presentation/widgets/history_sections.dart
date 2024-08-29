@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:intl/intl.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
@@ -41,13 +42,12 @@ class _HistorySectionsState extends State<HistorySections> {
           (e) => TripHistoryCard(
             tripDetails: e,
             onTap: () {
-              //   context.pushNamed(
-              //   'historyDetails',
-              //   queryParameters: {
-              //     'historyDetails': jsonEncode(e.toMap()),
-              //     'isHistoryPage': 'true',
-              //   },
-              // );
+              context.pushNamed(
+                'historyDetails',
+                queryParameters: {
+                  'tripId': e.id.toString(),
+                },
+              );
             },
           ),
         ),
