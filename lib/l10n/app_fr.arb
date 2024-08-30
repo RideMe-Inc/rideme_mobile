@@ -390,5 +390,7 @@
   "addUpToNumDestinations":"Ajoutez jusqu'à {number} destinations",
   "helloThere":"Bonjour, {name}",
   "didntReceiveACode":"Je n'ai pas reçu de code ({timer})",
-  "amountAndCurrency":"$ {amount}"
+  "amountAndCurrency":"$ {amount}",
+  "initialAmount":"Montant initial"
+
 }

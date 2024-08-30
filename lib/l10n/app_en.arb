@@ -381,6 +381,7 @@
   "delayMinutes":"Delay minutes",
   "paymentDetails":"Payment Details",
   "callDriver":"Call driver",
+  "initialAmount":"Inititial amount",
 
   "amountAndCurrency":"$ {amount}",
   "@amountAndCurrency":{
