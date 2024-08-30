@@ -382,6 +382,9 @@
   "paymentDetails":"Payment Details",
   "callDriver":"Call driver",
   "initialAmount":"Inititial amount",
+  "noTripHistoryYet":"No trip history yet",
+  "noTripHistoryYetInfo":"Book a ride and enjoy premium, fast and reliable service.",
+  "bookARide":"Book a ride",
 
   "amountAndCurrency":"$ {amount}",
   "@amountAndCurrency":{

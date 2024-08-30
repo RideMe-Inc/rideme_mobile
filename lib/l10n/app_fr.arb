@@ -391,6 +391,11 @@
   "helloThere":"Bonjour, {name}",
   "didntReceiveACode":"Je n'ai pas reçu de code ({timer})",
   "amountAndCurrency":"$ {amount}",
-  "initialAmount":"Montant initial"
+  "initialAmount":"Montant initial",
+
+  "noTripHistoryYet":"Pas encore d'historique de trajets",
+  "noTripHistoryYetInfo":"Réservez un trajet et profitez d'un service premium, rapide et fiable.",
+  "bookARide":"Réserver un trajet"
+
 
 }
