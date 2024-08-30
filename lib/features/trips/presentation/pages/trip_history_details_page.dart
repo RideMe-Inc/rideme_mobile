@@ -7,12 +7,14 @@ import 'package:rideme_mobile/core/mixins/location_mixin.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
+import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/destination_pickup_widget.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
 class TripHistoryDetailsPage extends StatefulWidget {
@@ -191,23 +193,116 @@ class _TripHistoryDetailsPageState extends State<TripHistoryDetailsPage>
 
                         Space.height(context, 0.02),
 
+                        TripPickUpDestinationWidget(
+                          pickup: tripDetails.pickupAddress ?? '',
+                          dropoff: tripDetails.destinations?.last.address ?? '',
+                          pickupTime: tripDetails.createdAt,
+                          dropoffTime: tripDetails.completedAt,
+                        ),
+
+                        _TripDetailsListingWidget(
+                            label: context.appLocalizations.tripDistance,
+                            value: '0km'),
+                        Space.height(context, 0.026),
+
+                        //PAYMENT DETAILS
+
+                        Text(
+                          context.appLocalizations.paymentDetails,
+                          style: context.textTheme.displayMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        _TripDetailsListingWidget(
+                          label: context.appLocalizations.initialAmount,
+                          value: context.appLocalizations.amountAndCurrency(
+                              tripDetails.amountCharged?.toString() ?? '0'),
+                        ),
+                        _TripDetailsListingWidget(
+                          label: context.appLocalizations.discount,
+                          valueColor: AppColors.rideMeBlueNormal,
+                          value: context.appLocalizations.amountAndCurrency(
+                              tripDetails.discountAmount?.toString() ?? '0'),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Container(
+                    color: AppColors.rideMeBackgroundLight,
+                    margin: EdgeInsets.only(top: Sizes.height(context, 0.027)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Sizes.height(context, 0.02)),
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.appLocalizations.total,
+                          style: context.textTheme.displayMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Space.height(context, 0.016),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            TripPickUpDestinationWidget(
-                              pickup: tripDetails.pickupAddress ?? '',
-                              dropoff:
-                                  tripDetails.destinations?.last.address ?? '',
+                            //indicator
+                            Row(
+                              children: [
+                                Image.asset(
+                                  PaymentTypes.values
+                                      .where(
+                                        (element) =>
+                                            element.name ==
+                                            tripDetails.paymentMethod,
+                                      )
+                                      .first
+                                      .imagePath,
+                                  height: Sizes.height(context, 0.028),
+                                ),
+                                Space.width(context, 0.032),
+                                Text(
+                                  PaymentTypes.values
+                                      .where(
+                                        (element) =>
+                                            element.name ==
+                                            tripDetails.paymentMethod,
+                                      )
+                                      .first
+                                      .type,
+                                  style:
+                                      context.textTheme.displayMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
                             ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [],
-                            )
+
+                            //amount
+
+                            Text(
+                              context.appLocalizations.amountAndCurrency(
+                                  tripDetails.totalAmount.toString()),
+                              style: context.textTheme.displayMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
+                        ),
+                        Space.height(context, 0.04),
+                        GenericButton(
+                          onTap: () {},
+                          label: context.appLocalizations.reportTrip,
+                          isActive: true,
+                          buttonColor: AppColors.rideMeErrorNormal,
                         )
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             );
@@ -215,6 +310,43 @@ class _TripHistoryDetailsPageState extends State<TripHistoryDetailsPage>
 
           return Space.height(context, 0);
         },
+      ),
+    );
+  }
+}
+
+class _TripDetailsListingWidget extends StatelessWidget {
+  final String label, value;
+  final Color? valueColor;
+  const _TripDetailsListingWidget({
+    super.key,
+    required this.label,
+    required this.value,
+    this.valueColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: Sizes.height(context, 0.016)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: context.textTheme.displaySmall?.copyWith(
+              color: AppColors.rideMeGreyNormalActive,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            value,
+            style: context.textTheme.displaySmall?.copyWith(
+              color: valueColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }
