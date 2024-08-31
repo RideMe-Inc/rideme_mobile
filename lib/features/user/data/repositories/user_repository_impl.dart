@@ -34,4 +34,46 @@ class UserRepositoryImpl implements UserRepository {
       return const Left('An error occured');
     }
   }
+
+  //DELETE ACCOUNT
+  @override
+  Future<Either<String, String>> deleteAccount(
+      Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteDatasource.deleteAccount(params);
+
+        return Right(response);
+      } catch (e) {
+        if (e is ErrorException) {
+          return Left(e.toString());
+        }
+
+        return const Left('An error occured');
+      }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
+
+  //EDIT PROFILE
+
+  @override
+  Future<Either<String, User>> editProfile(Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteDatasource.editProfile(params);
+
+        return Right(response);
+      } catch (e) {
+        if (e is ErrorException) {
+          return Left(e.toString());
+        }
+
+        return const Left('An error occured');
+      }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
 }

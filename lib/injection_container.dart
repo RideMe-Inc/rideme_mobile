@@ -63,6 +63,8 @@ import 'package:rideme_mobile/features/user/data/datasources/localds.dart';
 import 'package:rideme_mobile/features/user/data/datasources/remoteds.dart';
 import 'package:rideme_mobile/features/user/data/repositories/user_repository_impl.dart';
 import 'package:rideme_mobile/features/user/domain/repositories/user_repository.dart';
+import 'package:rideme_mobile/features/user/domain/usecases/delete_account.dart';
+import 'package:rideme_mobile/features/user/domain/usecases/edit_profile.dart';
 import 'package:rideme_mobile/features/user/domain/usecases/get_user_profile.dart';
 import 'package:rideme_mobile/features/user/presentation/bloc/user_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -330,11 +332,15 @@ initUser() {
   sl.registerFactory(
     () => UserBloc(
       getUserProfile: sl(),
+      deleteAccount: sl(),
+      editProfile: sl(),
     ),
   );
 
   //usecases
   sl.registerLazySingleton(() => GetUserProfile(repository: sl()));
+  sl.registerLazySingleton(() => DeleteAccount(repository: sl()));
+  sl.registerLazySingleton(() => EditProfile(repository: sl()));
 
   //repository
   sl.registerLazySingleton<UserRepository>(
