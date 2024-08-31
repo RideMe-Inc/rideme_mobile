@@ -197,6 +197,7 @@ class GenericTextField extends StatelessWidget {
               style: context.textTheme.displaySmall?.copyWith(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
+                color: enabled ?? true ? null : AppColors.rideMeGreyDarkHover,
               ),
               decoration: InputDecoration(
                 filled: filled,

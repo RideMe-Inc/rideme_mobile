@@ -13,6 +13,8 @@ import 'package:rideme_mobile/features/trips/presentation/pages/map_point_select
 import 'package:rideme_mobile/features/trips/presentation/pages/price_selection_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history_details_page.dart';
+import 'package:rideme_mobile/features/user/presentation/pages/delete_account_page.dart';
+import 'package:rideme_mobile/features/user/presentation/pages/edit_profile.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/profile.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/promotions.dart';
@@ -142,6 +144,20 @@ final GoRouter goRouterConfiguration = GoRouter(
           name: 'profile',
           path: 'profile',
           builder: (context, state) => const ProfilePage(),
+          routes: [
+            //edit profile
+            GoRoute(
+              name: 'editProfile',
+              path: 'edit',
+              builder: (context, state) => const EditProfilePage(),
+            ),
+            //deleteAccount
+            GoRoute(
+              name: 'deleteAccount',
+              path: 'delete-account',
+              builder: (context, state) => const DeleteAccountPage(),
+            ),
+          ],
         ),
 
         //payment
