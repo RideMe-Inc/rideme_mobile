@@ -23,3 +23,35 @@ final class GetUserProfileError extends UserState {
 
   const GetUserProfileError({required this.message});
 }
+
+//DELETE ACCOUNT
+
+final class DeleteAccountLoading extends UserState {}
+
+final class DeleteAccountLoaded extends UserState {
+  final String message;
+
+  const DeleteAccountLoaded({required this.message});
+}
+
+final class DeleteAccountError extends UserState {
+  final String message;
+
+  const DeleteAccountError({required this.message});
+}
+
+//EDiT PROFLE
+
+final class EditProfileLoading extends UserState {}
+
+final class EditProfileLoaded extends UserState {
+  final User user;
+
+  const EditProfileLoaded({required this.user});
+}
+
+final class EditProfileError extends UserState {
+  final String message;
+
+  const EditProfileError({required this.message});
+}

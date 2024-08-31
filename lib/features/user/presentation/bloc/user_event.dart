@@ -12,3 +12,16 @@ final class GetUserProfileEvent extends UserEvent {
 
   const GetUserProfileEvent({required this.params});
 }
+
+//DELETE ACCOUNT
+final class DeleteAccountEvent extends UserEvent {
+  final Map<String, dynamic> params;
+
+  const DeleteAccountEvent({required this.params});
+}
+
+//EDT PROFLE
+final class EditProfileEvent extends UserEvent {
+  final Map<String, dynamic> params;
+  const EditProfileEvent({required this.params});
+}

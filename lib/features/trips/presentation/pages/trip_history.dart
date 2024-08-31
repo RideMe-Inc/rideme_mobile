@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rideme_mobile/assets/images/image_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
+import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/become_a_driver_card.dart';
+import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/drop_off_location_bottom_sheet.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/history_sections.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
@@ -23,6 +27,7 @@ class TripHistoryPage extends StatefulWidget {
 
 class _TripHistoryPageState extends State<TripHistoryPage> {
   final tripsBloc = sl<TripsBloc>();
+  late LocationProvider locationProvider;
   ScrollController historyListingController = ScrollController();
 
   fetchDetails({
@@ -51,6 +56,7 @@ class _TripHistoryPageState extends State<TripHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    locationProvider = context.read<LocationProvider>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -127,29 +133,63 @@ class _TripHistoryPageState extends State<TripHistoryPage> {
                   );
 
                   return state.tripDetails.isEmpty
-                      ? Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Image.asset(
-                              //   ImageNameConstants.file,
-                              //   width: Sizes.width(context, 0.196),
-                              // ),
-                              Space.height(context, 0.06),
-                              Text(
-                                context.appLocalizations.noTripsTitle,
-                                style:
-                                    context.textTheme.displayMedium?.copyWith(),
-                              ),
-                              Space.height(context, 0.08),
-                              Text(
-                                context.appLocalizations.noTripsSubtitle,
-                                style: context.textTheme.displaySmall?.copyWith(
-                                  fontSize: 12,
+                      ? Expanded(
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  ImageNameConstants.noTripsImagePinIMG,
+                                  width: Sizes.width(context, 0.3),
+                                  height: Sizes.height(context, 0.145),
                                 ),
-                              ),
-                            ],
+                                Space.height(context, 0.038),
+                                Text(
+                                  context.appLocalizations.noTripHistoryYet,
+                                  style:
+                                      context.textTheme.displayMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Space.height(context, 0.008),
+                                Text(
+                                  context.appLocalizations.noTripHistoryYetInfo,
+                                  style: context.textTheme.displaySmall
+                                      ?.copyWith(),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Space.height(context, 0.18),
+                                GenericButton(
+                                  onTap: () {
+                                    context.pop();
+                                    context.pop();
+                                    Map locations = {
+                                      "pickUp": [
+                                        {
+                                          "name": locationProvider
+                                              .geoDataInfo?.address,
+                                          "id":
+                                              locationProvider.geoDataInfo?.id,
+                                          "lat":
+                                              locationProvider.geoDataInfo?.lat,
+                                          "lng":
+                                              locationProvider.geoDataInfo?.lng,
+                                        }
+                                      ],
+                                      "dropOff": [{}],
+                                    };
+
+                                    buildWhereToBottomSheet(
+                                      context: context,
+                                      locations: locations,
+                                    );
+                                  },
+                                  label: context.appLocalizations.bookARide,
+                                  isActive: true,
+                                )
+                              ],
+                            ),
                           ),
                         )
                       //history sections

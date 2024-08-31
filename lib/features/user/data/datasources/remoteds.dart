@@ -7,6 +7,12 @@ import 'package:http/http.dart' as http;
 abstract class UserRemoteDatasource {
   //get user profile
   Future<UserModel> getUserProfile(Map<String, dynamic> params);
+
+  //delete account
+  Future<String> deleteAccount(Map<String, dynamic> params);
+
+  //edit  profile
+  Future<UserModel> editProfile(Map<String, dynamic> params);
 }
 
 class UserRemoteDatasourceImpl
@@ -26,6 +32,32 @@ class UserRemoteDatasourceImpl
       urls: urls,
       endpoint: Endpoints.profile,
       params: params,
+    );
+
+    return UserModel.fromJson(decodedResponse['profile']);
+  }
+
+  //DELETE ACCOUNT
+
+  @override
+  Future<String> deleteAccount(Map<String, dynamic> params) async {
+    final decodedResponse = await delete(
+      client: client,
+      urls: urls,
+      params: params,
+      endpoint: Endpoints.profile,
+    );
+
+    return decodedResponse['message'];
+  }
+
+  @override
+  Future<UserModel> editProfile(Map<String, dynamic> params) async {
+    final decodedResponse = await patch(
+      client: client,
+      urls: urls,
+      params: params,
+      endpoint: Endpoints.profile,
     );
 
     return UserModel.fromJson(decodedResponse['profile']);

@@ -16,4 +16,5 @@ class ImageNameConstants {
   static const mapIndicatorIMG = '$_baseUrl/map_indicator.png';
   static const ridemeLogoIMG = '$_baseUrl/rideme_logo.png';
   static const locationPinIMG = '$_baseUrl/location_pin.png';
+  static const noTripsImagePinIMG = '$_baseUrl/no_trips_image.png';
 }
