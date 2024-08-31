@@ -404,6 +404,9 @@
   "pleaseTakeNote": "Please take note:",
   "update":"Update",
 
+  "driverNotFound":"Driver not found",
+  "driverNotFoundInfo":"There are currently no drivers around you",
+
 
 
   

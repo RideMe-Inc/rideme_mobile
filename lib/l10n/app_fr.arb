@@ -414,7 +414,10 @@
   "acountAssociatedWith": "Le compte associé à",
   "update":"Mise à jour",
   
-  "pleaseTakeNote": "Prenez des notes s'il vous plaît:"
+  "pleaseTakeNote": "Prenez des notes s'il vous plaît:",
+  "driverNotFound":"Chauffeur non trouvé",
+  "driverNotFoundInfo":"Il n'y a actuellement aucun chauffeur autour de vous"
+
 
 
 
