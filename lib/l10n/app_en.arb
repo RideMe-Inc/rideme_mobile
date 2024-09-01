@@ -266,7 +266,7 @@
   "tooLongToArrive": "The rider took too long to arrive",
   "multiplePickupsAndDropoffs": "Multiple Pickups and Dropoffs",
   "invalidFormatForItemWeight": "Invalid format for item weight",
-  "checkBoxBeginning": "Check the box if you agree to the ShaQ ",
+  "checkBoxBeginning": "Check the box if you agree to the RideMe ",
   "thisMightTakeAWhile": "This might take a while please hold on",
   "tooExpensive": "Too expensive , I can't afford your services.",
   "longPickupTime": "Long pickup time, rider is taking too long.",
@@ -292,7 +292,7 @@
   "addPasswordSubtitle": "Add a password to your account as another login option",
   "amountPayableDesc": "Select payment method or give cash payable to\nthe rider.",
   "loginWithEmailSubtitle": "Enter your email we'll send you a verification code.",
-  "letsGetYouStartedSubtitle": "First let's create your ShaQ Express account with ",
+  "letsGetYouStartedSubtitle": "First let's create your RideMe account with ",
   "verifyPhoneNumberSubtitle": "Enter the 6 digit number sent to your mobile number ",
   "worldwideDeliveryDescription": "Send and receive packages from different regions ",
   "changePasswordDesc": "Input old password and type new one to\nreset your password.",
@@ -306,7 +306,7 @@
   "noNewNotificationsDescription": "You'll get updates on promotions deals and\n trip notifications.",
   "bookingSuccessfulSubtitle": "Our staff will contact you soon for additional\ninformation and payment.",
   "reportTripDescription": "Please report trip incidents to help better your\nexperience and our services",
-  "choosePaymentMethodDesc": "Select payment to enjoy a stress free delivery\nevery time you use ShaQ Express.",
+  "choosePaymentMethodDesc": "Select payment to enjoy a stress free delivery\nevery time you use RideMe.",
   "refreshMapExperience": "Refresh your map experience by clearing the cache. This might mean deleting stored map data",
   "disclaimerInfo": "Please note that giving any money aside from the delivery fee to riders is at your own risk. Thank you.",
   "cancelTripConfirmationMessage": "Please be aware that cancellations may incur charges as outlined in our terms and conditions",
@@ -399,13 +399,23 @@
   "deleteAccountHeader": "Are you sure you want to delete your account?",
 
   "acountAssociatedWith": "Account associated with",
-  "accountAssociatedContinuation": "would be deleted from ShaQ App",
+  "accountAssociatedContinuation": "would be deleted from RideMe",
 
   "pleaseTakeNote": "Please take note:",
   "update":"Update",
 
   "driverNotFound":"Driver not found",
   "driverNotFoundInfo":"There are currently no drivers around you",
+
+  "cancelReason1": "Driver is taking longer to respond",
+  "cancelReason2":"The driver is  a bit far",
+  "cancelReason3":"Wrong location placed",
+  "cancelReason4":"Trip is expensive",
+  "tripCancelInfo":"Please select reason for cancelling your trip",
+  "others":"Others",
+
+  
+
 
 
 

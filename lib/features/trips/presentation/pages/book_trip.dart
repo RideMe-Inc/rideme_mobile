@@ -189,6 +189,7 @@ class _BookTripPageState extends State<BookTripPage> {
 
                 final jsonString = jsonEncode(params);
 
+                context.pop();
                 context.pushNamed('priceSelection', queryParameters: {
                   "pricing": jsonString,
                   "isScheduled": 'false',

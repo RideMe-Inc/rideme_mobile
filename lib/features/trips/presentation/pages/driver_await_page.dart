@@ -11,6 +11,7 @@ import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/cancel_trip_selection_bs.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/my_location_section_widget.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/payment_method_section_widget.dart';
@@ -76,13 +77,10 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
   }
 
   //TODO: RETRY FUNCTIONALITY
-  //TODO: CANCEL TRIP FUNCTIONALITY
 
   @override
   void dispose() {
     mapController.dispose();
-
-    //TODO: DROP THE ANIMATION CONTROLLER
     terminateTracking(tripDetailsInfo!.id!.toString());
     super.dispose();
   }
@@ -262,7 +260,11 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                                   ),
                                   Space.height(context, 0.042),
                                   GenericButton(
-                                    onTap: () {},
+                                    onTap: () => buildCancelTripReasonsBS(
+                                      context: context,
+                                      tripId:
+                                          tripDetailsInfo?.id?.toString() ?? '',
+                                    ),
                                     label: context.appLocalizations.cancelTrip,
                                     isActive: true,
                                     buttonColor: AppColors.rideMeErrorNormal,

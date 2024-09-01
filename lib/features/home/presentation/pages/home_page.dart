@@ -16,10 +16,13 @@ import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/become_a_driver_card.dart';
+import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
+import 'package:rideme_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
 import 'package:rideme_mobile/features/home/presentation/widgets/book_trip_for_later_bottom_sheet.dart';
 import 'package:rideme_mobile/features/home/presentation/widgets/dropoff_field_widget.dart';
 import 'package:rideme_mobile/features/home/presentation/widgets/nav_bar_widget.dart';
+import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/drop_off_location_bottom_sheet.dart';
 import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
@@ -39,6 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   final permissionBloc = sl<PermissionBloc>();
   final locationBloc = sl<LocationBloc>();
+  final homeBloc = sl<HomeBloc>();
 
   Set<Marker> markers = {};
   DateTime chosenDate = DateTime.now();
@@ -60,14 +64,14 @@ class _HomePageState extends State<HomePage> {
   //   homeBloc.add(FetchRidersNearMeEvent(params: params));
   // }
 
-  // fetchTopLocations() {
-  //   final params = {
-  //     "locale": context.read<LocaleProvider>().locale,
-  //     "bearer": 'Bearer ${context.read<HomeProvider>().refreshedToken}'
-  //   };
+  fetchTopLocations() {
+    final params = {
+      "locale": context.read<LocaleProvider>().locale,
+      "bearer": context.read<AuthenticationProvider>().token,
+    };
 
-  //   homeBloc.add(GetTopLocationsEvent(params: params));
-  // }
+    homeBloc.add(FetchTopPlacesEvent(params: params));
+  }
 
   late GoogleMapController mapController;
 
@@ -122,7 +126,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // user = userBloc.getCachedUserWithoutSafety();
     permissionBloc.add(RequestLocationPemEvent());
-    // fetchTopLocations();
+    fetchTopLocations();
     // PushNotificationHandler(
     //   context: context,
     //   localNotificationsPlugin: FlutterLocalNotificationsPlugin(),
@@ -174,6 +178,20 @@ class _HomePageState extends State<HomePage> {
               }
             },
           ),
+
+          BlocListener(
+            bloc: homeBloc,
+            listener: (context, state) {
+              if (state is FetchTopPlacesLoaded) {
+                print(state.places);
+              }
+
+              if (state is FetchTopPlacesError) {
+                print('hey');
+                print(state.message);
+              }
+            },
+          )
         ],
         child: Stack(
           children: [
@@ -184,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                 myLocationButtonEnabled: false,
                 onMapCreated: onMapCreated,
                 initialCameraPosition: const CameraPosition(
-                  target: LatLng(5.6651369, -0.202062),
+                  target: LatLng(44.9706674, -93.3438785),
                   zoom: 15,
                 ),
                 markers: homeProvider.markers,

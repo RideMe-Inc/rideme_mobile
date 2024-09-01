@@ -258,7 +258,7 @@
   "newPasswordConfirmation": "Confirmer le nouveau mot de passe",
   "tooLongToArrive": "Le cavalier a mis trop de temps à arriver",
   "multiplePickupsAndDropoffs": "Plusieurs ramassages et dépôts",
-  "checkBoxBeginning": "Cochez la case si vous acceptez le ShaQ",
+  "checkBoxBeginning": "Cochez la case si vous acceptez le RideMe",
   "serviceNotRequired": "Je ne souhaite plus réserver le service.",
   "fetchingTripInfo": "Récupération des informations sur le voyage",
   "setPickupDestination": "Définir la destination de prise en charge",
@@ -274,7 +274,7 @@
   "multiplePickupsAndDropoffsDescription": "De nombreux ramassages et dépôts",
   "multiplePickupsDescription": "Un ramassage vers différents points de dépôt",
   "multipleDropoffsDescription": "Retrait de différents endroits vers un seul",
-  "letsGetYouStartedSubtitle": "Créons d'abord votre compte ShaQ Express avec",
+  "letsGetYouStartedSubtitle": "Créons d'abord votre compte RideMe avec",
   "termsAndConditionsRequired": "Vous devez accepter les termes et conditions",
   "cancelTripDesc": "Quelle est la raison pour laquelle vous annulez le voyage?",
   "editEmailDesc": "Nous vous enverrons un e-mail pour vérifier votre\nadresse.",
@@ -306,7 +306,7 @@
   "weHaveSomethingNewSubTitle": "Achetez en ligne, achetez de la nourriture, des médicaments et payez vos factures d'éclairage depuis ECG",
   "disclaimerInfo": "Veuillez noter que donner de l'argent autre que les frais de livraison aux coureurs se fait à vos propres risques. Merci.",
   "cancelTripConfirmationMessage": "Veuillez noter que les annulations peuvent entraîner des frais comme indiqué dans nos termes et conditions",
-  "choosePaymentMethodDesc": "Sélectionnez le paiement pour profiter d'une livraison sans stress\nà chaque fois que vous utilisez ShaQ Express.",
+  "choosePaymentMethodDesc": "Sélectionnez le paiement pour profiter d'une livraison sans stress\nà chaque fois que vous utilisez RideMe.",
   "refreshMapExperience": "Actualisez votre expérience cartographique en vidant le cache. Cela peut impliquer la suppression des données cartographiques stockées",
   "scheduledBookSuccessfulMessage": "Votre réservation est confirmée! Veuillez noter que les voyages retardés peuvent entraîner des frais. Dans l'impatience de vous servir.",
   "deleteAccountMessage": "Nous sommes désolés de vous voir partir. La suppression de votre compte est une décision \npermanente et entraînera la perte de toutes les \ndonnées associées. Si nous pouvons faire quelque chose pour \narépondre à vos préoccupations, veuillez contacter notre équipe d'assistance.",
@@ -410,13 +410,21 @@
 
   "deleteAccountHeader": "Êtes-vous sûr de vouloir supprimer votre compte?",
 
-  "accountAssociatedContinuation": "serait supprimé de ShaQ App",
+  "accountAssociatedContinuation": "serait supprimé de RideMe",
   "acountAssociatedWith": "Le compte associé à",
   "update":"Mise à jour",
   
   "pleaseTakeNote": "Prenez des notes s'il vous plaît:",
   "driverNotFound":"Chauffeur non trouvé",
-  "driverNotFoundInfo":"Il n'y a actuellement aucun chauffeur autour de vous"
+  "driverNotFoundInfo":"Il n'y a actuellement aucun chauffeur autour de vous",
+
+  "cancelReason1": "Le chauffeur met trop de temps à répondre",
+  "cancelReason2":"Le chauffeur est un peu loin",
+  "cancelReason3":"Mauvaise localisation indiquée",
+  "cancelReason4":"Le trajet est trop cher",
+  "tripCancelInfo":"Veuillez sélectionner la raison de l'annulation de votre trajet",
+  "others":"Autres"
+
 
 
 
