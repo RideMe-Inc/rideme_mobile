@@ -82,3 +82,19 @@ final class TerminateTrackingEvent extends TripsEvent {
 
   const TerminateTrackingEvent({required this.params});
 }
+
+//!INITIATE DRIVER LOOKUP
+
+final class InitiateDriverLookupEvent extends TripsEvent {
+  final Map<String, dynamic> params;
+
+  const InitiateDriverLookupEvent({required this.params});
+}
+
+//!TERMINATE DRIVER LOOKUP
+
+final class TerminateDriverLookupEvent extends TripsEvent {
+  final Map<String, dynamic> params;
+
+  const TerminateDriverLookupEvent({required this.params});
+}

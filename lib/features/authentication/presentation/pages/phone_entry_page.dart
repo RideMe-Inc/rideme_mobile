@@ -113,7 +113,7 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                     style: context.textTheme.displaySmall?.copyWith(),
                   ),
                   GestureDetector(
-                    onTap: () => launchLink('https://rideme.com'),
+                    onTap: () => launchLink('https://rideme.app'),
                     child: Text(
                       " ${context.appLocalizations.termsOfService}",
                       style: context.textTheme.displaySmall?.copyWith(
@@ -126,7 +126,7 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                     style: context.textTheme.displaySmall,
                   ),
                   GestureDetector(
-                    onTap: () => launchLink('https://rideme.com'),
+                    onTap: () => launchLink('https://rideme.app'),
                     child: Text(
                       " ${context.appLocalizations.privacyPolicy}",
                       style: context.textTheme.displaySmall?.copyWith(
@@ -139,7 +139,7 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                     style: context.textTheme.displaySmall,
                   ),
                   GestureDetector(
-                    onTap: () => launchLink('https://rideme.com'),
+                    onTap: () => launchLink('https://rideme.app'),
                     child: Text(
                       " ${context.appLocalizations.conditions}.",
                       style: context.textTheme.displaySmall?.copyWith(

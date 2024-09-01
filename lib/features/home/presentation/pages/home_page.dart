@@ -35,6 +35,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late HomeProvider homeProvider;
   late LocationProvider locationProvider;
+  late UserProvider userProvider;
 
   final permissionBloc = sl<PermissionBloc>();
   final locationBloc = sl<LocationBloc>();
@@ -140,6 +141,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     homeProvider = context.watch<HomeProvider>();
     locationProvider = context.watch<LocationProvider>();
+    userProvider = context.watch<UserProvider>();
 
     return Scaffold(
       // drawer: const HomeDrawer(),
@@ -328,9 +330,8 @@ class _HomePageState extends State<HomePage> {
 
                         Space.height(context, 0.014),
                         Text(
-                          context.appLocalizations.helloThere(
-                              context.read<UserProvider>().user?.firstName ??
-                                  ''),
+                          context.appLocalizations
+                              .helloThere(userProvider.user?.firstName ?? ''),
                           style: context.textTheme.displayLarge?.copyWith(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,

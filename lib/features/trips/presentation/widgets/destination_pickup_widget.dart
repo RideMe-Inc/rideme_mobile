@@ -71,12 +71,15 @@ class _LocationTile extends StatelessWidget {
                 ? SvgNameConstants.dropOffPointActiveSVG
                 : SvgNameConstants.destinationSVG),
             Space.width(context, 0.032),
-            Text(
-              address,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: context.textTheme.displaySmall?.copyWith(
-                fontWeight: FontWeight.w500,
+            SizedBox(
+              width: Sizes.width(context, 0.5),
+              child: Text(
+                address,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.textTheme.displaySmall?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             )
           ],

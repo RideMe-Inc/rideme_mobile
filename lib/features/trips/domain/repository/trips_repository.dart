@@ -33,4 +33,12 @@ abstract class TripsRepository {
 
   //terminate tracking
   Future<Either<String, String>> terminateTracking(Map<String, dynamic> params);
+
+  //send event for tracking
+  Stream<Either<String, TrackingInfo>> initiateDriverLookup(
+      Map<String, dynamic> params);
+
+  //terminate tracking
+  Future<Either<String, String>> terminateDriverLookup(
+      Map<String, dynamic> params);
 }

@@ -54,9 +54,11 @@ import 'package:rideme_mobile/features/trips/domain/usecases/edit_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/fetch_pricing.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_all_trips.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_trip_info.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/initiate_driver_lookup.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/rate_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/report_trip.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/terminate_driver_lookup.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/user/data/datasources/localds.dart';
@@ -145,9 +147,7 @@ init() async {
 
   //socket
   sl.registerLazySingleton<WebSocket>(() {
-    final socket = WebSocket(Uri.parse('wss://dss.rideme.app/users/'));
-    // final testingSocket =
-    //     WebSocket(Uri.parse('wss://ws.shaqexpress.com/users/'));
+    final socket = WebSocket(Uri.parse('wss://dss.rideme.app'));
 
     return socket;
   });
@@ -432,11 +432,23 @@ initTrips() {
       initiateTracking: sl(),
       terminateTracking: sl(),
       editTrip: sl(),
+      initiateDriverLookup: sl(),
+      terminateDriverLookup: sl(),
     ),
   );
 
   //usecases
 
+  sl.registerLazySingleton(
+    () => InitiateDriverLookup(
+      repository: sl(),
+    ),
+  );
+  sl.registerLazySingleton(
+    () => TerminateDriverLookup(
+      repository: sl(),
+    ),
+  );
   sl.registerLazySingleton(
     () => InitiateTracking(
       repository: sl(),

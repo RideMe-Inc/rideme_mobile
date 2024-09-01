@@ -139,3 +139,22 @@ final class InitiateTrackingError extends TripsState {
 
   const InitiateTrackingError({required this.message});
 }
+
+//!INITIATE DRIVER LOOKUP
+
+//loading
+final class InitiateDriverLookupLoading extends TripsState {}
+
+//loaded
+final class InitiateDriverLookupLoaded extends TripsState {
+  final TrackingInfo trackingInfo;
+
+  const InitiateDriverLookupLoaded({required this.trackingInfo});
+}
+
+//error
+final class InitiateDriverLookupError extends TripsState {
+  final String message;
+
+  const InitiateDriverLookupError({required this.message});
+}

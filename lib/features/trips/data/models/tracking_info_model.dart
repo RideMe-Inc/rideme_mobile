@@ -6,11 +6,14 @@ class TrackingInfoModel extends TrackingInfo {
     required super.lng,
     required super.heading,
     required super.rating,
-    required super.riderID,
+    required super.driverID,
     required super.name,
     required super.status,
     required super.vehicleType,
     required super.timeToArrival,
+    required super.driverLat,
+    required super.driverLng,
+    required super.tripId,
   });
 
   //fromJson
@@ -20,11 +23,14 @@ class TrackingInfoModel extends TrackingInfo {
       lng: json['lng'],
       heading: json['heading'],
       rating: json['rating'],
-      riderID: json['rider_id'],
+      driverID: json['driver_id'],
       name: json['name'],
       status: json['status'],
       vehicleType: json['vehicle_type'],
       timeToArrival: json['time_to_arrival'],
+      driverLat: json['driver_lat'],
+      driverLng: json['driver_lng'],
+      tripId: json["trip_id"] != null ? json['trip_id'].toString() : null,
     );
   }
 }

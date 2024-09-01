@@ -35,8 +35,15 @@ abstract class TripRemoteDataSource {
   //send event for tracking
   Stream<TrackingInfoModel> initiateTracking(Map<String, dynamic> params);
 
+  //driver look up
+  //send event for tracking
+  Stream<TrackingInfoModel> initiateDriverLookup(Map<String, dynamic> params);
+
   //terminate tracking
   Future<String> terminateTracking(Map<String, dynamic> params);
+
+  //terminate tracking
+  Future<String> terminateDriverLookup(Map<String, dynamic> params);
 
   //apply coupon
   Future<String> applyCoupon(Map<String, dynamic> params);
@@ -170,8 +177,18 @@ class TripRemoteDataSourceImpl
       Map<String, dynamic> params) async* {
     StreamController<TrackingInfoModel> controller =
         StreamController<TrackingInfoModel>();
-    //send message to socket
-    socket.send(jsonEncode(params));
+
+    socket.connection.listen(
+      (event) {
+        if (event is Connected) {
+          //send message to socket
+          socket.send(jsonEncode(params));
+        }
+        if (event is Reconnected) {
+          socket.send(jsonEncode(params));
+        }
+      },
+    );
 
     //listen to tracking event
 
@@ -188,8 +205,17 @@ class TripRemoteDataSourceImpl
 
   @override
   Future<String> terminateTracking(Map<String, dynamic> params) async {
-    //send message to socket
-    socket.send(jsonEncode(params));
+    socket.connection.listen(
+      (event) {
+        if (event is Connected) {
+          //send message to socket
+          socket.send(jsonEncode(params));
+        }
+        if (event is Reconnected) {
+          socket.send(jsonEncode(params));
+        }
+      },
+    );
 
     return '';
   }
@@ -206,5 +232,56 @@ class TripRemoteDataSourceImpl
     );
 
     return decodedResponse['message'];
+  }
+
+  @override
+  Stream<TrackingInfoModel> initiateDriverLookup(
+      Map<String, dynamic> params) async* {
+    StreamController<TrackingInfoModel> controller =
+        StreamController<TrackingInfoModel>();
+
+    socket.connection.listen(
+      (event) {
+        print(event);
+        if (event is Connected) {
+          //send message to socket
+          socket.send(jsonEncode(params));
+        }
+        if (event is Reconnected) {
+          socket.send(jsonEncode(params));
+        }
+      },
+    );
+
+    //listen to tracking event
+
+    socket.messages.listen((event) {
+      final decodedResponse = json.decode(event);
+
+      if (decodedResponse['event'] ==
+          'driver-lookup/${params['data']['trip_id']}') {
+        print(decodedResponse['data']);
+        controller.add(TrackingInfoModel.fromJson(decodedResponse['data']));
+      }
+    });
+
+    yield* controller.stream;
+  }
+
+  @override
+  Future<String> terminateDriverLookup(Map<String, dynamic> params) async {
+    socket.connection.listen(
+      (event) {
+        if (event is Connected) {
+          //send message to socket
+          socket.send(jsonEncode(params));
+        }
+        if (event is Reconnected) {
+          socket.send(jsonEncode(params));
+        }
+      },
+    );
+
+    return '';
   }
 }

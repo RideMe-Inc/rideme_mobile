@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/extensions/date_extension.dart';
 import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
 import 'package:rideme_mobile/features/trips/data/models/trip_destnation_info_model.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
+import 'package:rideme_mobile/features/trips/domain/entities/tracking_info_notice.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/edit_trip.dart';
@@ -24,9 +26,11 @@ import 'package:rideme_mobile/features/trips/domain/usecases/fetch_pricing.dart'
 import 'package:rideme_mobile/features/trips/domain/usecases/get_all_trips.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/get_trip_info.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/initiate_driver_lookup.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/rate_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/report_trip.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/terminate_driver_lookup.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
 
@@ -45,6 +49,8 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   final InitiateTracking initiateTracking;
   final TerminateTracking terminateTracking;
   final EditTrip editTrip;
+  final InitiateDriverLookup initiateDriverLookup;
+  final TerminateDriverLookup terminateDriverLookup;
 
   TripsBloc({
     required this.cancelTrip,
@@ -57,6 +63,8 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     required this.initiateTracking,
     required this.terminateTracking,
     required this.editTrip,
+    required this.initiateDriverLookup,
+    required this.terminateDriverLookup,
   }) : super(TripsInitial()) {
     //! CANCEL TRIP
 
@@ -200,6 +208,27 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     //!TERMINATE TRACKING
     on<TerminateTrackingEvent>((event, emit) async {
       await terminateTracking(event.params);
+    });
+
+    //!INTITIATE DRIVER LOOKUP
+    on<InitiateDriverLookupEvent>((event, emit) async {
+      await emit.forEach(initiateDriverLookup.call(event.params),
+          onData: (data) {
+        emit(InitiateDriverLookupLoading());
+        return data.fold(
+          (error) => InitiateDriverLookupError(
+            message: error,
+          ),
+          (response) => InitiateDriverLookupLoaded(
+            trackingInfo: response,
+          ),
+        );
+      });
+    });
+
+    //!TERMINATE TRACKING
+    on<TerminateDriverLookupEvent>((event, emit) async {
+      await terminateDriverLookup(event.params);
     });
   }
 
@@ -346,5 +375,43 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
         )
         .toList();
     return historyList;
+  }
+
+  //get order page tracking intent
+  TrackingInfoNotice getSearchTrackInfo(
+    TrackingInfo? trackingInfo,
+    BuildContext context,
+  ) {
+    switch (trackingInfo?.status ?? 'searching') {
+      case 'searching':
+        return TrackingInfoNotice(
+          header: context.appLocalizations.checkingForCar,
+          subtitle: context.appLocalizations.checkingForCarInfo,
+        );
+
+      case 'driver-found':
+        return TrackingInfoNotice(
+          header: context.appLocalizations.availableDriverFound,
+          subtitle: context.appLocalizations.availableDriverFoundInfo,
+        );
+
+      case 'driver-not-found':
+        return TrackingInfoNotice(
+          header: context.appLocalizations.driverNotFound,
+          subtitle: context.appLocalizations.driverNotFoundInfo,
+        );
+
+      case 'driver-assigned':
+        return TrackingInfoNotice(
+          header: context.appLocalizations.driverNotFound,
+          subtitle: context.appLocalizations.driverNotFoundInfo,
+        );
+
+      default:
+        return TrackingInfoNotice(
+          header: context.appLocalizations.checkingForCar,
+          subtitle: context.appLocalizations.checkingForCarInfo,
+        );
+    }
   }
 }

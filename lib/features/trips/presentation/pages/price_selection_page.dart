@@ -43,7 +43,7 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
   CreateTripInfo? createTripInfo;
   late GoogleMapController mapController;
   late TripProvider tripProvider;
-  PaymentTypes? paymentTypes;
+  PaymentTypes? paymentTypes = PaymentTypes.cash;
 
   Set<Marker> markers = {};
 
@@ -84,6 +84,7 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
   @override
   void initState() {
     createTripInfo = tripBloc.decodePricingInfo(widget.pricing);
+    selectedPriceId = createTripInfo?.pricing[0].id.toInt();
     super.initState();
   }
 
@@ -100,7 +101,7 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
       body: Stack(
         children: [
           SizedBox(
-            height: Sizes.height(context, 0.8),
+            height: Sizes.height(context, 0.7),
             child: GoogleMap(
               myLocationEnabled: false,
               myLocationButtonEnabled: false,

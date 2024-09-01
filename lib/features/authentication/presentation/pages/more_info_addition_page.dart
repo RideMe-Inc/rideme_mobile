@@ -11,6 +11,7 @@ import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/core/widgets/textfield/generic_textfield_widget.dart';
 import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
+import 'package:rideme_mobile/features/user/presentation/bloc/user_bloc.dart';
 import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
@@ -31,6 +32,7 @@ class _MoreInfoAdditionPageState extends State<MoreInfoAdditionPage> {
   final lastName = TextEditingController();
 
   final authBloc = sl<AuthenticationBloc>();
+  final userBloc = sl<UserBloc>();
 
   signUpUser() {
     final params = {
@@ -46,46 +48,70 @@ class _MoreInfoAdditionPageState extends State<MoreInfoAdditionPage> {
     authBloc.add(SignUpEvent(params: params));
   }
 
+  getUserProfile(String token) {
+    final params = {
+      "locale": context.read<LocaleProvider>().locale,
+      "bearer": token,
+    };
+
+    userBloc.add(GetUserProfileEvent(params: params));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: Sizes.height(context, 0.02)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.appLocalizations.enterFullName,
-                style: context.textTheme.displayLarge?.copyWith(
-                  color: AppColors.rideMeBlackNormalActive,
-                  fontWeight: FontWeight.w600,
+      body: BlocListener(
+        bloc: userBloc,
+        listener: (context, state) {
+          if (state is GetUserProfileLoaded) {
+            //udpate provider with user data and navigate to home
+            context.read<UserProvider>().updateUserInfo = state.user;
+
+            context.goNamed('home');
+          }
+
+          if (state is GetUserProfileError) {
+            context.goNamed('noInternet');
+          }
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: Sizes.height(context, 0.02)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.appLocalizations.enterFullName,
+                  style: context.textTheme.displayLarge?.copyWith(
+                    color: AppColors.rideMeBlackNormalActive,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              Space.height(context, 0.012),
-              Text(
-                context.appLocalizations.enterFullNameInfo,
-                style: context.textTheme.displaySmall,
-              ),
-              Space.height(context, 0.031),
-              GenericTextField(
-                keyboardType: TextInputType.text,
-                label: context.appLocalizations.firstName,
-                hint: context.appLocalizations.enterYourFirstName,
-                controller: firstName,
-                onChanged: (p0) => setState(() {}),
-              ),
-              Space.height(context, 0.016),
-              GenericTextField(
-                keyboardType: TextInputType.text,
-                label: context.appLocalizations.lastName,
-                hint: context.appLocalizations.enterYourLastName,
-                controller: lastName,
-                onChanged: (p0) => setState(() {}),
-              ),
-            ],
+                Space.height(context, 0.012),
+                Text(
+                  context.appLocalizations.enterFullNameInfo,
+                  style: context.textTheme.displaySmall,
+                ),
+                Space.height(context, 0.031),
+                GenericTextField(
+                  keyboardType: TextInputType.text,
+                  label: context.appLocalizations.firstName,
+                  hint: context.appLocalizations.enterYourFirstName,
+                  controller: firstName,
+                  onChanged: (p0) => setState(() {}),
+                ),
+                Space.height(context, 0.016),
+                GenericTextField(
+                  keyboardType: TextInputType.text,
+                  label: context.appLocalizations.lastName,
+                  hint: context.appLocalizations.enterYourLastName,
+                  controller: lastName,
+                  onChanged: (p0) => setState(() {}),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -102,10 +128,13 @@ class _MoreInfoAdditionPageState extends State<MoreInfoAdditionPage> {
               listener: (context, state) {
                 if (state is SignupLoaded) {
                   //update user provider and navigate to home
-                  context.read<UserProvider>().updateUserInfo =
-                      state.authenticationInfo.user!;
 
-                  context.goNamed('home');
+                  getUserProfile(
+                      state.authenticationInfo.authorization!.token!);
+                  // context.read<UserProvider>().updateUserInfo =
+                  //     state.authenticationInfo.user!;
+
+                  // context.goNamed('home');
                 }
                 if (state is GenericAuthenticationError) {
                   showErrorPopUp(state.errorMessage, context);
