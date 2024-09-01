@@ -26,6 +26,11 @@ import 'package:rideme_mobile/features/authentication/domain/usecases/recover_to
 import 'package:rideme_mobile/features/authentication/domain/usecases/sign_up.dart';
 import 'package:rideme_mobile/features/authentication/domain/usecases/verify_otp.dart';
 import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:rideme_mobile/features/home/data/datasources/remoteds.dart';
+import 'package:rideme_mobile/features/home/data/repositories/home_repository_impl.dart';
+import 'package:rideme_mobile/features/home/domain/repositories/home_repository.dart';
+import 'package:rideme_mobile/features/home/domain/usecases/fetch_top_places.dart';
+import 'package:rideme_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:rideme_mobile/features/localization/data/datasources/localds.dart';
 import 'package:rideme_mobile/features/localization/data/repository/repo_impl.dart';
 import 'package:rideme_mobile/features/localization/domain/repository/localization_repo.dart';
@@ -80,6 +85,9 @@ final sl = GetIt.instance;
 
 init() async {
   //!INTERNAL
+
+  //home
+  initHome();
 
   //permissions
   initPermissions();
@@ -151,6 +159,27 @@ init() async {
 
     return socket;
   });
+}
+
+//!INITI HOME
+initHome() {
+  //bloc
+  sl.registerFactory(
+    () => HomeBloc(fetchTopPlaces: sl()),
+  );
+
+  //usecases
+  sl.registerLazySingleton(() => FetchTopPlaces(repository: sl()));
+
+  //repository
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(remoteDatasource: sl(), networkInfo: sl()),
+  );
+
+  //datasources
+  sl.registerLazySingleton<HomeRemoteDatasource>(
+    () => HomeRemoteDatasourceImpl(urls: sl(), client: sl()),
+  );
 }
 
 //!INIT PERMISSIONS

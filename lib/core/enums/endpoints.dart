@@ -21,6 +21,7 @@ enum Endpoints {
   myLocation(value: '/geo-data'),
   addresses(value: '/address'),
   editAddress(value: '/address/:id'),
+  topPlaces(value: '/profile/top-places'),
 
   applyCoupon(value: '/coupons/');
 
