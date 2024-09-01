@@ -260,7 +260,6 @@ class TripRemoteDataSourceImpl
 
       if (decodedResponse['event'] ==
           'driver-lookup/${params['data']['trip_id']}') {
-        print(decodedResponse['data']);
         controller.add(TrackingInfoModel.fromJson(decodedResponse['data']));
       }
     });

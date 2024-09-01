@@ -319,7 +319,6 @@ class _TripDetailsListingWidget extends StatelessWidget {
   final String label, value;
   final Color? valueColor;
   const _TripDetailsListingWidget({
-    super.key,
     required this.label,
     required this.value,
     this.valueColor,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -34,8 +36,28 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
   final tripsBloc2 = sl<TripsBloc>();
   late GoogleMapController mapController;
   TrackingInfo? trackingInfo;
-
   TripDetails? tripDetailsInfo;
+
+  Timer? timer;
+  int _minute = 0;
+  int _seconds = 0;
+  int seconds = 0;
+
+  countdown() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (seconds == 59) {
+        setState(() {
+          seconds = 0;
+          _minute += 1;
+          _seconds = 0;
+        });
+      } else if (seconds >= 0) {
+        seconds++;
+        _seconds += 1;
+        setState(() {});
+      }
+    });
+  }
 
   void onMapCreated(GoogleMapController controller) async {
     mapController = controller;
@@ -72,7 +94,7 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
   void initState() {
     tripDetailsInfo = tripsBloc.decodeTripDetailsInfo(widget.tripInfo);
     initTracking();
-
+    countdown();
     super.initState();
   }
 
@@ -82,6 +104,7 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
   void dispose() {
     mapController.dispose();
     terminateTracking(tripDetailsInfo!.id!.toString());
+    timer?.cancel();
     super.dispose();
   }
 
@@ -93,10 +116,12 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
           BlocListener(
             bloc: tripsBloc2,
             listener: (context, state) {
-              print(state);
               if (state is InitiateDriverLookupLoaded) {
-                print(state.trackingInfo);
                 trackingInfo = state.trackingInfo;
+
+                if (trackingInfo?.status == 'driver-not-found') {
+                  timer?.cancel();
+                }
 
                 setState(() {});
               }
@@ -190,6 +215,7 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                         //STATUS UPDATES WILL BE HERE
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,6 +238,10 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                                   ),
                                 ),
                               ],
+                            ),
+                            Text(
+                              '$_minute:${_seconds < 10 ? '0$_seconds' : _seconds}',
+                              style: context.textTheme.displaySmall,
                             )
                           ],
                         ),
@@ -239,6 +269,7 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   MyLocationSectionWidget(
+                                      editable: false,
                                       onEditTap: () {},
                                       onAddDestinationTap: () {},
                                       pickUp:
@@ -248,6 +279,7 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                                           ''),
                                   Space.height(context, 0.03),
                                   PaymentMethodSectionWidget(
+                                    editable: false,
                                     paymentTypes:
                                         PaymentTypes.values.firstWhere(
                                       (element) =>

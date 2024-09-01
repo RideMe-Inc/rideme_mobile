@@ -187,7 +187,6 @@ class _HomePageState extends State<HomePage> {
               }
 
               if (state is FetchTopPlacesError) {
-                print('hey');
                 print(state.message);
               }
             },

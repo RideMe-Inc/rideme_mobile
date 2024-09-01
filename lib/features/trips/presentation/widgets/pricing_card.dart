@@ -55,7 +55,6 @@ class _PricingCardState extends State<PricingCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    //TODO: CHECK IMAGE
                     //car image
                     Image.asset(
                       CarTypesImages.values
