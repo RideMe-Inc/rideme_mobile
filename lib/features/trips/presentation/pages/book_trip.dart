@@ -413,6 +413,8 @@ class _BookTripPageState extends State<BookTripPage> {
                                 dropOffLocationControllers[index].text =
                                     responseInfo['name'];
                               });
+
+                              fetchPricing();
                             }
                           },
                         ),
