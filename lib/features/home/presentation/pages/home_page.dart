@@ -182,6 +182,7 @@ class _HomePageState extends State<HomePage> {
           BlocListener(
             bloc: homeBloc,
             listener: (context, state) {
+              //TODO: IMPLEMENT TOP PLACES
               if (state is FetchTopPlacesLoaded) {
                 print(state.places);
               }
@@ -197,6 +198,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: Sizes.height(context, 0.8),
               child: GoogleMap(
+                mapType: MapType.terrain,
                 myLocationEnabled: true,
                 myLocationButtonEnabled: false,
                 onMapCreated: onMapCreated,

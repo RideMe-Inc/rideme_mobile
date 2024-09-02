@@ -103,6 +103,7 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
           SizedBox(
             height: Sizes.height(context, 0.7),
             child: GoogleMap(
+              mapType: MapType.terrain,
               myLocationEnabled: false,
               myLocationButtonEnabled: false,
               polylines: {
