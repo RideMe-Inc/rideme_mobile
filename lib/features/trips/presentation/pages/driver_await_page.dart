@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:rideme_mobile/assets/images/image_name_constants.dart';
@@ -10,6 +12,9 @@ import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
+import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
+import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
+import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
@@ -34,6 +39,7 @@ class DriverAwaitPage extends StatefulWidget {
 class _DriverAwaitPageState extends State<DriverAwaitPage> {
   final tripsBloc = sl<TripsBloc>();
   final tripsBloc2 = sl<TripsBloc>();
+  final tripsBloc3 = sl<TripsBloc>();
   late GoogleMapController mapController;
   TrackingInfo? trackingInfo;
   TripDetails? tripDetailsInfo;
@@ -98,8 +104,6 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
     super.initState();
   }
 
-  //TODO: RETRY FUNCTIONALITY
-
   @override
   void dispose() {
     mapController.dispose();
@@ -133,6 +137,24 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
             bloc: tripsBloc,
             listener: (context, state) {
               // TODO: implement listener
+            },
+          ),
+          BlocListener(
+            bloc: tripsBloc3,
+            listener: (context, state) {
+              if (state is RetryBookingLoaded) {
+                final params = state.createTripInfo.toMap();
+
+                final jsonString = jsonEncode(params);
+
+                context.goNamed('priceSelection', queryParameters: {
+                  "pricing": jsonString,
+                  "isScheduled": 'false',
+                });
+              }
+              if (state is RetryBookingError) {
+                showErrorPopUp(state.message, context);
+              }
             },
           ),
         ],
@@ -258,10 +280,32 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                                     ),
                                   ),
                                   Space.height(context, 0.058),
-                                  GenericButton(
-                                    onTap: () {},
-                                    label: context.appLocalizations.retry,
-                                    isActive: true,
+                                  BlocBuilder(
+                                    bloc: tripsBloc3,
+                                    builder: (context, state) {
+                                      if (state is RetryBookingLoading) {
+                                        return const LoadingIndicator();
+                                      }
+                                      return GenericButton(
+                                        onTap: () {
+                                          final params = {
+                                            "locale": context
+                                                .appLocalizations.localeName,
+                                            "bearer": context
+                                                .read<AuthenticationProvider>()
+                                                .token,
+                                            "body": {
+                                              "trip_id": tripDetailsInfo?.id
+                                            }
+                                          };
+
+                                          tripsBloc3.add(RetryBookingEvent(
+                                              params: params));
+                                        },
+                                        label: context.appLocalizations.retry,
+                                        isActive: true,
+                                      );
+                                    },
                                   ),
                                 ],
                               )
