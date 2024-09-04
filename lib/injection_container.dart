@@ -26,6 +26,11 @@ import 'package:rideme_mobile/features/authentication/domain/usecases/recover_to
 import 'package:rideme_mobile/features/authentication/domain/usecases/sign_up.dart';
 import 'package:rideme_mobile/features/authentication/domain/usecases/verify_otp.dart';
 import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
+import 'package:rideme_mobile/features/home/data/datasources/remoteds.dart';
+import 'package:rideme_mobile/features/home/data/repositories/home_repository_impl.dart';
+import 'package:rideme_mobile/features/home/domain/repositories/home_repository.dart';
+import 'package:rideme_mobile/features/home/domain/usecases/fetch_top_places.dart';
+import 'package:rideme_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:rideme_mobile/features/localization/data/datasources/localds.dart';
 import 'package:rideme_mobile/features/localization/data/repository/repo_impl.dart';
 import 'package:rideme_mobile/features/localization/domain/repository/localization_repo.dart';
@@ -54,9 +59,12 @@ import 'package:rideme_mobile/features/trips/domain/usecases/edit_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/fetch_pricing.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_all_trips.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_trip_info.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/initiate_driver_lookup.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/rate_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/report_trip.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/retry_booking.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/terminate_driver_lookup.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/user/data/datasources/localds.dart';
@@ -78,6 +86,9 @@ final sl = GetIt.instance;
 
 init() async {
   //!INTERNAL
+
+  //home
+  initHome();
 
   //permissions
   initPermissions();
@@ -145,12 +156,31 @@ init() async {
 
   //socket
   sl.registerLazySingleton<WebSocket>(() {
-    final socket = WebSocket(Uri.parse('wss://dss.rideme.app/users/'));
-    // final testingSocket =
-    //     WebSocket(Uri.parse('wss://ws.shaqexpress.com/users/'));
+    final socket = WebSocket(Uri.parse('wss://dss.rideme.app'));
 
     return socket;
   });
+}
+
+//!INITI HOME
+initHome() {
+  //bloc
+  sl.registerFactory(
+    () => HomeBloc(fetchTopPlaces: sl()),
+  );
+
+  //usecases
+  sl.registerLazySingleton(() => FetchTopPlaces(repository: sl()));
+
+  //repository
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(remoteDatasource: sl(), networkInfo: sl()),
+  );
+
+  //datasources
+  sl.registerLazySingleton<HomeRemoteDatasource>(
+    () => HomeRemoteDatasourceImpl(urls: sl(), client: sl()),
+  );
 }
 
 //!INIT PERMISSIONS
@@ -432,11 +462,30 @@ initTrips() {
       initiateTracking: sl(),
       terminateTracking: sl(),
       editTrip: sl(),
+      initiateDriverLookup: sl(),
+      retryBooking: sl(),
+      terminateDriverLookup: sl(),
     ),
   );
 
   //usecases
 
+  sl.registerLazySingleton(
+    () => RetryBooking(
+      repository: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton(
+    () => InitiateDriverLookup(
+      repository: sl(),
+    ),
+  );
+  sl.registerLazySingleton(
+    () => TerminateDriverLookup(
+      repository: sl(),
+    ),
+  );
   sl.registerLazySingleton(
     () => InitiateTracking(
       repository: sl(),

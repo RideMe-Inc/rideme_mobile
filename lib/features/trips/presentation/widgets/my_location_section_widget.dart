@@ -9,12 +9,14 @@ import 'package:rideme_mobile/features/trips/presentation/widgets/destination_pi
 class MyLocationSectionWidget extends StatelessWidget {
   final VoidCallback onEditTap, onAddDestinationTap;
   final String pickUp, dropOff;
+  final bool? editable;
   const MyLocationSectionWidget({
     super.key,
     required this.onEditTap,
     required this.onAddDestinationTap,
     required this.pickUp,
     required this.dropOff,
+    this.editable = true,
   });
 
   @override
@@ -32,16 +34,17 @@ class MyLocationSectionWidget extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            GestureDetector(
-              onTap: onEditTap,
-              child: Text(
-                'Edit',
-                style: context.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.rideMeBlueNormal,
+            if (editable!)
+              GestureDetector(
+                onTap: onEditTap,
+                child: Text(
+                  'Edit',
+                  style: context.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.rideMeBlueNormal,
+                  ),
                 ),
-              ),
-            )
+              )
           ],
         ),
 
@@ -54,22 +57,23 @@ class MyLocationSectionWidget extends StatelessWidget {
 
         Space.height(context, 0.016),
 
-        GestureDetector(
-          onTap: onAddDestinationTap,
-          child: Row(
-            children: [
-              SvgPicture.asset(SvgNameConstants.addDestinationSVG),
-              Space.width(context, 0.032),
-              Text(
-                context.appLocalizations.addDestination,
-                style: context.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.rideMeBlueNormal,
-                ),
-              )
-            ],
+        if (editable!)
+          GestureDetector(
+            onTap: onAddDestinationTap,
+            child: Row(
+              children: [
+                SvgPicture.asset(SvgNameConstants.addDestinationSVG),
+                Space.width(context, 0.032),
+                Text(
+                  context.appLocalizations.addDestination,
+                  style: context.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.rideMeBlueNormal,
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
 
         Space.height(context, 0.014),
 

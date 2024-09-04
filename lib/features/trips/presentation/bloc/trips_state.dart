@@ -121,6 +121,24 @@ final class FetchPricingError extends TripsState {
   const FetchPricingError({required this.message});
 }
 
+//!RETRY BOOKING
+//loading
+final class RetryBookingLoading extends TripsState {}
+
+//loaded
+final class RetryBookingLoaded extends TripsState {
+  final CreateTripInfo createTripInfo;
+
+  const RetryBookingLoaded({required this.createTripInfo});
+}
+
+//error
+final class RetryBookingError extends TripsState {
+  final String message;
+
+  const RetryBookingError({required this.message});
+}
+
 //!INITIATE TRACKING
 
 //loading
@@ -138,4 +156,23 @@ final class InitiateTrackingError extends TripsState {
   final String message;
 
   const InitiateTrackingError({required this.message});
+}
+
+//!INITIATE DRIVER LOOKUP
+
+//loading
+final class InitiateDriverLookupLoading extends TripsState {}
+
+//loaded
+final class InitiateDriverLookupLoaded extends TripsState {
+  final TrackingInfo trackingInfo;
+
+  const InitiateDriverLookupLoaded({required this.trackingInfo});
+}
+
+//error
+final class InitiateDriverLookupError extends TripsState {
+  final String message;
+
+  const InitiateDriverLookupError({required this.message});
 }

@@ -104,6 +104,7 @@ class _LocationSelectionOnMapState extends State<LocationSelectionOnMap> {
           SizedBox(
             height: Sizes.height(context, 0.8),
             child: GoogleMap(
+              mapType: MapType.terrain,
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
               onMapCreated: onMapCreated,

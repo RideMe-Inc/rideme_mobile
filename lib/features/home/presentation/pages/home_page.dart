@@ -1,6 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,15 +13,19 @@ import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart';
 import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
+import 'package:rideme_mobile/core/notifications/notif_handler.dart';
 
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/become_a_driver_card.dart';
+import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
+import 'package:rideme_mobile/features/home/presentation/bloc/home_bloc.dart';
 import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
 import 'package:rideme_mobile/features/home/presentation/widgets/book_trip_for_later_bottom_sheet.dart';
 import 'package:rideme_mobile/features/home/presentation/widgets/dropoff_field_widget.dart';
 import 'package:rideme_mobile/features/home/presentation/widgets/nav_bar_widget.dart';
+import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/drop_off_location_bottom_sheet.dart';
 import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
@@ -35,9 +41,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late HomeProvider homeProvider;
   late LocationProvider locationProvider;
+  late UserProvider userProvider;
 
   final permissionBloc = sl<PermissionBloc>();
   final locationBloc = sl<LocationBloc>();
+  final homeBloc = sl<HomeBloc>();
 
   Set<Marker> markers = {};
   DateTime chosenDate = DateTime.now();
@@ -59,14 +67,14 @@ class _HomePageState extends State<HomePage> {
   //   homeBloc.add(FetchRidersNearMeEvent(params: params));
   // }
 
-  // fetchTopLocations() {
-  //   final params = {
-  //     "locale": context.read<LocaleProvider>().locale,
-  //     "bearer": 'Bearer ${context.read<HomeProvider>().refreshedToken}'
-  //   };
+  fetchTopLocations() {
+    final params = {
+      "locale": context.read<LocaleProvider>().locale,
+      "bearer": context.read<AuthenticationProvider>().token,
+    };
 
-  //   homeBloc.add(GetTopLocationsEvent(params: params));
-  // }
+    homeBloc.add(FetchTopPlacesEvent(params: params));
+  }
 
   late GoogleMapController mapController;
 
@@ -121,12 +129,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // user = userBloc.getCachedUserWithoutSafety();
     permissionBloc.add(RequestLocationPemEvent());
-    // fetchTopLocations();
-    // PushNotificationHandler(
-    //   context: context,
-    //   localNotificationsPlugin: FlutterLocalNotificationsPlugin(),
-    //   messaging: FirebaseMessaging.instance,
-    // );
+    fetchTopLocations();
+    PushNotificationHandler(
+      context: context,
+      localNotificationsPlugin: FlutterLocalNotificationsPlugin(),
+      messaging: FirebaseMessaging.instance,
+    );
     super.initState();
   }
 
@@ -140,6 +148,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     homeProvider = context.watch<HomeProvider>();
     locationProvider = context.watch<LocationProvider>();
+    userProvider = context.watch<UserProvider>();
 
     return Scaffold(
       // drawer: const HomeDrawer(),
@@ -172,17 +181,32 @@ class _HomePageState extends State<HomePage> {
               }
             },
           ),
+
+          BlocListener(
+            bloc: homeBloc,
+            listener: (context, state) {
+              //TODO: IMPLEMENT TOP PLACES
+              if (state is FetchTopPlacesLoaded) {
+                print(state.places);
+              }
+
+              if (state is FetchTopPlacesError) {
+                print(state.message);
+              }
+            },
+          )
         ],
         child: Stack(
           children: [
             SizedBox(
               height: Sizes.height(context, 0.8),
               child: GoogleMap(
+                mapType: MapType.terrain,
                 myLocationEnabled: true,
                 myLocationButtonEnabled: false,
                 onMapCreated: onMapCreated,
                 initialCameraPosition: const CameraPosition(
-                  target: LatLng(5.6651369, -0.202062),
+                  target: LatLng(44.9706674, -93.3438785),
                   zoom: 15,
                 ),
                 markers: homeProvider.markers,
@@ -328,9 +352,8 @@ class _HomePageState extends State<HomePage> {
 
                         Space.height(context, 0.014),
                         Text(
-                          context.appLocalizations.helloThere(
-                              context.read<UserProvider>().user?.firstName ??
-                                  ''),
+                          context.appLocalizations
+                              .helloThere(userProvider.user?.firstName ?? ''),
                           style: context.textTheme.displayLarge?.copyWith(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,

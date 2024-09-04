@@ -57,8 +57,13 @@ class _PricingCardState extends State<PricingCard> {
                   children: [
                     //car image
                     Image.asset(
-                      ImageNameConstants.carIMG,
-                      height: Sizes.height(context, 0.038),
+                      CarTypesImages.values
+                          .firstWhere(
+                            (element) => element.name == widget.pricing.tag,
+                            orElse: () => CarTypesImages.economy,
+                          )
+                          .imagePath,
+                      height: Sizes.height(context, 0.06),
                     ),
                     Space.height(context, 0.018),
                     //price information
@@ -98,8 +103,13 @@ class _PricingCardState extends State<PricingCard> {
                       children: [
                         //car image
                         Image.asset(
-                          ImageNameConstants.carIMG,
-                          height: Sizes.height(context, 0.028),
+                          CarTypesImages.values
+                              .firstWhere(
+                                (element) => element.name == widget.pricing.tag,
+                                orElse: () => CarTypesImages.economy,
+                              )
+                              .imagePath,
+                          height: Sizes.height(context, 0.039),
                         ),
 
                         Space.width(context, 0.048),
@@ -175,4 +185,16 @@ class _TypeAndDescription extends StatelessWidget {
       ],
     );
   }
+}
+
+enum CarTypesImages {
+  suv(imagePath: ImageNameConstants.suvIMG),
+  hybrid(imagePath: ImageNameConstants.hybridIMG),
+  economy(imagePath: ImageNameConstants.economyIMG),
+  electric(imagePath: ImageNameConstants.electricIMG),
+  premium(imagePath: ImageNameConstants.premiumIMG);
+
+  final String imagePath;
+
+  const CarTypesImages({required this.imagePath});
 }

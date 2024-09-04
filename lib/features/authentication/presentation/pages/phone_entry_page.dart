@@ -1,9 +1,12 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/mixins/url_launcher_mixin.dart';
+import 'package:rideme_mobile/core/notifications/notif_handler.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
@@ -39,6 +42,16 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
     };
 
     authBloc.add(InitAuthenticationEvent(params: params));
+  }
+
+  @override
+  void initState() {
+    PushNotificationHandler(
+      context: context,
+      localNotificationsPlugin: FlutterLocalNotificationsPlugin(),
+      messaging: FirebaseMessaging.instance,
+    );
+    super.initState();
   }
 
   @override
@@ -113,7 +126,7 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                     style: context.textTheme.displaySmall?.copyWith(),
                   ),
                   GestureDetector(
-                    onTap: () => launchLink('https://rideme.com'),
+                    onTap: () => launchLink('https://rideme.app'),
                     child: Text(
                       " ${context.appLocalizations.termsOfService}",
                       style: context.textTheme.displaySmall?.copyWith(
@@ -126,7 +139,7 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                     style: context.textTheme.displaySmall,
                   ),
                   GestureDetector(
-                    onTap: () => launchLink('https://rideme.com'),
+                    onTap: () => launchLink('https://rideme.app'),
                     child: Text(
                       " ${context.appLocalizations.privacyPolicy}",
                       style: context.textTheme.displaySmall?.copyWith(
@@ -139,7 +152,7 @@ class _PhoneEntryPageState extends State<PhoneEntryPage> with UrlLauncherMixin {
                     style: context.textTheme.displaySmall,
                   ),
                   GestureDetector(
-                    onTap: () => launchLink('https://rideme.com'),
+                    onTap: () => launchLink('https://rideme.app'),
                     child: Text(
                       " ${context.appLocalizations.conditions}.",
                       style: context.textTheme.displaySmall?.copyWith(

@@ -67,6 +67,13 @@ final class FetchPricingEvent extends TripsEvent {
   const FetchPricingEvent({required this.params});
 }
 
+//!RETRY BOOKING
+final class RetryBookingEvent extends TripsEvent {
+  final Map<String, dynamic> params;
+
+  const RetryBookingEvent({required this.params});
+}
+
 //!INITIATE TRACKING
 
 final class InitiateTrackingEvent extends TripsEvent {
@@ -81,4 +88,20 @@ final class TerminateTrackingEvent extends TripsEvent {
   final Map<String, dynamic> params;
 
   const TerminateTrackingEvent({required this.params});
+}
+
+//!INITIATE DRIVER LOOKUP
+
+final class InitiateDriverLookupEvent extends TripsEvent {
+  final Map<String, dynamic> params;
+
+  const InitiateDriverLookupEvent({required this.params});
+}
+
+//!TERMINATE DRIVER LOOKUP
+
+final class TerminateDriverLookupEvent extends TripsEvent {
+  final Map<String, dynamic> params;
+
+  const TerminateDriverLookupEvent({required this.params});
 }

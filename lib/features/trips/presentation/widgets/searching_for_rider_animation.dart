@@ -238,11 +238,26 @@ class _SearchingForRiderAnimationState extends State<SearchingForRiderAnimation>
             shape: BoxShape.circle,
             color: AppColors.rideMeBlueNormal,
           ),
-          child: Text(
-            widget.eta,
-            style: context.textTheme.displaySmall?.copyWith(
-              color: AppColors.rideMeBackgroundLight,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  widget.eta,
+                  style: context.textTheme.displaySmall?.copyWith(
+                    color: AppColors.rideMeBackgroundLight,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Text(
+                'min',
+                style: context.textTheme.displaySmall?.copyWith(
+                  color: AppColors.rideMeBackgroundLight,
+                ),
+              )
+            ],
           ),
         ),
       ],

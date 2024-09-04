@@ -1,8 +1,14 @@
 part of 'home_bloc.dart';
 
-abstract class HomeEvent extends Equatable {
+sealed class HomeEvent extends Equatable {
   const HomeEvent();
 
   @override
   List<Object> get props => [];
+}
+
+final class FetchTopPlacesEvent extends HomeEvent {
+  final Map<String, dynamic> params;
+
+  const FetchTopPlacesEvent({required this.params});
 }

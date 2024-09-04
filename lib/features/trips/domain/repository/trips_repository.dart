@@ -27,10 +27,22 @@ abstract class TripsRepository {
   Future<Either<String, CreateTripInfo>> fetchPricing(
       Map<String, dynamic> params);
 
+  //retry trip pricing
+  Future<Either<String, CreateTripInfo>> retryBooking(
+      Map<String, dynamic> params);
+
   //send event for tracking
   Stream<Either<String, TrackingInfo>> initiateTracking(
       Map<String, dynamic> params);
 
   //terminate tracking
   Future<Either<String, String>> terminateTracking(Map<String, dynamic> params);
+
+  //send event for tracking
+  Stream<Either<String, TrackingInfo>> initiateDriverLookup(
+      Map<String, dynamic> params);
+
+  //terminate tracking
+  Future<Either<String, String>> terminateDriverLookup(
+      Map<String, dynamic> params);
 }
