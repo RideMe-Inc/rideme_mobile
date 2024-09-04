@@ -17,6 +17,7 @@ enum Endpoints {
   tripDetails(value: '/trips/:id'),
   reportTrip(value: '/trips/:id/reports'),
   rateTrip(value: '/trips/:id/ratings'),
+
   //! LOCATION
   myLocation(value: '/geo-data'),
   addresses(value: '/address'),

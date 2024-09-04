@@ -1,6 +1,8 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +13,7 @@ import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart';
 import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
+import 'package:rideme_mobile/core/notifications/notif_handler.dart';
 
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
@@ -127,11 +130,11 @@ class _HomePageState extends State<HomePage> {
     // user = userBloc.getCachedUserWithoutSafety();
     permissionBloc.add(RequestLocationPemEvent());
     fetchTopLocations();
-    // PushNotificationHandler(
-    //   context: context,
-    //   localNotificationsPlugin: FlutterLocalNotificationsPlugin(),
-    //   messaging: FirebaseMessaging.instance,
-    // );
+    PushNotificationHandler(
+      context: context,
+      localNotificationsPlugin: FlutterLocalNotificationsPlugin(),
+      messaging: FirebaseMessaging.instance,
+    );
     super.initState();
   }
 
