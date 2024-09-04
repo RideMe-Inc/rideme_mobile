@@ -67,6 +67,13 @@ final class FetchPricingEvent extends TripsEvent {
   const FetchPricingEvent({required this.params});
 }
 
+//!RETRY BOOKING
+final class RetryBookingEvent extends TripsEvent {
+  final Map<String, dynamic> params;
+
+  const RetryBookingEvent({required this.params});
+}
+
 //!INITIATE TRACKING
 
 final class InitiateTrackingEvent extends TripsEvent {

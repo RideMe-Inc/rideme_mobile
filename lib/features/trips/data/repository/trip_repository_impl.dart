@@ -254,4 +254,23 @@ class TripsRepositoryImpl implements TripsRepository {
       return Left(networkInfo.noNetowrkMessage);
     }
   }
+
+  @override
+  Future<Either<String, CreateTripInfo>> retryBooking(
+      Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await tripRemoteDataSource.retryBooking(params);
+        return Right(response);
+      } catch (e) {
+        if (e is ErrorException) {
+          return Left(e.toString());
+        }
+
+        return const Left('An error occured');
+      }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
 }

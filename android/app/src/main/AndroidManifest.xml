@@ -53,7 +53,7 @@
             android:value="high_importance_channel" />
 
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyDLjcqLckWgCLKIW-suyJRd9Gj59lm3lxg"/>
+           android:value="AIzaSyAIO-3vFI_0dmGTdOv9oojSnbXNysdXxmQ"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

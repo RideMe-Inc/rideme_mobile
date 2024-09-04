@@ -30,6 +30,7 @@ import 'package:rideme_mobile/features/trips/domain/usecases/initiate_driver_loo
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/rate_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/report_trip.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/retry_booking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_driver_lookup.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
@@ -51,6 +52,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   final EditTrip editTrip;
   final InitiateDriverLookup initiateDriverLookup;
   final TerminateDriverLookup terminateDriverLookup;
+  final RetryBooking retryBooking;
 
   TripsBloc({
     required this.cancelTrip,
@@ -65,6 +67,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     required this.editTrip,
     required this.initiateDriverLookup,
     required this.terminateDriverLookup,
+    required this.retryBooking,
   }) : super(TripsInitial()) {
     //! CANCEL TRIP
 
@@ -184,6 +187,22 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
         response.fold(
           (error) => FetchPricingError(message: error),
           (response) => FetchPricingLoaded(
+            createTripInfo: response,
+          ),
+        ),
+      );
+    });
+
+    //!RETRY BOOKING
+    on<RetryBookingEvent>((event, emit) async {
+      emit(RetryBookingLoading());
+
+      final response = await retryBooking(event.params);
+
+      emit(
+        response.fold(
+          (error) => RetryBookingError(message: error),
+          (response) => RetryBookingLoaded(
             createTripInfo: response,
           ),
         ),

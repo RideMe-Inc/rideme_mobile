@@ -63,6 +63,7 @@ import 'package:rideme_mobile/features/trips/domain/usecases/initiate_driver_loo
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/rate_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/report_trip.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/retry_booking.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_driver_lookup.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
@@ -462,11 +463,18 @@ initTrips() {
       terminateTracking: sl(),
       editTrip: sl(),
       initiateDriverLookup: sl(),
+      retryBooking: sl(),
       terminateDriverLookup: sl(),
     ),
   );
 
   //usecases
+
+  sl.registerLazySingleton(
+    () => RetryBooking(
+      repository: sl(),
+    ),
+  );
 
   sl.registerLazySingleton(
     () => InitiateDriverLookup(

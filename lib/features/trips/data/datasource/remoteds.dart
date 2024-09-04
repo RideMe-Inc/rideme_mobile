@@ -32,6 +32,9 @@ abstract class TripRemoteDataSource {
   //fetch pricing
   Future<CreateTripInfoModel> createOrFetchPricing(Map<String, dynamic> params);
 
+  //retry booking
+  Future<CreateTripInfoModel> retryBooking(Map<String, dynamic> params);
+
   //send event for tracking
   Stream<TrackingInfoModel> initiateTracking(Map<String, dynamic> params);
 
@@ -282,5 +285,17 @@ class TripRemoteDataSourceImpl
     );
 
     return '';
+  }
+
+  @override
+  Future<CreateTripInfoModel> retryBooking(Map<String, dynamic> params) async {
+    final decodedResponse = await post(
+      client: client,
+      urls: urls,
+      endpoint: Endpoints.retry,
+      params: params,
+    );
+
+    return CreateTripInfoModel.fromJson(decodedResponse['trip']);
   }
 }
