@@ -13,27 +13,40 @@ Future handleNotification({
   RemoteNotification? notification = message.notification;
 
   switch (message.data['event']) {
-    //TODO: WORK ON THE RIGHT NOTIFICATION SETUPS HERE
-    case 'orders/assigned' ||
-          'orders/cancelled' ||
-          'orders/delivered' ||
-          'orders/completed' ||
-          'orders/updated' ||
-          'orders/ready' ||
-          'orders/dispatched' ||
-          'orders/arriving':
+    //TODO: WORK ON THE RIGHT NOTIFICATION  NAVIGATION SETUPS HERE
+    // case 'orders/assigned' ||
+    //       'orders/cancelled' ||
+    //       'orders/delivered' ||
+    //       'orders/completed' ||
+    //       'orders/updated' ||
+    //       'orders/ready' ||
+    //       'orders/dispatched' ||
+    //       'orders/arriving':
+    //   if (!isTapped) showNotification(notification);
+    //   if (context.mounted) {
+    //     context.goNamed(
+    //       'orderDetails',
+    //       queryParameters: {
+    //         'service': message.data['service_type'],
+    //         'orderId': message.data['order_id'],
+    //         'message': message.notification?.body ?? '',
+    //         'isFromPayment': 'false'
+    //       },
+    //     );
+    //   }
+
+    case 'trips/assigned' || 'trips/started' || 'trips/updated':
+
+      //navigate to tracking page
       if (!isTapped) showNotification(notification);
-      if (context.mounted) {
-        context.goNamed(
-          'orderDetails',
-          queryParameters: {
-            'service': message.data['service_type'],
-            'orderId': message.data['order_id'],
-            'message': message.notification?.body ?? '',
-            'isFromPayment': 'false'
-          },
-        );
-      }
+
+    case 'trips/completed':
+      //navigate to trip payment page and price listing
+      if (!isTapped) showNotification(notification);
+
+    case 'trips/ended':
+      //navigate to rating page
+      if (!isTapped) showNotification(notification);
 
     default:
       showNotification(notification);
