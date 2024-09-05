@@ -11,6 +11,8 @@ import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
+import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
+import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
@@ -23,10 +25,12 @@ import 'package:rideme_mobile/injection_container.dart';
 
 class BookTripPage extends StatefulWidget {
   final Map locations;
+  final bool? fromTopPlaces;
 
   const BookTripPage({
     super.key,
     required this.locations,
+    this.fromTopPlaces = false,
   });
 
   @override
@@ -58,6 +62,11 @@ class _BookTripPageState extends State<BookTripPage> {
     }
 
     pickupLocationController.text = widget.locations['pickUp'][0]['name'];
+
+    if (widget.locations['dropOff'][0]['name'] != null) {
+      dropOffLocationControllers[0].text =
+          widget.locations['dropOff'][0]['name'];
+    }
   }
 
   bool allLocationsLoaded() {
@@ -551,6 +560,30 @@ class _BookTripPageState extends State<BookTripPage> {
           ),
         ),
       ),
+      bottomSheet: widget.fromTopPlaces ?? false
+          ? Container(
+              color: AppColors.rideMeBackgroundLight,
+              padding: EdgeInsets.all(Sizes.height(context, 0.02)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BlocBuilder(
+                    bloc: tripsBloc,
+                    builder: (context, state) {
+                      if (state is FetchPricingLoading) {
+                        return const LoadingIndicator();
+                      }
+                      return GenericButton(
+                        onTap: fetchPricing,
+                        label: context.appLocalizations.confirm,
+                        isActive: true,
+                      );
+                    },
+                  )
+                ],
+              ),
+            )
+          : null,
     );
   }
 }

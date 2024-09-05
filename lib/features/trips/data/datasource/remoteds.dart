@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:rideme_mobile/core/enums/endpoints.dart';
 
 import 'package:rideme_mobile/core/mixins/remote_request_mixin.dart';
@@ -245,7 +246,7 @@ class TripRemoteDataSourceImpl
 
     socket.connection.listen(
       (event) {
-        print(event);
+        if (kDebugMode) print(event);
         if (event is Connected) {
           //send message to socket
           socket.send(jsonEncode(params));

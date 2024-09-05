@@ -11,6 +11,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
+import 'package:rideme_mobile/core/location/domain/entity/geo_hash.dart';
+import 'package:rideme_mobile/core/location/domain/entity/places_info.dart';
 import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart';
 import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
 import 'package:rideme_mobile/core/notifications/notif_handler.dart';
@@ -28,8 +30,10 @@ import 'package:rideme_mobile/features/home/presentation/widgets/nav_bar_widget.
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/drop_off_location_bottom_sheet.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/search_suggestions.dart';
 import 'package:rideme_mobile/features/user/presentation/provider/user_provider.dart';
 import 'package:rideme_mobile/injection_container.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -46,6 +50,7 @@ class _HomePageState extends State<HomePage> {
   final permissionBloc = sl<PermissionBloc>();
   final locationBloc = sl<LocationBloc>();
   final homeBloc = sl<HomeBloc>();
+  List<GeoData> topPlaces = [];
 
   Set<Marker> markers = {};
   DateTime chosenDate = DateTime.now();
@@ -185,13 +190,14 @@ class _HomePageState extends State<HomePage> {
           BlocListener(
             bloc: homeBloc,
             listener: (context, state) {
-              //TODO: IMPLEMENT TOP PLACES
               if (state is FetchTopPlacesLoaded) {
-                print(state.places);
+                setState(() {
+                  topPlaces = state.places;
+                });
               }
 
               if (state is FetchTopPlacesError) {
-                print(state.message);
+                if (kDebugMode) print(state.message);
               }
             },
           )
@@ -349,7 +355,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-
                         Space.height(context, 0.014),
                         Text(
                           context.appLocalizations
@@ -359,7 +364,6 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-
                         Space.height(context, 0.016),
                         SetDropOffField(
                           dropOffOnTap: locationProvider.geoDataInfo != null
@@ -421,56 +425,70 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         Space.height(context, 0.028),
-
                         const BecomeADriverCard(),
+                        Space.height(context, 0.03),
 
-                        Space.height(context, 0.04),
+                        //!TOP PLACES
+                        Skeletonizer(
+                          ignoreContainers: true,
+                          enabled: topPlaces.isEmpty,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                bottom: Sizes.height(context, 0.015)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                2,
+                                (index) {
+                                  if (topPlaces.isEmpty) {
+                                    return const SearchSuggestionsWidget(
+                                      sectionType: SectionType.suggestions,
+                                      placeInfo: PlaceInfo(
+                                          id: 'id',
+                                          name: 'name',
+                                          structuredFormatting: DisplayName(
+                                              mainText: 'mainText')),
+                                    );
+                                  }
+                                  return SearchSuggestionsWidget(
+                                    sectionType: SectionType.suggestions,
+                                    place: topPlaces[index],
+                                    topLocationOnTap: (p0) {
+                                      Map locations = {
+                                        "pickUp": [
+                                          {
+                                            "name": locationProvider
+                                                .geoDataInfo?.address,
+                                            "id": locationProvider
+                                                .geoDataInfo?.id,
+                                            "lat": locationProvider
+                                                .geoDataInfo?.lat,
+                                            "lng": locationProvider
+                                                .geoDataInfo?.lng,
+                                          }
+                                        ],
+                                        "dropOff": [
+                                          {
+                                            "name": p0?.address,
+                                            "id": p0?.id,
+                                            "lat": p0?.lat,
+                                            "lng": p0?.lng,
+                                          }
+                                        ],
+                                      };
 
-                        // Column(
-                        //   children: homeProvider.topLocations
-                        //       .map(
-                        //         (location) => DropOffLocationSections(
-                        //           sectionType: SectionType.suggestions,
-                        //           place: location,
-                        //           isLast: homeProvider.topLocations
-                        //                   .indexOf(location) ==
-                        //               homeProvider.topLocations.length - 1,
-                        //           topLocationOnTap: (p0) {
-                        //             Map locations = {
-                        //               "pickUp": [
-                        //                 homeProvider.isLocationAllowed
-                        //                     ? {
-                        //                         "name": homeProvider
-                        //                             .geoDataInfo?.address,
-                        //                         "id": homeProvider
-                        //                             .geoDataInfo?.id,
-                        //                         "lat": homeProvider
-                        //                             .geoDataInfo?.lat,
-                        //                         "lng": homeProvider
-                        //                             .geoDataInfo?.lng,
-                        //                       }
-                        //                     : {}
-                        //               ],
-                        //               "dropOff": [
-                        //                 {
-                        //                   'id': p0?.id,
-                        //                   'name': p0?.address,
-                        //                   'lat': p0?.lat,
-                        //                   'lng': p0?.lng,
-                        //                 }
-                        //               ],
-                        //             };
-                        //             final tripData = jsonEncode(locations);
-                        //             context.pushNamed('tripInfo',
-                        //                 queryParameters: {
-                        //                   "tripData": tripData,
-                        //                   "scheduledDate": null.toString(),
-                        //                 });
-                        //           },
-                        //         ),
-                        //       )
-                        //       .toList(),
-                        // ),
+                                      buildWhereToBottomSheet(
+                                        context: context,
+                                        locations: locations,
+                                        fromTopPlaces: true,
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
