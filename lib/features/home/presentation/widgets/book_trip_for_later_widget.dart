@@ -73,7 +73,7 @@ class _BookTripForLaterState extends State<BookTripForLater> {
             Space.height(context, 0.012),
 
             Text(
-              DateFormat('d MMM').format(
+              DateFormat('EE, d MMM').format(
                 chosedDate,
               ),
               style: context.textTheme.displayMedium?.copyWith(
@@ -107,12 +107,15 @@ class _BookTripForLaterState extends State<BookTripForLater> {
                   height: Sizes.height(context, 0.02),
                 ),
                 Space.width(context, 0.024),
-                Text(
-                  context.appLocalizations.bookForLaterNote,
-                  style: context.textTheme.displaySmall?.copyWith(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.rideMeBlack80,
+                SizedBox(
+                  width: Sizes.width(context, 0.7),
+                  child: Text(
+                    context.appLocalizations.bookForLaterNote,
+                    style: context.textTheme.displaySmall?.copyWith(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.rideMeGreyDarker,
+                    ),
                   ),
                 ),
               ],
