@@ -14,6 +14,10 @@ class ScheduledTrackingPage extends StatefulWidget {
 class _ScheduledTrackingPageState extends State<ScheduledTrackingPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: Center(
+        child: Text('SCHEDULE TRIP TRACKING PAGE'),
+      ),
+    );
   }
 }

@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:intl/intl.dart';
 import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
+import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/drop_off_location_bottom_sheet.dart';
 
 class BookTripForLater extends StatefulWidget {
   final DateTime chosenDate;
@@ -24,6 +27,7 @@ class BookTripForLater extends StatefulWidget {
 
 class _BookTripForLaterState extends State<BookTripForLater> {
   DateTime chosedDate = DateTime.now();
+  late LocationProvider locationProvider;
 
   @override
   void initState() {
@@ -33,6 +37,7 @@ class _BookTripForLaterState extends State<BookTripForLater> {
 
   @override
   Widget build(BuildContext context) {
+    locationProvider = context.read<LocationProvider>();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Sizes.width(context, 0.04),
@@ -87,7 +92,7 @@ class _BookTripForLaterState extends State<BookTripForLater> {
             SizedBox(
               height: Sizes.height(context, 0.2),
               child: CupertinoDatePicker(
-                minimumDate: DateTime.now(),
+                minimumDate: widget.chosenDate,
                 initialDateTime: chosedDate,
                 onDateTimeChanged: (value) {
                   setState(() {
@@ -121,8 +126,28 @@ class _BookTripForLaterState extends State<BookTripForLater> {
               ],
             ),
             Space.height(context, 0.04),
+
+            //TODO: HERE WE GO DEY
             GenericButton(
-              onTap: () => context.pop(chosedDate),
+              onTap: () {
+                Map locations = {
+                  "pickUp": [
+                    {
+                      "name": locationProvider.geoDataInfo?.address,
+                      "id": locationProvider.geoDataInfo?.id,
+                      "lat": locationProvider.geoDataInfo?.lat,
+                      "lng": locationProvider.geoDataInfo?.lng,
+                    }
+                  ],
+                  "dropOff": [{}],
+                };
+                buildWhereToBottomSheet(
+                  context: context,
+                  locations: locations,
+                  fromScheduled: true,
+                  scheduleDate: chosedDate.toString(),
+                );
+              },
               label: context.appLocalizations.schedule,
               isActive: true,
             ),

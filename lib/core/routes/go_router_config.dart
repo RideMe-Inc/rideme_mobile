@@ -125,22 +125,6 @@ final GoRouter goRouterConfiguration = GoRouter(
           ],
         ),
 
-        // GoRoute(
-        //   name: 'bookTrip',
-        //   path: 'book-trip',
-        //   builder: (context, state) => const BookTripPage(),
-        //   routes: [
-        //     GoRoute(
-        //       name: 'mapLocationSelection',
-        //       path: 'map-selection',
-        //       builder: (context, state) => LocationSelectionOnMap(
-        //         lat: state.uri.queryParameters['lat'].toString(),
-        //         lng: state.uri.queryParameters['lng'].toString(),
-        //         name: state.uri.queryParameters['name'].toString(),
-        //       ),
-        //     )
-        //   ],
-        // ),
         //profile
         GoRoute(
           name: 'profile',

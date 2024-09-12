@@ -394,8 +394,8 @@ class _HomePageState extends State<HomePage> {
                             final response =
                                 await buildBookTripForLaterBottomSheet(
                               context: context,
-                              chosenDate:
-                                  chosenDate.add(const Duration(hours: 1)),
+                              chosenDate: chosenDate
+                                  .add(const Duration(hours: 5, minutes: 5)),
                             );
 
                             if (!context.mounted) return;
@@ -438,7 +438,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: List.generate(
-                                2,
+                                topPlaces.length > 1 ? 2 : topPlaces.length,
                                 (index) {
                                   if (topPlaces.isEmpty) {
                                     return const SearchSuggestionsWidget(

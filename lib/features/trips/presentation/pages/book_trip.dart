@@ -26,11 +26,15 @@ import 'package:rideme_mobile/injection_container.dart';
 class BookTripPage extends StatefulWidget {
   final Map locations;
   final bool? fromTopPlaces;
+  final bool? fromScheduled;
+  final String? scheduledDate;
 
   const BookTripPage({
     super.key,
     required this.locations,
     this.fromTopPlaces = false,
+    this.fromScheduled = false,
+    this.scheduledDate,
   });
 
   @override
@@ -92,6 +96,8 @@ class _BookTripPageState extends State<BookTripPage> {
       "body": {
         "pickup_geo_data_id": locations['pickUp'][0]['id'],
         "stops": tripsBloc.getGeoDataIds(locations['dropOff']),
+        if (widget.fromScheduled ?? false)
+          "schedule_time": widget.scheduledDate,
       }
     };
 
@@ -112,7 +118,9 @@ class _BookTripPageState extends State<BookTripPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          context.appLocalizations.enterLocations,
+          widget.fromScheduled ?? false
+              ? context.appLocalizations.bookForLater
+              : context.appLocalizations.enterLocations,
           style: context.textTheme.displayMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -201,7 +209,8 @@ class _BookTripPageState extends State<BookTripPage> {
                 // context.pop();
                 context.pushNamed('priceSelection', queryParameters: {
                   "pricing": jsonString,
-                  "isScheduled": 'false',
+                  "isScheduled":
+                      widget.fromScheduled ?? false ? 'true' : 'false',
                 });
               }
 

@@ -336,6 +336,16 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
                               bloc: tripBloc,
                               listener: (context, state) {
                                 if (state is CreateTripLoaded) {
+                                  if (bool.parse(widget.isScheduled)) {
+                                    context.goNamed('scheduledTracking',
+                                        queryParameters: {
+                                          "tripId": state.tripDestination
+                                              .tripDestinationData?.id
+                                              .toString()
+                                        });
+
+                                    return;
+                                  }
                                   //do navigation here
                                   final params = state
                                       .tripDestination.tripDestinationData!
