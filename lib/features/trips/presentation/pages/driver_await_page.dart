@@ -127,6 +127,14 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                   timer?.cancel();
                 }
 
+                if (trackingInfo?.status == 'driver-assigned') {
+                  context.goNamed(
+                    'tracking',
+                    queryParameters: {'tripId': trackingInfo?.tripId ?? ''},
+                  );
+                  return;
+                }
+
                 setState(() {});
               }
 

@@ -15,6 +15,7 @@ import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
+import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
@@ -43,6 +44,7 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
   CreateTripInfo? createTripInfo;
   late GoogleMapController mapController;
   late TripProvider tripProvider;
+  late HomeProvider homeProvider;
   PaymentTypes? paymentTypes = PaymentTypes.cash;
 
   Set<Marker> markers = {};
@@ -97,6 +99,7 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
   @override
   Widget build(BuildContext context) {
     tripProvider = context.watch<TripProvider>();
+    homeProvider = context.watch<HomeProvider>();
     return Scaffold(
       body: Stack(
         children: [
@@ -126,7 +129,20 @@ class _PriceSelectionPageState extends State<PriceSelectionPage> {
                     createTripInfo?.pickupLng?.toDouble() ?? -93.3438785),
                 zoom: 16,
               ),
-              markers: markers,
+              markers: tripProvider.polyCoordinates.isNotEmpty
+                  ? {
+                      Marker(
+                        markerId: const MarkerId('start_point'),
+                        icon: homeProvider.startIcon,
+                        position: tripProvider.polyCoordinates.first,
+                      ),
+                      Marker(
+                        markerId: const MarkerId('end_point'),
+                        icon: homeProvider.endIcon,
+                        position: tripProvider.polyCoordinates.last,
+                      ),
+                    }
+                  : {},
             ),
           ),
 

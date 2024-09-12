@@ -260,6 +260,7 @@ class TripRemoteDataSourceImpl
     //listen to tracking event
 
     socket.messages.listen((event) {
+      print(event);
       final decodedResponse = json.decode(event);
 
       if (decodedResponse['event'] ==

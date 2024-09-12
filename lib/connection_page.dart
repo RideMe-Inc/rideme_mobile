@@ -10,6 +10,7 @@ import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/features/authentication/presentation/bloc/authentication_bloc.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
+import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/onboarding/presentation/bloc/onboarding_bloc.dart';
 import 'package:rideme_mobile/features/permissions/presentation/bloc/permission_bloc.dart';
@@ -69,6 +70,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
 
   @override
   void initState() {
+    context.read<HomeProvider>().loadInitialMarker();
     isViewed();
     startTimer();
     super.initState();
