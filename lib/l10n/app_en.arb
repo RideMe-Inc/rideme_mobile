@@ -413,14 +413,25 @@
   "cancelReason4":"Trip is expensive",
   "tripCancelInfo":"Please select reason for cancelling your trip",
   "others":"Others",
-
-  
-
-
+  "requestNewTrip":"Request new trip",
+  "carSearchInfo":"Car search starts 10 minutes before  your scheduled time",
 
 
-  
 
+
+  "tripScheduleNotice":"Trip scheduled for {day} at ({time})",
+  "@tripScheduleNotice":{
+    "placeholders":{
+      "day":{
+        "type":"String",
+        "example":"Today"
+      },
+      "time":{
+        "type":"String",
+        "example":"Today"
+      }
+    }
+  },
 
 
 

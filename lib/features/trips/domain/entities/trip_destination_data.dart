@@ -21,6 +21,7 @@ class TripDetails extends Equatable {
       status,
       completedAt,
       paymentMethod,
+      scheduleTime,
       createdAt,
       polyline;
   final List<DestinationInfo>? destinations;
@@ -36,6 +37,7 @@ class TripDetails extends Equatable {
     required this.amountCharged,
     required this.discountAmount,
     required this.amountPaid,
+    required this.scheduleTime,
     required this.amountDue,
     required this.trackingNumber,
     required this.paymentStatus,
@@ -72,6 +74,7 @@ class TripDetails extends Equatable {
         extraFees,
         totalAmount,
         waitingPenalty,
+        scheduleTime,
         polyline,
         driver,
         paymentInfo,
@@ -94,6 +97,7 @@ class TripDetails extends Equatable {
         "completed_at": completedAt,
         "extra_fees": extraFees,
         "total_amount": totalAmount,
+        "schedule_time": scheduleTime,
         "waiting_penalty": waitingPenalty,
         "payment_method": paymentMethod,
         "polyline": polyline,

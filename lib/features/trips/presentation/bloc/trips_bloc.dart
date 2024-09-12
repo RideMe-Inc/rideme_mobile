@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/extensions/date_extension.dart';
 import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
@@ -431,6 +432,39 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
           header: context.appLocalizations.checkingForCar,
           subtitle: context.appLocalizations.checkingForCarInfo,
         );
+    }
+  }
+
+  //scheduled string notice
+
+  String scheduleInfoString(String date, BuildContext context) {
+    DateTime tripDate =
+        DateTime.parse(date).toLocal(); // Parse and convert to local time
+
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    DateTime tomorrow = today.add(const Duration(days: 1));
+
+    // Formatting for time
+    String timeString =
+        DateFormat('h:mma').format(tripDate).toLowerCase(); // format to 10:23am
+
+    // Compare dates
+    if (tripDate.year == today.year &&
+        tripDate.month == today.month &&
+        tripDate.day == today.day) {
+      return context.appLocalizations.tripScheduleNotice('today', timeString);
+    } else if (tripDate.year == tomorrow.year &&
+        tripDate.month == tomorrow.month &&
+        tripDate.day == tomorrow.day) {
+      return context.appLocalizations
+          .tripScheduleNotice('tomorrow', timeString);
+    } else {
+      String dateString =
+          DateFormat('d MMM').format(tripDate); // format to 12th Sept
+
+      return context.appLocalizations
+          .tripScheduleNotice(dateString, timeString);
     }
   }
 }

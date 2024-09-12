@@ -40,6 +40,7 @@ class SvgNameConstants {
   static const bookMarkedSVG = '$_baseUrl/bookmarked.svg';
   static const workSVG = '$_baseUrl/work.svg';
   static const checkmarkSVG = '$_baseUrl/checkmark.svg';
+  static const additionSVG = '$_baseUrl/addition.svg';
   static const myLocationSVG = '$_baseUrl/my_location.svg';
   static const alertCircle = '$_baseUrl/alert_circle.svg';
 }

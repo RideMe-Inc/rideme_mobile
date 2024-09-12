@@ -438,7 +438,11 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: List.generate(
-                                topPlaces.length > 1 ? 2 : topPlaces.length,
+                                topPlaces.isEmpty
+                                    ? 2
+                                    : topPlaces.length > 1
+                                        ? 2
+                                        : topPlaces.length,
                                 (index) {
                                   if (topPlaces.isEmpty) {
                                     return const SearchSuggestionsWidget(

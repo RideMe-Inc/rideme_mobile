@@ -423,7 +423,12 @@
   "cancelReason3":"Mauvaise localisation indiquée",
   "cancelReason4":"Le trajet est trop cher",
   "tripCancelInfo":"Veuillez sélectionner la raison de l'annulation de votre trajet",
-  "others":"Autres"
+  "others":"Autres",
+
+  "requestNewTrip":"Demander un nouveau trajet",
+  "carSearchInfo":"La recherche de voiture commence 10 minutes avant l'heure prévue",
+  "tripScheduleNotice":"Trajet prévu pour {day} à ({time})"
+
 
 
 
