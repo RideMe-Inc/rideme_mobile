@@ -11,7 +11,6 @@ class UserModel extends User {
     required super.profileUrl,
     required super.status,
     required super.requestedDeletion,
-    required super.ongoingTrip,
   });
 
   factory UserModel.fromJson(Map<String, dynamic>? json) {
@@ -25,26 +24,6 @@ class UserModel extends User {
       profileUrl: json?['profile_url'],
       status: json?['status'],
       requestedDeletion: json?['requested_deletion'],
-      ongoingTrip: json?['ongoing_trip'] != null
-          ? UserOngoingTripsModel.fromJson(json!['ongoing_trip'])
-          : null,
-    );
-  }
-}
-
-//ONGOING TRIPS
-class UserOngoingTripsModel extends UserOngoingTrips {
-  const UserOngoingTripsModel(
-      {required super.id,
-      required super.trackingNumber,
-      required super.status});
-
-  //fromJson
-  factory UserOngoingTripsModel.fromJson(Map<String, dynamic> json) {
-    return UserOngoingTripsModel(
-      id: json['id'],
-      trackingNumber: json['tracking_number'],
-      status: json['status'],
     );
   }
 }

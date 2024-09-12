@@ -124,8 +124,12 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         listener: (context, state) {
           if (state is GetUserProfileLoaded) {
             //udpate provider with user data and navigate to home
-            context.read<UserProvider>().updateUserInfo = state.user;
-            context.goNamed('home');
+
+            context.read<UserProvider>().updateUserInfo =
+                state.userObject.profile;
+
+            userBloc.navigateUserBasedOnAccountActivity(
+                state.userObject.extra, context);
           }
 
           if (state is GetUserProfileError) {

@@ -13,9 +13,9 @@ class UserInitial extends UserState {}
 final class GetUserProfileLoading extends UserState {}
 
 final class GetUserProfileLoaded extends UserState {
-  final User user;
+  final UserObject userObject;
 
-  const GetUserProfileLoaded({required this.user});
+  const GetUserProfileLoaded({required this.userObject});
 }
 
 final class GetUserProfileError extends UserState {

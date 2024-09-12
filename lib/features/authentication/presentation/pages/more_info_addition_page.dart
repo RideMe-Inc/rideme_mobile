@@ -66,7 +66,9 @@ class _MoreInfoAdditionPageState extends State<MoreInfoAdditionPage> {
         listener: (context, state) {
           if (state is GetUserProfileLoaded) {
             //udpate provider with user data and navigate to home
-            context.read<UserProvider>().updateUserInfo = state.user;
+
+            context.read<UserProvider>().updateUserInfo =
+                state.userObject.profile;
 
             context.goNamed('home');
           }

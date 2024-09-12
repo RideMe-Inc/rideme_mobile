@@ -3,10 +3,11 @@ import 'package:rideme_mobile/core/mixins/remote_request_mixin.dart';
 import 'package:rideme_mobile/core/urls/urls.dart';
 import 'package:rideme_mobile/features/user/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:rideme_mobile/features/user/data/models/user_object_model.dart';
 
 abstract class UserRemoteDatasource {
   //get user profile
-  Future<UserModel> getUserProfile(Map<String, dynamic> params);
+  Future<UserObjectModel> getUserProfile(Map<String, dynamic> params);
 
   //delete account
   Future<String> deleteAccount(Map<String, dynamic> params);
@@ -26,7 +27,7 @@ class UserRemoteDatasourceImpl
     required this.urls,
   });
   @override
-  Future<UserModel> getUserProfile(Map<String, dynamic> params) async {
+  Future<UserObjectModel> getUserProfile(Map<String, dynamic> params) async {
     final decodedResponse = await get(
       client: client,
       urls: urls,
@@ -34,7 +35,7 @@ class UserRemoteDatasourceImpl
       params: params,
     );
 
-    return UserModel.fromJson(decodedResponse['profile']);
+    return UserObjectModel.fromJson(decodedResponse);
   }
 
   //DELETE ACCOUNT

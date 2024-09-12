@@ -3,6 +3,7 @@ import 'package:rideme_mobile/core/exceptions/generic_exception_class.dart';
 import 'package:rideme_mobile/core/network/networkinfo.dart';
 import 'package:rideme_mobile/features/user/data/datasources/localds.dart';
 import 'package:rideme_mobile/features/user/data/datasources/remoteds.dart';
+import 'package:rideme_mobile/features/user/data/models/user_object_model.dart';
 import 'package:rideme_mobile/features/user/domain/entities/user.dart';
 import 'package:rideme_mobile/features/user/domain/repositories/user_repository.dart';
 
@@ -17,7 +18,7 @@ class UserRepositoryImpl implements UserRepository {
       required this.remoteDatasource});
 
   @override
-  Future<Either<String, User>> getUserProfile(
+  Future<Either<String, UserObjectModel>> getUserProfile(
       Map<String, dynamic> params) async {
     if (!(await networkInfo.isConnected)) {
       return Left(networkInfo.noNetowrkMessage);

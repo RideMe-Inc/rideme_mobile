@@ -11,6 +11,7 @@ import 'package:rideme_mobile/features/payment/presentation/pages/payment.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/driver_await_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/map_point_selection.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/price_selection_page.dart';
+import 'package:rideme_mobile/features/trips/presentation/pages/scheduled_tracking_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history_details_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_tracking_page.dart';
@@ -222,6 +223,14 @@ final GoRouter goRouterConfiguration = GoRouter(
       path: '/tracking',
       builder: (context, state) =>
           TripTrackingPage(tripId: state.uri.queryParameters['tripId']!),
+    ),
+
+    //SCHEDULED TRACKING
+    GoRoute(
+      name: 'scheduledTracking',
+      path: '/scheduled-tracking',
+      builder: (context, state) =>
+          ScheduledTrackingPage(tripId: state.uri.queryParameters['tripId']!),
     )
   ],
 );
