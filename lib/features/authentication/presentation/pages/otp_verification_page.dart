@@ -216,6 +216,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   }
                   return Space.height(context, 0);
                 },
+              ),
+              BlocBuilder(
+                bloc: userBloc,
+                builder: (context, state) {
+                  if (state is GetUserProfileLoading) {
+                    return const LoadingIndicator();
+                  }
+                  return Space.height(context, 0);
+                },
               )
             ],
           ),

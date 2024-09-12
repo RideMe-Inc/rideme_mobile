@@ -65,7 +65,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   //user navigation based on activity
 
   navigateUserBasedOnAccountActivity(Extra? extra, BuildContext context) {
-    if (extra == null) {
+    if (extra == null || extra.ongoingTrips.isEmpty) {
       context.goNamed('home');
       return;
     }
