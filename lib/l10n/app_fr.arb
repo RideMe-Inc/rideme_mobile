@@ -427,7 +427,15 @@
 
   "requestNewTrip":"Demander un nouveau trajet",
   "carSearchInfo":"La recherche de voiture commence 10 minutes avant l'heure prévue",
-  "tripScheduleNotice":"Trajet prévu pour {day} à ({time})"
+  "tripScheduleNotice":"Trajet prévu pour {day} à ({time})",
+  "driverAtPickup":"Le chauffeur est au point de prise en charge",
+
+
+  "waitTimeEnds":"Le temps d'attente se termine"
+
+
+
+
 
 
 

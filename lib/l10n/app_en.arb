@@ -320,6 +320,7 @@
   "deliveryProblems": "Delivery/order problems.",
   "movingOutOfServiceArea": "Moving out of service area.",
   "arrivingInPlaceholder": "Arriving in -- minutes",
+  "waitTimeEnds":"Wait time ends",
   
 
   "ecoFriendly":"Eco-Friendly",
@@ -363,6 +364,7 @@
   "ridePreferences":"Ride preferences",
   "ridePreferencesInfo":"Choose temperature, music etc",
   "drivingToPickup":"Driving to pickup",
+  "driverAtPickup":"Driver is at pickup",
   "drivingToDestination":"Driving to destination",
   "driverAtDestination":"Driver is at destination",
   "pleaseRateTrip":"Please rate your trip",

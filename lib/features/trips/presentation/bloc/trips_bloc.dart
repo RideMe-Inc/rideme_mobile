@@ -467,4 +467,25 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
           .tripScheduleNotice(dateString, timeString);
     }
   }
+
+  //tracking strings
+  String getTrackingStrings(
+      {required String status,
+      required String? arrivedAt,
+      required BuildContext context}) {
+    switch (status) {
+      case 'assigned':
+        return arrivedAt == null
+            ? context.appLocalizations.drivingToPickup
+            : context.appLocalizations.driverAtPickup;
+
+      case 'started':
+        return context.appLocalizations.drivingToDestination;
+
+      case 'completed':
+        return context.appLocalizations.driverAtDestination;
+      default:
+        return context.appLocalizations.drivingToPickup;
+    }
+  }
 }

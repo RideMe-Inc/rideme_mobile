@@ -182,21 +182,26 @@ class TripRemoteDataSourceImpl
     StreamController<TrackingInfoModel> controller =
         StreamController<TrackingInfoModel>();
 
-    socket.connection.listen(
-      (event) {
-        if (event is Connected) {
-          //send message to socket
-          socket.send(jsonEncode(params));
-        }
-        if (event is Reconnected) {
-          socket.send(jsonEncode(params));
-        }
-      },
-    );
+    print(params);
+
+    socket.send(jsonEncode(params));
+
+    // socket.connection.listen(
+    //   (event) {
+    //     if (event is Connected) {
+    //       //send message to socket
+    //       socket.send(jsonEncode(params));
+    //     }
+    //     if (event is Reconnected) {
+    //       socket.send(jsonEncode(params));
+    //     }
+    //   },
+    // );
 
     //listen to tracking event
 
     socket.messages.listen((event) {
+      print(event);
       final decodedResponse = json.decode(event);
       if (decodedResponse['event'] ==
           'track-trips/${params['data']['trip_id']}') {
