@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:rideme_mobile/core/extensions/date_extension.dart';
 import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
 import 'package:rideme_mobile/features/trips/data/models/trip_destnation_info_model.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_details.dart';
+import 'package:rideme_mobile/features/trips/domain/entities/directions_object.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info_notice.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 
@@ -25,6 +27,7 @@ import 'package:rideme_mobile/features/trips/domain/usecases/cancel_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/create_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/fetch_pricing.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_all_trips.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/get_directions.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/get_trip_info.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_driver_lookup.dart';
@@ -35,6 +38,7 @@ import 'package:rideme_mobile/features/trips/domain/usecases/retry_booking.dart'
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_driver_lookup.dart';
 
 import 'package:rideme_mobile/features/trips/domain/usecases/terminate_tracking.dart';
+import 'package:rideme_mobile/features/trips/presentation/provider/trip_provider.dart';
 
 part 'trips_event.dart';
 part 'trips_state.dart';
@@ -54,6 +58,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   final InitiateDriverLookup initiateDriverLookup;
   final TerminateDriverLookup terminateDriverLookup;
   final RetryBooking retryBooking;
+  final GetDirections getDirections;
 
   TripsBloc({
     required this.cancelTrip,
@@ -69,6 +74,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     required this.initiateDriverLookup,
     required this.terminateDriverLookup,
     required this.retryBooking,
+    required this.getDirections,
   }) : super(TripsInitial()) {
     //! CANCEL TRIP
 
@@ -249,6 +255,20 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     //!TERMINATE TRACKING
     on<TerminateDriverLookupEvent>((event, emit) async {
       await terminateDriverLookup(event.params);
+    });
+
+    //!GET DIRECTIONS
+    on<GetDirectionsEvent>((event, emit) async {
+      emit(GetDirectionsLoading());
+
+      final response = await getDirections(event.params);
+
+      emit(
+        response.fold(
+          (error) => GetDirectionsError(error: error),
+          (response) => GetDirectionsLoaded(directions: response),
+        ),
+      );
     });
   }
 
@@ -487,5 +507,61 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
       default:
         return context.appLocalizations.drivingToPickup;
     }
+  }
+
+  String convertToKM({required LatLng pickup, required LatLng dropOff}) {
+    const radius = 6371; // Radius of the earth in km
+    final dLat = degToRad(pickup.latitude - dropOff.latitude); // degToRad below
+    final dLon = degToRad(pickup.longitude - dropOff.longitude);
+    final a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(degToRad(dropOff.latitude)) *
+            cos(degToRad(pickup.latitude)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final distance = radius * c; // Distance in km
+
+    return distance.toStringAsFixed(2);
+  }
+
+  //degree to radians
+
+  double degToRad(deg) {
+    return (deg * pi) / 180;
+  }
+
+  Future<bool> reCallDirectionsApi(
+      {required BuildContext context, required LatLng riderLocation}) async {
+    bool callGoogle = false;
+    List<LatLng> polyCoordinates = context.read<TripProvider>().polyCoordinates;
+
+    if (polyCoordinates.length > 1) {
+      for (int i = 0; i < polyCoordinates.length; i++) {
+        final distanceKm1 = double.parse(
+            convertToKM(pickup: riderLocation, dropOff: polyCoordinates[i]));
+        final distanceKm2 = double.parse(convertToKM(
+            pickup: riderLocation, dropOff: polyCoordinates[i + 1]));
+
+        if (distanceKm1 > distanceKm2) {
+          //meaning he is on the right path
+
+          polyCoordinates.removeRange(i, i + 1);
+        } else {
+          //there is a deviation. check for upward adjustment
+
+          if (distanceKm1 > 0.1) {
+            callGoogle = true;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+    context.read<TripProvider>().updatePolyCoordinates = polyCoordinates;
+
+    if (!context.mounted) return false;
+
+    return callGoogle;
   }
 }

@@ -176,3 +176,18 @@ final class InitiateDriverLookupError extends TripsState {
 
   const InitiateDriverLookupError({required this.message});
 }
+
+//!GET DIRECTIONS
+final class GetDirectionsLoading extends TripsState {}
+
+final class GetDirectionsLoaded extends TripsState {
+  final DirectionsObject directions;
+
+  const GetDirectionsLoaded({required this.directions});
+}
+
+final class GetDirectionsError extends TripsState {
+  final String error;
+
+  const GetDirectionsError({required this.error});
+}

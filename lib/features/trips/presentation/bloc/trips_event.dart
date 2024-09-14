@@ -105,3 +105,10 @@ final class TerminateDriverLookupEvent extends TripsEvent {
 
   const TerminateDriverLookupEvent({required this.params});
 }
+
+//!GET DIRECTIONS
+final class GetDirectionsEvent extends TripsEvent {
+  final Map<String, dynamic> params;
+
+  const GetDirectionsEvent({required this.params});
+}

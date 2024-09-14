@@ -18,6 +18,7 @@ import 'package:rideme_mobile/features/authentication/presentation/provider/auth
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
+import 'package:rideme_mobile/features/trips/presentation/provider/trip_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/cancel_trip_selection_bs.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/my_location_section_widget.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
@@ -41,6 +42,7 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
   final tripsBloc2 = sl<TripsBloc>();
   final tripsBloc3 = sl<TripsBloc>();
   late GoogleMapController mapController;
+  late TripProvider tripProvider;
   TrackingInfo? trackingInfo;
   TripDetails? tripDetailsInfo;
 
@@ -114,6 +116,7 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
 
   @override
   Widget build(BuildContext context) {
+    tripProvider = context.read<TripProvider>();
     return Scaffold(
       body: MultiBlocListener(
         listeners: [
@@ -128,6 +131,8 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
                 }
 
                 if (trackingInfo?.status == 'driver-assigned') {
+                  tripProvider.clearPolyCoordinates();
+                  terminateTracking(trackingInfo?.tripId ?? '');
                   context.goNamed(
                     'tracking',
                     queryParameters: {'tripId': trackingInfo?.tripId ?? ''},

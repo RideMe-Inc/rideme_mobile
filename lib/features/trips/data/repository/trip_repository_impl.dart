@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:rideme_mobile/core/exceptions/generic_exception_class.dart';
 import 'package:rideme_mobile/core/network/networkinfo.dart';
 import 'package:rideme_mobile/features/trips/data/datasource/remoteds.dart';
+import 'package:rideme_mobile/features/trips/data/models/directions_object_model.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
 
@@ -268,6 +269,23 @@ class TripsRepositoryImpl implements TripsRepository {
         }
 
         return const Left('An error occured');
+      }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
+
+  //GET DIRECTIONS
+
+  @override
+  Future<Either<String, DirectionsObjectModel>> getDirections(
+      Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await tripRemoteDataSource.getDirections(params);
+        return Right(response);
+      } catch (e) {
+        return Left(e.toString());
       }
     } else {
       return Left(networkInfo.noNetowrkMessage);

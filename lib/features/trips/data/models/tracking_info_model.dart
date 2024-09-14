@@ -28,8 +28,8 @@ class TrackingInfoModel extends TrackingInfo {
       status: json['status'],
       vehicleType: json['vehicle_type'],
       timeToArrival: json['time_to_arrival'],
-      driverLat: json['driver_lat'],
-      driverLng: json['driver_lng'],
+      driverLat: json['lat'],
+      driverLng: json['lng'],
       tripId: json["trip_id"] != null ? json['trip_id'].toString() : null,
     );
   }

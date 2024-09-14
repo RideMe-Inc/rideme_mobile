@@ -73,7 +73,7 @@ class HomeProvider extends ChangeNotifier {
   //load initial marker
   loadInitialMarker() async {
     final markericon =
-        await getBytesFromAsset(ImageNameConstants.carTracking, 35);
+        await getBytesFromAsset(ImageNameConstants.carTracking, 30);
     final starterIcon =
         await getBytesFromAsset(ImageNameConstants.startTrip, 20);
     final endedIcon = await getBytesFromAsset(ImageNameConstants.endTrip, 20);

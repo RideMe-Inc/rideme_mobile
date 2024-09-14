@@ -13,6 +13,7 @@ import 'package:rideme_mobile/features/home/presentation/provider/home_provider.
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
+import 'package:rideme_mobile/features/trips/presentation/provider/trip_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/cancel_trip_selection_bs.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/my_location_section_widget.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
@@ -37,10 +38,14 @@ class TripTrackingPage extends StatefulWidget {
 class _TripTrackingPageState extends State<TripTrackingPage> {
   final tripBloc = sl<TripsBloc>();
   final tripBloc2 = sl<TripsBloc>();
+  final tripBloc3 = sl<TripsBloc>();
 
   late GoogleMapController mapController;
   late HomeProvider homeProvider;
+  late TripProvider tripProvider;
   TripDetails? tripDetails;
+  Set<Marker>? markers = {};
+
   Marker? driverMarker;
 
   void onMapCreated(GoogleMapController controller) async {
@@ -73,7 +78,7 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
   initiateDriverTracking() {
     //INTITATE TRACKING
     tripBloc2.add(InitiateTrackingEvent(params: {
-      "event": "track-trips",
+      "event": "track-trip",
       "data": {"trip_id": widget.tripId}
     }));
   }
@@ -87,6 +92,10 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
     );
   }
 
+  callDirectionsApi(Map<String, dynamic> params) {
+    tripBloc3.add(GetDirectionsEvent(params: params));
+  }
+
   @override
   void initState() {
     fetchTripDetails();
@@ -97,6 +106,7 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
   @override
   Widget build(BuildContext context) {
     homeProvider = context.watch<HomeProvider>();
+    tripProvider = context.watch<TripProvider>();
     return MultiBlocListener(
       listeners: [
         BlocListener(
@@ -113,18 +123,28 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
           bloc: tripBloc2,
           listener: (context, state) {
             if (state is InitiateTrackingLoaded) {
-              print(state.trackingInfo);
-
               setState(() {
-                driverMarker = Marker(
-                  markerId: const MarkerId('driver_marker'),
-                  icon: homeProvider.customMarkerIcon,
-                  position: LatLng(
-                      state.trackingInfo.driverLat?.toDouble() ?? 0,
-                      state.trackingInfo.driverLng?.toDouble() ?? 0),
-                  rotation: state.trackingInfo.heading?.toDouble() ?? 0,
-                );
+                markers = {
+                  Marker(
+                    markerId: const MarkerId('driver_marker'),
+                    icon: homeProvider.customMarkerIcon,
+                    position: LatLng(
+                        state.trackingInfo.driverLat?.toDouble() ?? 0,
+                        state.trackingInfo.driverLng?.toDouble() ?? 0),
+                    rotation: state.trackingInfo.heading?.toDouble() ?? 0,
+                  )
+                };
               });
+            }
+          },
+          child: Container(),
+        ),
+        BlocListener(
+          bloc: tripBloc3,
+          listener: (context, state) {
+            if (state is GetDirectionsLoaded) {
+              tripProvider.decodePolylineFromString(
+                  state.directions.routes!.first.overviewPolyline!.points!);
             }
           },
           child: Container(),
@@ -154,17 +174,15 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
                   myLocationButtonEnabled: false,
                   mapType: MapType.terrain,
                   onMapCreated: onMapCreated,
-                  markers: {
-                    if (driverMarker != null) driverMarker!,
+                  markers: markers != null ? markers! : {},
+                  polylines: {
+                    Polyline(
+                      polylineId: const PolylineId('trip_line'),
+                      points: tripProvider.polyCoordinates,
+                      color: AppColors.rideMeBlueDark,
+                      width: 5,
+                    )
                   },
-                  // polylines: {
-                  //   Polyline(
-                  //     polylineId: PolylineId('trip_line'),
-                  //     points: tripProvider.polyCoordinates,
-                  //     color: AppColors.rideMeBlueDark,
-                  //     width: 5,
-                  //   )
-                  // },
                   initialCameraPosition: const CameraPosition(
                     target: LatLng(
                       0,

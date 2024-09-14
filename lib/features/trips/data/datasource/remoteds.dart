@@ -9,6 +9,7 @@ import 'package:rideme_mobile/core/mixins/remote_request_mixin.dart';
 import 'package:rideme_mobile/core/urls/urls.dart';
 import 'package:rideme_mobile/features/trips/data/models/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/data/models/create_trip_info.dart';
+import 'package:rideme_mobile/features/trips/data/models/directions_object_model.dart';
 
 import 'package:rideme_mobile/features/trips/data/models/tracking_info_model.dart';
 import 'package:rideme_mobile/features/trips/data/models/trip_destnation_info_model.dart';
@@ -51,6 +52,9 @@ abstract class TripRemoteDataSource {
 
   //apply coupon
   Future<String> applyCoupon(Map<String, dynamic> params);
+
+  //GET DIRECTIONS
+  Future<DirectionsObjectModel> getDirections(Map<String, dynamic> params);
 }
 
 class TripRemoteDataSourceImpl
@@ -182,26 +186,22 @@ class TripRemoteDataSourceImpl
     StreamController<TrackingInfoModel> controller =
         StreamController<TrackingInfoModel>();
 
-    print(params);
-
-    socket.send(jsonEncode(params));
-
-    // socket.connection.listen(
-    //   (event) {
-    //     if (event is Connected) {
-    //       //send message to socket
-    //       socket.send(jsonEncode(params));
-    //     }
-    //     if (event is Reconnected) {
-    //       socket.send(jsonEncode(params));
-    //     }
-    //   },
-    // );
+    socket.connection.listen(
+      (event) {
+        if (event is Connected) {
+          //send message to socket
+          socket.send(jsonEncode(params));
+        }
+        if (event is Reconnected) {
+          socket.send(jsonEncode(params));
+        }
+      },
+    );
 
     //listen to tracking event
 
     socket.messages.listen((event) {
-      print(event);
+      if (kDebugMode) print(event);
       final decodedResponse = json.decode(event);
       if (decodedResponse['event'] ==
           'track-trips/${params['data']['trip_id']}') {
@@ -265,7 +265,7 @@ class TripRemoteDataSourceImpl
     //listen to tracking event
 
     socket.messages.listen((event) {
-      print(event);
+      if (kDebugMode) print(event);
       final decodedResponse = json.decode(event);
 
       if (decodedResponse['event'] ==
@@ -304,5 +304,19 @@ class TripRemoteDataSourceImpl
     );
 
     return CreateTripInfoModel.fromJson(decodedResponse['trip']);
+  }
+
+  @override
+  Future<DirectionsObjectModel> getDirections(
+      Map<String, dynamic> params) async {
+    final url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/directions/json?origin=heading=${params['origin_heading']}:${params['origin_lat']},${params['origin_lng']}&destination=${params['destination_lat']},${params['destination_lng']}&key=AIzaSyAIO-3vFI_0dmGTdOv9oojSnbXNysdXxmQ',
+    );
+
+    final response = await client.get(url);
+
+    print(response.body);
+
+    return DirectionsObjectModel.fromJson(jsonDecode(response.body));
   }
 }

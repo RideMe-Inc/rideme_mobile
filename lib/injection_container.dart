@@ -58,6 +58,7 @@ import 'package:rideme_mobile/features/trips/domain/usecases/create_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/edit_trip.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/fetch_pricing.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_all_trips.dart';
+import 'package:rideme_mobile/features/trips/domain/usecases/get_directions.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/get_trip_info.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_driver_lookup.dart';
 import 'package:rideme_mobile/features/trips/domain/usecases/initiate_tracking.dart';
@@ -457,6 +458,7 @@ initTrips() {
       getAllTrips: sl(),
       rateTrip: sl(),
       getTripInfo: sl(),
+      getDirections: sl(),
       reportTrip: sl(),
       fetchPricing: sl(),
       initiateTracking: sl(),
@@ -472,6 +474,12 @@ initTrips() {
 
   sl.registerLazySingleton(
     () => RetryBooking(
+      repository: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton(
+    () => GetDirections(
       repository: sl(),
     ),
   );

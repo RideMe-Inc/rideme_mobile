@@ -101,6 +101,28 @@ class TripProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //decodePolyline
+  decodePolylineFromString(String polyline) async {
+    //deal with polylines
+
+    _polyLines = _polylinePoints.decodePolyline(polyline);
+
+    _polyCoordinates =
+        _polyLines.map((e) => LatLng(e.latitude, e.longitude)).toList();
+
+    notifyListeners();
+  }
+
+  set updatePolyCoordinates(List<LatLng> newPolyCord) {
+    _polyCoordinates = newPolyCord;
+    notifyListeners();
+  }
+
+  clearPolyCoordinates() {
+    _polyCoordinates = [];
+    notifyListeners();
+  }
+
   resetAllValues() {
     _initialCameraMove = false;
     _notRun = true;

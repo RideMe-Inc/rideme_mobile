@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:rideme_mobile/features/trips/domain/entities/all_trips_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/create_trip_info.dart';
+import 'package:rideme_mobile/features/trips/domain/entities/directions_object.dart';
 
 import 'package:rideme_mobile/features/trips/domain/entities/tracking_info.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_info.dart';
@@ -44,5 +45,9 @@ abstract class TripsRepository {
 
   //terminate tracking
   Future<Either<String, String>> terminateDriverLookup(
+      Map<String, dynamic> params);
+
+  //GET DIRECTIONS
+  Future<Either<String, DirectionsObject>> getDirections(
       Map<String, dynamic> params);
 }
