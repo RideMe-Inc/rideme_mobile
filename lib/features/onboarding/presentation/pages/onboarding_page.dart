@@ -53,8 +53,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
         imagePath: ImageNameConstants.onboardingIMG2,
       ),
       OnboardingInfo(
-        title: context.appLocalizations.subscriptionPlans,
-        body: context.appLocalizations.subscriptionPlansNotice,
+        title: context.appLocalizations.affordableRates,
+        body: context.appLocalizations.affordableRatesNotice,
         imagePath: ImageNameConstants.onboardingIMG3,
       ),
     ];

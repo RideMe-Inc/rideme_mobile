@@ -431,7 +431,11 @@
   "driverAtPickup":"Le chauffeur est au point de prise en charge",
 
 
-  "waitTimeEnds":"Le temps d'attente se termine"
+  "waitTimeEnds":"Le temps d'attente se termine",
+
+  "affordableRates":"Tarifs abordables",
+  "affordableRatesNotice":"Nos tarifs abordables vous permettent de voyager autant que nécessaire sans vous ruiner."
+
 
 
 
