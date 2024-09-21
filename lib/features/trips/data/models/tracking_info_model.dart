@@ -14,6 +14,11 @@ class TrackingInfoModel extends TrackingInfo {
     required super.driverLat,
     required super.driverLng,
     required super.tripId,
+    required super.arrivedAt,
+    required super.completedAt,
+    required super.pickedUpAt,
+    required super.completedStopsCount,
+    required super.totalStops,
   });
 
   //fromJson
@@ -31,6 +36,11 @@ class TrackingInfoModel extends TrackingInfo {
       driverLat: json['lat'],
       driverLng: json['lng'],
       tripId: json["trip_id"] != null ? json['trip_id'].toString() : null,
+      arrivedAt: json['arrived_at'],
+      completedAt: json['completed_at'],
+      pickedUpAt: json['picked_up_at'],
+      completedStopsCount: json['completed_stops_count'],
+      totalStops: json['total_stops'],
     );
   }
 }

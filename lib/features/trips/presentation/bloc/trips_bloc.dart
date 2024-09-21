@@ -535,12 +535,18 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     bool callGoogle = false;
     List<LatLng> polyCoordinates = context.read<TripProvider>().polyCoordinates;
 
+    final latLngPosition =
+        LatLng(riderLocation.latitude, riderLocation.longitude);
+
     if (polyCoordinates.length > 1) {
       for (int i = 0; i < polyCoordinates.length; i++) {
+        if (i + 1 == polyCoordinates.length) {
+          return false;
+        }
         final distanceKm1 = double.parse(
-            convertToKM(pickup: riderLocation, dropOff: polyCoordinates[i]));
+            convertToKM(pickup: latLngPosition, dropOff: polyCoordinates[i]));
         final distanceKm2 = double.parse(convertToKM(
-            pickup: riderLocation, dropOff: polyCoordinates[i + 1]));
+            pickup: latLngPosition, dropOff: polyCoordinates[i + 1]));
 
         if (distanceKm1 > distanceKm2) {
           //meaning he is on the right path
@@ -549,7 +555,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
         } else {
           //there is a deviation. check for upward adjustment
 
-          if (distanceKm1 > 0.1) {
+          if (distanceKm1 > 0.05) {
             callGoogle = true;
           } else {
             break;

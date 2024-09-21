@@ -99,7 +99,6 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
   @override
   void initState() {
     fetchTripDetails();
-    initiateDriverTracking();
     super.initState();
   }
 
@@ -113,6 +112,7 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
           bloc: tripBloc,
           listener: (context, state) {
             if (state is GetTripLoaded) {
+              initiateDriverTracking();
               setState(() {
                 tripDetails = state.tripDetailsInfo.tripDestinationData;
               });
@@ -121,8 +121,45 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
         ),
         BlocListener(
           bloc: tripBloc2,
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is InitiateTrackingLoaded) {
+              bool recallGoogle = await tripBloc.reCallDirectionsApi(
+                  context: context,
+                  riderLocation: LatLng(state.trackingInfo.lat!.toDouble(),
+                      state.trackingInfo.lng!.toDouble()));
+
+              if (recallGoogle) {
+                LatLng destination =
+                    (state.trackingInfo.status ?? 'assigned') == 'assigned'
+                        ? LatLng(tripDetails!.pickupLat!.toDouble(),
+                            tripDetails!.pickupLng!.toDouble())
+                        : LatLng(
+                            tripDetails!
+                                .destinations![state
+                                        .trackingInfo.completedStopsCount
+                                        ?.toInt() ??
+                                    0]
+                                .lat!
+                                .toDouble(),
+                            tripDetails!
+                                .destinations![state
+                                        .trackingInfo.completedStopsCount
+                                        ?.toInt() ??
+                                    0]
+                                .lng!
+                                .toDouble());
+
+                final params = {
+                  "origin_heading": state.trackingInfo.heading?.toDouble() ?? 0,
+                  "origin_lat": state.trackingInfo.lat,
+                  "origin_lng": state.trackingInfo.lng,
+                  "destination_lat": destination.latitude,
+                  "destination_lng": destination.longitude,
+                };
+
+                callDirectionsApi(params);
+              }
+
               setState(() {
                 markers = {
                   Marker(

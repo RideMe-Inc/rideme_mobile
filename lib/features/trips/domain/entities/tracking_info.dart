@@ -1,8 +1,23 @@
 import 'package:equatable/equatable.dart';
 
 class TrackingInfo extends Equatable {
-  final num? lat, lng, heading, rating, driverID, driverLat, driverLng;
-  final String? name, status, vehicleType, timeToArrival, tripId;
+  final num? lat,
+      lng,
+      heading,
+      rating,
+      driverID,
+      driverLat,
+      driverLng,
+      totalStops,
+      completedStopsCount;
+  final String? name,
+      status,
+      vehicleType,
+      timeToArrival,
+      tripId,
+      arrivedAt,
+      pickedUpAt,
+      completedAt;
 
   const TrackingInfo({
     required this.lat,
@@ -17,6 +32,11 @@ class TrackingInfo extends Equatable {
     required this.tripId,
     required this.driverLat,
     required this.driverLng,
+    required this.arrivedAt,
+    required this.completedAt,
+    required this.pickedUpAt,
+    required this.completedStopsCount,
+    required this.totalStops,
   });
 
   @override
@@ -33,5 +53,10 @@ class TrackingInfo extends Equatable {
         driverLat,
         driverLng,
         tripId,
+        arrivedAt,
+        completedAt,
+        pickedUpAt,
+        completedStopsCount,
+        totalStops,
       ];
 }
