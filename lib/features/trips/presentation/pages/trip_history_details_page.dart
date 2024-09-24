@@ -15,6 +15,7 @@ import 'package:rideme_mobile/features/localization/presentation/providers/local
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/destination_pickup_widget.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/payment/payment_type_selection.dart';
+import 'package:rideme_mobile/features/trips/presentation/widgets/report_trip_selection_bs.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
 class TripHistoryDetailsPage extends StatefulWidget {
@@ -296,7 +297,8 @@ class _TripHistoryDetailsPageState extends State<TripHistoryDetailsPage>
                         ),
                         Space.height(context, 0.04),
                         GenericButton(
-                          onTap: () {},
+                          onTap: () => buildReportTripBS(
+                              context: context, tripId: widget.tripId),
                           label: context.appLocalizations.reportTrip,
                           isActive: true,
                           buttonColor: AppColors.rideMeErrorNormal,
