@@ -21,6 +21,7 @@ import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/profile.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/promotions.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/safety_page.dart';
+import 'package:rideme_mobile/features/user/presentation/pages/saved_places_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/support.dart';
 
 final GoRouter goRouterConfiguration = GoRouter(
@@ -137,6 +138,15 @@ final GoRouter goRouterConfiguration = GoRouter(
               path: 'edit',
               builder: (context, state) => const EditProfilePage(),
             ),
+
+            //saved places
+
+            GoRoute(
+              name: 'savedPlaces',
+              path: 'saved-places',
+              builder: (context, state) => const SavedPlacesPage(),
+            ),
+
             //deleteAccount
             GoRoute(
               name: 'deleteAccount',

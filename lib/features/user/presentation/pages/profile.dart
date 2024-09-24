@@ -25,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   final List<ProfileItemType> profileItemType = [
     ProfileItemType.editProfile,
-    ProfileItemType.accountSettings,
+    ProfileItemType.savedPlaces,
     ProfileItemType.appLanguage,
     ProfileItemType.notification,
     ProfileItemType.privacyAndData,

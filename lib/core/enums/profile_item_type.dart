@@ -5,6 +5,7 @@ enum ProfileItemType {
   logout(svg: SvgNameConstants.logoutSVG),
   payment(svg: SvgNameConstants.paymentSVG),
   editProfile(svg: SvgNameConstants.userSVG),
+  savedPlaces(svg: SvgNameConstants.bookMarkedSVG),
   appLanguage(svg: SvgNameConstants.appLanguageSVG),
   privacyAndData(svg: SvgNameConstants.privacyDataPolicySVG),
   contactSupport(svg: SvgNameConstants.supportSVG),

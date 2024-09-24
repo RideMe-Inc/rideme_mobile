@@ -434,7 +434,17 @@
   "waitTimeEnds":"Le temps d'attente se termine",
 
   "affordableRates":"Tarifs abordables",
-  "affordableRatesNotice":"Nos tarifs abordables vous permettent de voyager autant que nécessaire sans vous ruiner."
+  "affordableRatesNotice":"Nos tarifs abordables vous permettent de voyager autant que nécessaire sans vous ruiner.",
+
+  "savedPlaces":"Lieux enregistrés",
+  "savePlace":"Enregistrer le lieu",
+  "saveLocation":"Enregistrer la localisation",
+  "newPlace":"Nouveau lieu",
+  "enterNewPlace":"Entrer un nouveau lieu",
+  "userCurrentLocation":"Utiliser la localisation actuelle",
+  "locationName":"Nom de la localisation",
+  "givePlaceName":"Donner un nom au lieu"
+
 
 
 

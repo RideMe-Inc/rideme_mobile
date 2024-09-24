@@ -38,6 +38,7 @@ class ProfileItemListingWidget extends StatelessWidget {
       "editProfile": context.appLocalizations.userDetails,
       "appLanguage": context.appLocalizations.appLanguage,
       "becomeARider": context.appLocalizations.becomeARider,
+      "savedPlaces": context.appLocalizations.savedPlaces,
       "aboutRideMe": context.appLocalizations.aboutRideMe,
       "deleteAccount": context.appLocalizations.deleteAccount,
       "contactSupport": context.appLocalizations.contactSupport,

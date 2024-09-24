@@ -421,6 +421,16 @@
   "requestNewTrip":"Request new trip",
   "carSearchInfo":"Car search starts 10 minutes before  your scheduled time",
 
+  "savedPlaces":"Saved Places",
+  "savePlace":"Save place",
+  "saveLocation":"Save location",
+  "newPlace":"New place",
+  "enterNewPlace":"Enter new place",
+  "userCurrentLocation":"Use current location",
+  "locationName":"Location name",
+  "givePlaceName":"Give place a name",
+
+
 
 
 
