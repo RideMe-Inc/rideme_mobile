@@ -13,6 +13,10 @@ abstract class LocationRemoteDatasource {
 
   //get geo id
   Future<GeoDataModel> getGeoID(Map<String, dynamic> params);
+
+  Future<String> saveAddress(Map<String, dynamic> params);
+
+  Future<String> editSavedAddress(Map<String, dynamic> params);
 }
 
 class LocationRemoteDatasourceImpl
@@ -71,5 +75,29 @@ class LocationRemoteDatasourceImpl
     );
 
     return GeoDataModel.fromJson(decodedResponse['data']);
+  }
+
+  @override
+  Future<String> editSavedAddress(Map<String, dynamic> params) async {
+    final decodedResponse = await post(
+      client: client,
+      endpoint: Endpoints.editAddress,
+      params: params,
+      urls: urls,
+    );
+
+    return decodedResponse['message'];
+  }
+
+  @override
+  Future<String> saveAddress(Map<String, dynamic> params) async {
+    final decodedResponse = await post(
+      client: client,
+      endpoint: Endpoints.addresses,
+      params: params,
+      urls: urls,
+    );
+
+    return decodedResponse['message'];
   }
 }

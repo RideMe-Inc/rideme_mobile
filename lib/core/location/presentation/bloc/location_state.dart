@@ -62,3 +62,33 @@ final class SearchPlacesError extends LocationState {
 
   const SearchPlacesError({required this.message});
 }
+
+//!EDIT SAVED ADDRESS
+final class EditSavedAddressLoading extends LocationState {}
+
+final class EditSavedAddressLoaded extends LocationState {
+  final String message;
+
+  const EditSavedAddressLoaded({required this.message});
+}
+
+final class EditSavedAddressError extends LocationState {
+  final String message;
+
+  const EditSavedAddressError({required this.message});
+}
+
+//!SAVED ADDRESS
+final class SavedAddressLoading extends LocationState {}
+
+final class SavedAddressLoaded extends LocationState {
+  final String message;
+
+  const SavedAddressLoaded({required this.message});
+}
+
+final class SavedAddressError extends LocationState {
+  final String message;
+
+  const SavedAddressError({required this.message});
+}

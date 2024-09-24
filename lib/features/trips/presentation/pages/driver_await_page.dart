@@ -147,12 +147,6 @@ class _DriverAwaitPageState extends State<DriverAwaitPage> {
             },
           ),
           BlocListener(
-            bloc: tripsBloc,
-            listener: (context, state) {
-              // TODO: implement listener
-            },
-          ),
-          BlocListener(
             bloc: tripsBloc3,
             listener: (context, state) {
               if (state is RetryBookingLoaded) {

@@ -3,7 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideme_mobile/core/location/domain/entity/geo_hash.dart';
 import 'package:rideme_mobile/core/location/domain/entity/places_info.dart';
+import 'package:rideme_mobile/core/location/domain/usecases/edit_saved_address.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/get_geo_id.dart';
+import 'package:rideme_mobile/core/location/domain/usecases/save_address.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/search_place.dart';
 
 part 'location_event.dart';
@@ -12,10 +14,14 @@ part 'location_state.dart';
 class LocationBloc extends Bloc<LocationEvent, LocationState> {
   final SearchPlace searchPlace;
   final GetGeoID getGeoID;
+  final SaveAddress saveAddress;
+  final EditSavedAddress editSavedAddress;
 
   LocationBloc({
     required this.searchPlace,
     required this.getGeoID,
+    required this.saveAddress,
+    required this.editSavedAddress,
   }) : super(LocationInitial()) {
     //!SEARCH PLACES
 
@@ -68,6 +74,38 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         );
       },
       transformer: restartable(),
+    );
+
+    //!EDIT ADDRESS
+    on<EditSavedAddressEvent>(
+      (event, emit) async {
+        emit(EditSavedAddressLoading());
+
+        final response = await editSavedAddress(event.params);
+
+        emit(
+          response.fold(
+            (l) => EditSavedAddressError(message: l),
+            (r) => EditSavedAddressLoaded(message: r),
+          ),
+        );
+      },
+    );
+
+    //!SAVE ADDRESS
+    on<SaveAddressEvent>(
+      (event, emit) async {
+        emit(SavedAddressLoading());
+
+        final response = await saveAddress(event.params);
+
+        emit(
+          response.fold(
+            (l) => SavedAddressError(message: l),
+            (r) => SavedAddressLoaded(message: r),
+          ),
+        );
+      },
     );
   }
 }

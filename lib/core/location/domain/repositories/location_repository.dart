@@ -15,4 +15,8 @@ abstract class LocationRepository {
 
   //retrieve locations
   List<GeoData> retrieveRecentLocations();
+
+  Future<Either<String, String>> saveAddress(Map<String, dynamic> params);
+
+  Future<Either<String, String>> editSavedAddress(Map<String, dynamic> params);
 }

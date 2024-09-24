@@ -8,8 +8,10 @@ import 'package:rideme_mobile/core/location/data/datasources/remoteds.dart';
 import 'package:rideme_mobile/core/location/data/repository/location_repository_impl.dart';
 import 'package:rideme_mobile/core/location/domain/repositories/location_repository.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/cache_locations.dart';
+import 'package:rideme_mobile/core/location/domain/usecases/edit_saved_address.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/get_geo_id.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/retrieve_locations.dart';
+import 'package:rideme_mobile/core/location/domain/usecases/save_address.dart';
 import 'package:rideme_mobile/core/location/domain/usecases/search_place.dart';
 import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart';
 import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
@@ -401,6 +403,8 @@ initLocation() {
     () => LocationBloc(
       searchPlace: sl(),
       getGeoID: sl(),
+      saveAddress: sl(),
+      editSavedAddress: sl(),
     ),
   );
   //provider
@@ -413,6 +417,12 @@ initLocation() {
 
   //usecases
 
+  sl.registerLazySingleton(
+    () => SaveAddress(repository: sl()),
+  );
+  sl.registerLazySingleton(
+    () => EditSavedAddress(repository: sl()),
+  );
   sl.registerLazySingleton(
     () => SearchPlace(repository: sl()),
   );

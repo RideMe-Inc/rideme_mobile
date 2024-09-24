@@ -153,6 +153,8 @@ final GoRouter goRouterConfiguration = GoRouter(
                   builder: (context, state) => AddPlacePage(
                     geoId: state.uri.queryParameters['geo_id']!,
                     locationName: state.uri.queryParameters['location_name']!,
+                    placeName: state.uri.queryParameters['place_name'],
+                    placeId: state.uri.queryParameters['place_id'],
                   ),
                 )
               ],

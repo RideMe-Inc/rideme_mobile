@@ -391,37 +391,11 @@ class _HomePageState extends State<HomePage> {
                                 }
                               : null,
                           schedularOnTap: () async {
-                            final response =
-                                await buildBookTripForLaterBottomSheet(
+                            await buildBookTripForLaterBottomSheet(
                               context: context,
                               chosenDate: chosenDate
                                   .add(const Duration(hours: 5, minutes: 5)),
                             );
-
-                            if (!context.mounted) return;
-
-                            if (response != null) {
-                              //TODO: ASSIGNN THE RESPONSE TO THE CHOSENDATE VARIABLE ON THIS PAGE
-                              // Map locations = {
-                              //   "pickUp": [
-                              //     homeProvider.isLocationAllowed
-                              //         ? {
-                              //             "name":
-                              //                 homeProvider.geoDataInfo?.address,
-                              //             "id": homeProvider.geoDataInfo?.id,
-                              //             "lat": homeProvider.geoDataInfo?.lat,
-                              //             "lng": homeProvider.geoDataInfo?.lng,
-                              //           }
-                              //         : {}
-                              //   ],
-                              //   "dropOff": [{}],
-                              // };
-                              // final tripData = jsonEncode(locations);
-                              // context.pushNamed('tripInfo', queryParameters: {
-                              //   "tripData": tripData,
-                              //   "scheduledDate": chosenDate.toString(),
-                              // });
-                            }
                           },
                         ),
                         Space.height(context, 0.028),

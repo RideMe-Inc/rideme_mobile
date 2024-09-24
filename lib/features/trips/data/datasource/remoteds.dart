@@ -315,7 +315,7 @@ class TripRemoteDataSourceImpl
 
     final response = await client.get(url);
 
-    print(response.body);
+    if (kDebugMode) print(response.body);
 
     return DirectionsObjectModel.fromJson(jsonDecode(response.body));
   }

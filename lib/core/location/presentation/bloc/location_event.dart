@@ -29,3 +29,17 @@ final class GetGeoIDEvent extends LocationEvent {
 
 //!CLEAR SEARCH RESULTS
 final class ClearSearchResultsEvent extends LocationEvent {}
+
+//!EDIT SAVED ADDRESS
+final class EditSavedAddressEvent extends LocationEvent {
+  final Map<String, dynamic> params;
+
+  const EditSavedAddressEvent({required this.params});
+}
+
+//!SAVE ADDRESS
+final class SaveAddressEvent extends LocationEvent {
+  final Map<String, dynamic> params;
+
+  const SaveAddressEvent({required this.params});
+}

@@ -127,7 +127,6 @@ class _BookTripForLaterState extends State<BookTripForLater> {
             ),
             Space.height(context, 0.04),
 
-            //TODO: HERE WE GO DEY
             GenericButton(
               onTap: () {
                 Map locations = {

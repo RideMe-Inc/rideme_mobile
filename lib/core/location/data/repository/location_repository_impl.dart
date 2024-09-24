@@ -66,4 +66,42 @@ class LocationRepositoryImpl extends LocationRepository {
   List<GeoData> retrieveRecentLocations() {
     return localDatasource.retrieveRecentLocations();
   }
+
+  @override
+  Future<Either<String, String>> editSavedAddress(
+      Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteDatasource.editSavedAddress(params);
+        return Right(response);
+      } catch (e) {
+        if (e is ErrorException) {
+          return Left(e.toString());
+        }
+
+        return const Left('An error occured');
+      }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
+
+  @override
+  Future<Either<String, String>> saveAddress(
+      Map<String, dynamic> params) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteDatasource.saveAddress(params);
+        return Right(response);
+      } catch (e) {
+        if (e is ErrorException) {
+          return Left(e.toString());
+        }
+
+        return const Left('An error occured');
+      }
+    } else {
+      return Left(networkInfo.noNetowrkMessage);
+    }
+  }
 }
