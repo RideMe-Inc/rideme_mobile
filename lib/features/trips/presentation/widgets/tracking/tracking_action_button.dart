@@ -19,21 +19,24 @@ class TrackActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CircleAvatar(
-          backgroundColor: AppColors.rideMeGreyNormal,
-          radius: Sizes.height(context, 0.024),
-          child: Center(
-            child: SvgPicture.asset(svgPath),
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          CircleAvatar(
+            backgroundColor: AppColors.rideMeGreyNormal,
+            radius: Sizes.height(context, 0.024),
+            child: Center(
+              child: SvgPicture.asset(svgPath),
+            ),
           ),
-        ),
-        Space.height(context, 0.002),
-        Text(
-          label,
-          style: context.textTheme.displaySmall,
-        )
-      ],
+          Space.height(context, 0.002),
+          Text(
+            label,
+            style: context.textTheme.displaySmall,
+          )
+        ],
+      ),
     );
   }
 }

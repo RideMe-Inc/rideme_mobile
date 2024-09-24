@@ -4,12 +4,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
+import 'package:rideme_mobile/core/mixins/url_launcher_mixin.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
 import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
+import 'package:rideme_mobile/features/home/presentation/widgets/nav_bar_widget.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/domain/entities/trip_destination_data.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
@@ -190,7 +192,7 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
       child: Scaffold(
         body: SlidingUpPanel(
           boxShadow: null,
-          minHeight: Sizes.height(context, 0.35),
+          minHeight: Sizes.height(context, 0.25),
           maxHeight: Sizes.height(context, 0.7),
           color: Colors.transparent,
           collapsed: tripDetails != null
@@ -229,6 +231,59 @@ class _TripTrackingPageState extends State<TripTrackingPage> {
                   ),
                 ),
               ),
+
+              //MORE SECTION
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Builder(builder: (context) {
+                    return GestureDetector(
+                      onTap: () {
+                        // Scaffold.of(context).openDrawer();
+                        showAdaptiveDialog(
+                          useSafeArea: false,
+                          barrierDismissible: true,
+                          context: context,
+                          builder: (context) {
+                            return Column(
+                              children: [
+                                const NavBarWidget(),
+                                Space.height(context, 0.01),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          Container(
+                            height: Sizes.height(context, 0.05),
+                            width: Sizes.width(context, 0.2),
+                            decoration: const BoxDecoration(
+                              color: AppColors.rideMeWhite500,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 5,
+                                  spreadRadius: 1,
+                                  color: AppColors.rideMeGreyNormalActive,
+                                  offset: Offset(0, 3.5),
+                                )
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.menu,
+                              color: AppColors.rideMeBlackNormal,
+                              size: Sizes.height(context, 0.025),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ),
             ],
           ),
         ),
@@ -248,7 +303,7 @@ class _PanelWidget extends StatefulWidget {
   State<_PanelWidget> createState() => __PanelWidgetState();
 }
 
-class __PanelWidgetState extends State<_PanelWidget> {
+class __PanelWidgetState extends State<_PanelWidget> with UrlLauncherMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -308,20 +363,10 @@ class __PanelWidgetState extends State<_PanelWidget> {
                         onTap: () {},
                         svgPath: SvgNameConstants.inRideSafetySVG,
                         label: context.appLocalizations.safety,
-                      )
-                    ],
-                  ),
-                  Space.height(context, 0.04),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TrackActionButton(
-                        onTap: () {},
-                        svgPath: SvgNameConstants.safetySVG,
-                        label: 'Chat',
                       ),
                       TrackActionButton(
-                        onTap: () {},
+                        onTap: () => launchCallUrl(
+                            widget.tripDetails.driver?.phone ?? ''),
                         svgPath: SvgNameConstants.phoneSVG,
                         label: context.appLocalizations.call,
                       )
@@ -376,7 +421,8 @@ class _CollapsedWidget extends StatefulWidget {
   State<_CollapsedWidget> createState() => __CollapsedWidgetState();
 }
 
-class __CollapsedWidgetState extends State<_CollapsedWidget> {
+class __CollapsedWidgetState extends State<_CollapsedWidget>
+    with UrlLauncherMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -431,26 +477,16 @@ class __CollapsedWidgetState extends State<_CollapsedWidget> {
                 onTap: () {},
                 svgPath: SvgNameConstants.inRideSafetySVG,
                 label: context.appLocalizations.safety,
-              )
-            ],
-          ),
-          Space.height(context, 0.04),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TrackActionButton(
-                onTap: () {},
-                svgPath: SvgNameConstants.safetySVG,
-                label: 'Chat',
               ),
               TrackActionButton(
-                onTap: () {},
+                onTap: () =>
+                    launchCallUrl(widget.tripDetails.driver?.phone ?? ''),
                 svgPath: SvgNameConstants.phoneSVG,
                 label: context.appLocalizations.call,
               )
             ],
           ),
+          Space.height(context, 0.04),
         ],
       ),
     );

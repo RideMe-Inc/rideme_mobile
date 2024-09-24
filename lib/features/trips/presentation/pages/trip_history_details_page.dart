@@ -150,6 +150,7 @@ class _TripHistoryDetailsPageState extends State<TripHistoryDetailsPage>
                                 : DecorationImage(
                                     image: CachedNetworkImageProvider(
                                         tripDetails.driver!.profileURL!),
+                                    fit: BoxFit.cover,
                                   ),
                           ),
                         )

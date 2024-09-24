@@ -11,6 +11,7 @@ import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
 import 'package:rideme_mobile/features/authentication/presentation/provider/authentication_provider.dart';
+import 'package:rideme_mobile/features/home/presentation/widgets/nav_bar_widget.dart';
 import 'package:rideme_mobile/features/localization/presentation/providers/locale_provider.dart';
 import 'package:rideme_mobile/features/trips/presentation/bloc/trips_bloc.dart';
 import 'package:rideme_mobile/features/trips/presentation/widgets/cancel_trip_selection_bs.dart';
@@ -94,6 +95,59 @@ class _ScheduledTrackingPageState extends State<ScheduledTrackingPage> {
                   target: LatLng(44.9706674, -93.3438785),
                   zoom: 16,
                 ),
+              ),
+            ),
+
+            //MORE SECTION
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Builder(builder: (context) {
+                  return GestureDetector(
+                    onTap: () {
+                      // Scaffold.of(context).openDrawer();
+                      showAdaptiveDialog(
+                        useSafeArea: false,
+                        barrierDismissible: true,
+                        context: context,
+                        builder: (context) {
+                          return Column(
+                            children: [
+                              const NavBarWidget(),
+                              Space.height(context, 0.01),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Container(
+                          height: Sizes.height(context, 0.05),
+                          width: Sizes.width(context, 0.2),
+                          decoration: const BoxDecoration(
+                            color: AppColors.rideMeWhite500,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 5,
+                                spreadRadius: 1,
+                                color: AppColors.rideMeGreyNormalActive,
+                                offset: Offset(0, 3.5),
+                              )
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.menu,
+                            color: AppColors.rideMeBlackNormal,
+                            size: Sizes.height(context, 0.025),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ),
 
