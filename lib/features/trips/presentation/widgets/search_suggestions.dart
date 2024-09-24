@@ -69,6 +69,7 @@ enum SectionType {
   recent(svg: SvgNameConstants.recentLocationSVG),
   suggestions(svg: SvgNameConstants.locationPinSVG),
   bookmarked(svg: SvgNameConstants.bookMarkedSVG),
+  savePlace(svg: SvgNameConstants.savePlaceNav),
   work(svg: SvgNameConstants.workSVG);
 
   final String svg;

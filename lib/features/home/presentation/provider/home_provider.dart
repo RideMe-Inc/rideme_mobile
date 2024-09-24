@@ -7,6 +7,7 @@ import 'package:rideme_mobile/assets/images/image_name_constants.dart';
 
 class HomeProvider extends ChangeNotifier {
   BitmapDescriptor _customMarkerIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor _locationIcon = BitmapDescriptor.defaultMarker;
 
   BitmapDescriptor _startIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor _endIcon = BitmapDescriptor.defaultMarker;
@@ -29,6 +30,7 @@ class HomeProvider extends ChangeNotifier {
   // GeoDataInfo? get geoDataInfo => _geoDataInfo;
   BitmapDescriptor get startIcon => _startIcon;
   BitmapDescriptor get endIcon => _endIcon;
+  BitmapDescriptor get locationIcon => _locationIcon;
   String? get refreshedToken => _refreshedToken;
   // ServiceInfo? get serviceInfo => _serviceInfo;
 
@@ -77,10 +79,13 @@ class HomeProvider extends ChangeNotifier {
     final starterIcon =
         await getBytesFromAsset(ImageNameConstants.startTrip, 20);
     final endedIcon = await getBytesFromAsset(ImageNameConstants.endTrip, 20);
+    final locationicon =
+        await getBytesFromAsset(ImageNameConstants.locationPinIMG, 30);
 
     _customMarkerIcon = BitmapDescriptor.bytes(markericon);
     _startIcon = BitmapDescriptor.bytes(starterIcon);
     _endIcon = BitmapDescriptor.bytes(endedIcon);
+    _locationIcon = BitmapDescriptor.bytes(locationicon);
 
     notifyListeners();
   }

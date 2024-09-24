@@ -43,4 +43,6 @@ class SvgNameConstants {
   static const additionSVG = '$_baseUrl/addition.svg';
   static const myLocationSVG = '$_baseUrl/my_location.svg';
   static const alertCircle = '$_baseUrl/alert_circle.svg';
+  static const currentLocation = '$_baseUrl/current_location.svg';
+  static const savePlaceNav = '$_baseUrl/save_place_nav.svg';
 }

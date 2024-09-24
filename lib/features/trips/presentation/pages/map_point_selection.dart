@@ -11,13 +11,13 @@ import 'package:rideme_mobile/assets/svgs/svg_name_constants.dart';
 import 'package:rideme_mobile/core/extensions/context_extensions.dart';
 import 'package:rideme_mobile/core/location/domain/entity/geo_hash.dart';
 import 'package:rideme_mobile/core/location/presentation/bloc/location_bloc.dart';
-import 'package:rideme_mobile/core/location/presentation/providers/location_provider.dart';
 import 'package:rideme_mobile/core/size/sizes.dart';
 import 'package:rideme_mobile/core/spacing/whitspacing.dart';
 import 'package:rideme_mobile/core/theme/app_colors.dart';
 import 'package:rideme_mobile/core/widgets/buttons/generic_button_widget.dart';
 import 'package:rideme_mobile/core/widgets/loaders/loading_indicator.dart';
 import 'package:rideme_mobile/core/widgets/popups/error_popup.dart';
+import 'package:rideme_mobile/features/home/presentation/provider/home_provider.dart';
 import 'package:rideme_mobile/injection_container.dart';
 
 class LocationSelectionOnMap extends StatefulWidget {
@@ -39,7 +39,7 @@ class LocationSelectionOnMap extends StatefulWidget {
 class _LocationSelectionOnMapState extends State<LocationSelectionOnMap> {
   late bool isCurrentLocationSelector;
 
-  late LocationProvider locationProvider;
+  late HomeProvider homeProvider;
 
   final locationBloc = sl<LocationBloc>();
 
@@ -83,7 +83,6 @@ class _LocationSelectionOnMapState extends State<LocationSelectionOnMap> {
   void initState() {
     lat = double.parse(widget.lat);
     lng = double.parse(widget.lng);
-    context.read<LocationProvider>().loadCustomIcon();
 
     super.initState();
   }
@@ -96,7 +95,7 @@ class _LocationSelectionOnMapState extends State<LocationSelectionOnMap> {
 
   @override
   Widget build(BuildContext context) {
-    locationProvider = context.watch<LocationProvider>();
+    homeProvider = context.watch<HomeProvider>();
 
     return Scaffold(
       body: Stack(
@@ -132,9 +131,9 @@ class _LocationSelectionOnMapState extends State<LocationSelectionOnMap> {
               markers: {
                 Marker(
                   markerId: const MarkerId(''),
-                  icon: locationProvider.customIcon,
+                  icon: homeProvider.locationIcon,
                   position: LatLng(lat ?? 5.6623, lng ?? -0.2013),
-                  anchor: const Offset(0.2, 1),
+                  anchor: const Offset(0.5, 0.5),
                 )
               },
             ),

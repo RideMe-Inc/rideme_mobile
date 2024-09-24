@@ -15,6 +15,7 @@ import 'package:rideme_mobile/features/trips/presentation/pages/scheduled_tracki
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_history_details_page.dart';
 import 'package:rideme_mobile/features/trips/presentation/pages/trip_tracking_page.dart';
+import 'package:rideme_mobile/features/user/presentation/pages/add_place_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/delete_account_page.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/edit_profile.dart';
 import 'package:rideme_mobile/features/user/presentation/pages/faq_page.dart';
@@ -145,6 +146,16 @@ final GoRouter goRouterConfiguration = GoRouter(
               name: 'savedPlaces',
               path: 'saved-places',
               builder: (context, state) => const SavedPlacesPage(),
+              routes: [
+                GoRoute(
+                  name: 'addPlace',
+                  path: 'add-place',
+                  builder: (context, state) => AddPlacePage(
+                    geoId: state.uri.queryParameters['geo_id']!,
+                    locationName: state.uri.queryParameters['location_name']!,
+                  ),
+                )
+              ],
             ),
 
             //deleteAccount
