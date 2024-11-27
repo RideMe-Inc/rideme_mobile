@@ -65,14 +65,15 @@ class AuthenticationRemoteDatasourceImpl
       urlParameters: null,
     );
 
+    Map<String, dynamic> finalbody = {};
+
     //get device fcm token
-    final fcmToken = await messaging.getToken();
+    try {
+      final fcmToken = await messaging.getToken();
+      finalbody.addAll({'fcm_token': fcmToken});
+    } catch (e) {}
 
-    final body = params['body'];
-
-    final finalbody = {'fcm_token': fcmToken};
-
-    finalbody.addAll(body);
+    finalbody.addAll(params['body']);
 
     //make request
     final response = await client.post(
@@ -100,15 +101,15 @@ class AuthenticationRemoteDatasourceImpl
       urlParameters: null,
     );
 
+    Map<String, dynamic> finalbody = {};
+
     //get device fcm token
+    try {
+      final fcmToken = await messaging.getToken();
+      finalbody.addAll({'fcm_token': fcmToken});
+    } catch (e) {}
 
-    final fcmToken = await messaging.getToken();
-
-    final body = params['body'];
-
-    final finalbody = <String, dynamic>{'fcm_token': fcmToken};
-
-    finalbody.addAll(body);
+    finalbody.addAll(params['body']);
 
     //make request
 
@@ -158,18 +159,18 @@ class AuthenticationRemoteDatasourceImpl
     headers.addAll(
         <String, String>{"Authorization": "Bearer ${params['bearer']}"});
 
-    // get device fcm token
+    Map<String, dynamic> finalbody = {};
 
-    final fcmToken = await messaging.getToken();
-
-    Map<String, dynamic> body = {
-      "fcm_token": fcmToken,
-    };
+    //get device fcm token
+    try {
+      final fcmToken = await messaging.getToken();
+      finalbody.addAll({'fcm_token': fcmToken});
+    } catch (e) {}
 
     //make request
 
     final response =
-        await client.post(uri, headers: headers, body: jsonEncode(body));
+        await client.post(uri, headers: headers, body: jsonEncode(finalbody));
 
     final decodedResponse = json.decode(response.body);
 
